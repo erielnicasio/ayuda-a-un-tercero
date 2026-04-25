@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones - Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .notif-page { padding-top: calc(var(--nav-h) + 40px); min-height: 100vh; background: var(--bg-light); }
+        .notif-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .notif-item { background: white; padding: 20px 24px; border-radius: 16px; border: 1px solid var(--gray-200); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 16px; transition: all 0.2s; }
+        .notif-item.unread { border-left: 4px solid var(--accent-orange); background: #FFF8F0; }
+        .notif-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .notif-icon.green { background: #dcfce7; color: #166534; }
+        .notif-icon.red { background: #fee2e2; color: #991b1b; }
+        .notif-icon.blue { background: #dbeafe; color: #1e40af; }
+        .notif-icon.orange { background: #ffedd5; color: #9a3412; }
+        .notif-body { flex: 1; }
+        .notif-msg { font-size: 0.95rem; color: var(--gray-700); font-weight: 500; line-height: 1.5; }
+        .notif-time { font-size: 0.8rem; color: var(--gray-400); margin-top: 6px; }
+        .notif-empty { text-align: center; padding: 60px 20px; color: var(--gray-400); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="notificaciones.html" id="nav-notif-link" class="active" style="position:relative;margin-right:12px;color:var(--accent-orange);font-size:1.3rem;">
+                    &#128276;
+                    <span id="notif-badge" style="display:none;position:absolute;top:-6px;right:-8px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:800;width:18px;height:18px;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="login.html" id="auth-btn" class="btn btn-outline btn-sm">Iniciar Sesión</a>
+                <a href="admin.html" id="nav-admin-link" class="btn btn-primary btn-sm" style="display:none;margin-left:10px">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="notif-page">
+        <div class="container" style="max-width:800px;">
+            <div class="notif-header">
+                <div>
+                    <h2 style="font-size:1.8rem;font-weight:800;color:var(--primary-blue);">Notificaciones</h2>
+                    <p style="color:var(--gray-500);font-size:0.95rem;">Mantente al día con la actividad de tu cuenta.</p>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="markAllRead()">Marcar todo leído</button>
+            </div>
+            <div id="notif-list"></div>
+        </div>
+    </section>
+
+    <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function renderNotifications() {
+            var user = DB.getCurrentUser();
+            if (!user) { window.location.href = 'login.html'; return; }
+            var userId = user.role === 'admin' ? 'admin' : user.id;
+            var notifs = DB.getNotifications(userId).sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+            var container = document.getElementById('notif-list');
+
+            if (notifs.length === 0) {
+                container.innerHTML = '<div class="notif-empty"><div style="font-size:3rem;margin-bottom:16px;">&#128276;</div><h3>Sin notificaciones</h3><p>No tienes notificaciones por el momento.</p></div>';
+                return;
+            }
+
+            var html = '';
+            notifs.forEach(function(n) {
+                var iconClass = 'blue';
+                var icon = '&#128276;';
+                if (n.type && n.type.includes('approved')) { iconClass = 'green'; icon = '&#9989;'; }
+                if (n.type && n.type.includes('rejected')) { iconClass = 'red'; icon = '&#10060;'; }
+                if (n.type && n.type.includes('report')) { iconClass = 'orange'; icon = '&#9888;'; }
+                if (n.type && n.type.includes('contact')) { iconClass = 'green'; icon = '&#128222;'; }
+                if (n.type && n.type.includes('request')) { iconClass = 'orange'; icon = '&#128100;'; }
+
+                var date = new Date(n.createdAt);
+                var timeStr = date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+                html += '<div class="notif-item ' + (n.read ? '' : 'unread') + '" onclick="markRead(\'' + n.id + '\')">';
+                html += '<div class="notif-icon ' + iconClass + '">' + icon + '</div>';
+                html += '<div class="notif-body"><div class="notif-msg">' + n.message + '</div><div class="notif-time">' + timeStr + '</div></div>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+        }
+
+        function markRead(id) {
+            DB.markNotifRead(id);
+            renderNotifications();
+            App.updateNotifBadge();
+        }
+
+        function markAllRead() {
+            var user = DB.getCurrentUser();
+            if (!user) return;
+            var userId = user.role === 'admin' ? 'admin' : user.id;
+            DB.markAllNotifsRead(userId);
+            renderNotifications();
+            App.updateNotifBadge();
+            App.showToast('Todas las notificaciones marcadas como leídas', 'success');
+        }
+
+        renderNotifications();
+    </script>
+    <script src="../assets/js/accessibility.js"></script>
+</body>
+</html>

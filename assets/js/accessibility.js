@@ -98,46 +98,76 @@ function toggleAccess(className) {
 }
 
 function updateVisualStates() {
-    const options = document.querySelectorAll('.access-option');
-    options.forEach(opt => {
-        const text = opt.querySelector('span').innerText.toLowerCase();
+    var options = document.querySelectorAll('.access-option');
+    options.forEach(function(opt) {
+        var text = opt.querySelector('span').innerText.toLowerCase();
+        opt.classList.remove('active');
         if (text.includes('contraste') && document.body.classList.contains('high-contrast')) opt.classList.add('active');
-        else if (text.includes('texto') && document.body.classList.contains('large-text')) opt.classList.add('active');
-        else opt.classList.remove('active');
+        if (text.includes('texto') && document.body.classList.contains('large-text')) opt.classList.add('active');
+        if (text.includes('oscuro') && document.documentElement.getAttribute('data-theme') === 'dark') opt.classList.add('active');
+        if (text.includes('voz') && _ttsEnabled) opt.classList.add('active');
     });
 }
 
+var _ttsEnabled = localStorage.getItem('tts-enabled') === 'true';
+
 function handleTTS() {
-    const text = document.body.innerText;
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        showFeedback('Lectura detenida');
+    _ttsEnabled = !_ttsEnabled;
+    localStorage.setItem('tts-enabled', _ttsEnabled);
+    if (_ttsEnabled) {
+        showFeedback('Lectura por voz activada. Haz clic en cualquier texto.');
+        enableClickTTS();
     } else {
-        const utterance = new SpeechSynthesisUtterance("Modo de lectura activado. Haz clic en los títulos para leer secciones.");
-        utterance.lang = 'es-ES';
-        window.speechSynthesis.speak(utterance);
-        showFeedback('Lectura activada');
+        window.speechSynthesis.cancel();
+        showFeedback('Lectura por voz desactivada');
+        disableClickTTS();
     }
+    updateVisualStates();
 }
+
+function _ttsClickHandler(e) {
+    var el = e.target;
+    var text = (el.innerText || el.textContent || '').trim();
+    if (!text || text.length < 2) return;
+    window.speechSynthesis.cancel();
+    var utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'es-ES';
+    window.speechSynthesis.speak(utt);
+}
+
+function enableClickTTS() {
+    document.body.addEventListener('click', _ttsClickHandler, true);
+}
+
+function disableClickTTS() {
+    document.body.removeEventListener('click', _ttsClickHandler, true);
+}
+
+if (_ttsEnabled) enableClickTTS();
 
 function resetAccess() {
     document.body.classList.remove('high-contrast', 'large-text', 'dyslexia-font');
     document.documentElement.setAttribute('data-theme', 'light');
-    localStorage.clear();
-    location.reload();
+    localStorage.setItem('theme', 'light');
+    localStorage.removeItem('high-contrast');
+    localStorage.removeItem('large-text');
+    localStorage.removeItem('dyslexia-font');
+    localStorage.removeItem('tts-enabled');
+    _ttsEnabled = false;
+    disableClickTTS();
+    window.speechSynthesis.cancel();
+    updateVisualStates();
+    showFeedback('Ajustes restablecidos');
 }
 
 function showFeedback(msg) {
-    // Simple notification if toast system exists, otherwise alert or console
-    if (typeof showToast === 'function') {
-        showToast(msg, 'success');
+    if (typeof App !== 'undefined' && App.showToast) {
+        App.showToast(msg, 'info');
     } else {
-        console.log('Accessibility: ' + msg);
-        // Create temporary toast if not exists
-        const t = document.createElement('div');
-        t.style.cssText = "position:fixed; bottom:20px; right:20px; background:var(--primary-blue-mid); color:white; padding:12px 24px; border-radius:12px; z-index:10001; animation:slideUp 0.3s ease;";
+        var t = document.createElement('div');
+        t.style.cssText = "position:fixed; bottom:20px; right:20px; background:#2563eb; color:white; padding:12px 24px; border-radius:12px; z-index:10001; font-weight:600; font-size:0.9rem;";
         t.innerText = msg;
         document.body.appendChild(t);
-        setTimeout(() => t.remove(), 3000);
+        setTimeout(function() { t.remove(); }, 3000);
     }
 }

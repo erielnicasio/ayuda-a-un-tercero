@@ -277,38 +277,16 @@
                     <!-- Formulario Registro -->
                     <form id="form-register" class="auth-form" onsubmit="handleRegister(event)">
                         <div class="form-group">
-                            <label class="form-label">Nombre Completo</label>
-                            <input type="text" class="form-control" placeholder="Ej. María Sánchez" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" placeholder="809-000-0000" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" placeholder="Ej. Monte Plata" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Quiero unirme como:</label>
-                            <select id="registerRole" class="form-control" required
-                                style="appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23667085%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px;">
-                                <option value="" disabled selected>Selecciona tu perfil...</option>
-                                <option value="donador">❤️ Donador</option>
-                                <option value="beneficiario">🙌 Beneficiario</option>
-                                <option value="emprendedor">🚀 Emprendedor (Marketplace)</option>
-                                <option value="comprador">🛍️ Comprador Solidario</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" placeholder="tu@correo.com" required>
+                            <input type="email" id="registerEmail" class="form-control" placeholder="tu@correo.com" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" placeholder="Crea una contraseña segura"
-                                required>
+                            <input type="password" id="registerPassword" class="form-control" placeholder="Mínimo 4 caracteres" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar Contraseña</label>
+                            <input type="password" id="registerPassword2" class="form-control" placeholder="Repite la contraseña" required>
                         </div>
                         <button type="submit" class="btn btn-accent btn-lg btn-block">Registrarme Gratis</button>
                     </form>
@@ -332,58 +310,60 @@
         </div>
     </div>
 
+    <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/app.js"></script>
     <script>
-        // Inicializar Iconos
         lucide.createIcons();
 
+        // Redirect if already logged in
+        (function() {
+            var user = DB.getCurrentUser();
+            if (user) {
+                window.location.href = user.role === 'admin' ? 'admin.html' : 'perfil.html';
+            }
+        })();
+
         function switchTab(tabId) {
-            // Eliminar active de todos los tabs y forms
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-
-            // Activar el correspondiente
+            document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
             document.getElementById('form-' + tabId).classList.add('active');
-
-            // Si es login o register, activar su pestaña visual
             if (tabId === 'login' || tabId === 'register') {
                 document.getElementById('tab-' + tabId).classList.add('active');
             }
         }
 
-        // --- SISTEMA DE LOGUEO Y REGISTRO ---
         function handleLogin(event) {
             event.preventDefault();
-            const email = document.getElementById('loginEmail').value.toLowerCase();
-
-            if (email === 'admin' || email === 'admin@ayudatercero.com') {
-                localStorage.setItem('userRole', 'Admin');
-                localStorage.setItem('userName', 'SuperAdministrador');
-                window.location.href = 'admin.html';
-            } else {
-                let role = localStorage.getItem('userRole') || 'Usuario';
-                localStorage.setItem('userRole', role);
-                localStorage.setItem('userName', 'Usuario Plataforma');
-
-                alert(`¡Bienvenido de nuevo!\nHas iniciado sesión como ${role}.`);
-                window.location.href = 'perfil.html';
+            var email = document.getElementById('loginEmail').value.trim();
+            var password = document.getElementById('loginPassword').value;
+            var result = DB.loginUser(email, password);
+            if (result.error) {
+                App.showToast(result.error, 'error');
+                return;
             }
+            App.showToast('Sesión iniciada correctamente', 'success');
+            setTimeout(function() {
+                window.location.href = result.user.role === 'admin' ? 'admin.html' : 'perfil.html';
+            }, 500);
         }
 
         function handleRegister(event) {
             event.preventDefault();
-            const rolSelect = document.getElementById('registerRole');
-            const rolActivo = rolSelect.options[rolSelect.selectedIndex].text;
-
-            localStorage.setItem('userRole', rolActivo);
-            localStorage.setItem('userName', 'Nuevo Miembro');
-
-            alert(`¡Verificación enviada!\nPor favor revisa tu correo para verificar tu nueva cuenta de ${rolActivo}.`);
-            window.location.href = 'perfil.html';
+            var email = document.getElementById('registerEmail').value.trim();
+            var pass = document.getElementById('registerPassword').value;
+            var pass2 = document.getElementById('registerPassword2').value;
+            if (pass.length < 4) { App.showToast('La contraseña debe tener al menos 4 caracteres', 'error'); return; }
+            if (pass !== pass2) { App.showToast('Las contraseñas no coinciden', 'error'); return; }
+            var result = DB.registerUser(email, pass);
+            if (result.error) { App.showToast(result.error, 'error'); return; }
+            DB.setCurrentUser(result.user);
+            App.showToast('Cuenta creada exitosamente', 'success');
+            setTimeout(function() { window.location.href = 'perfil.html'; }, 500);
         }
 
         function handleRecovery(event) {
             event.preventDefault();
-            alert('Se ha enviado un enlace de recuperación a tu correo electrónico.');
+            App.showToast('Se ha enviado un enlace de recuperación a tu correo electrónico.', 'info');
             switchTab('login');
         }
     </script>

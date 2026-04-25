@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,1474 +21,345 @@
             --shadow-sm: var(--shadow-soft);
             --shadow-md: var(--shadow-premium);
         }
-
-        body {
-            background: var(--gray-50);
-        }
-
-        .admin-page {
-            padding-top: calc(var(--nav-h) + 20px);
-            min-height: 100vh;
-        }
-
-        .admin-layout {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Sidebar Administrador */
-        .admin-sidebar {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
-            padding: 24px 16px;
-            height: calc(100vh - var(--nav-h) - 40px);
-            position: sticky;
-            top: calc(var(--nav-h) + 20px);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .admin-nav-item {
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            color: var(--gray-600);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .admin-nav-item:hover {
-            background: var(--blue-pale);
-            color: var(--blue-mid);
-        }
-
-        .admin-nav-item.active {
-            background: var(--blue-mid);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
-
-        /* Contenido Principal */
-        .admin-main {
-            padding-bottom: 60px;
-            position: relative;
-        }
-
-        .admin-view {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .admin-view.active-view {
-            display: block;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .admin-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--blue-deep);
-        }
-
-        .admin-subtitle {
-            color: var(--gray-500);
-            font-size: 0.95rem;
-        }
-
-        /* KPI Dashboard */
-        .admin-kpis {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .admin-kpi-card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .admin-kpi-title {
-            font-size: 0.85rem;
-            color: var(--gray-500);
-            font-weight: 600;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .admin-kpi-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--gray-800);
-            transition: color 0.3s ease;
-        }
-
-        .admin-kpi-value.flash {
-            color: var(--green);
-        }
-
-        .admin-kpi-trend {
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-top: 8px;
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .trend-up {
-            background: #d1fae5;
-            color: #059669;
-        }
-
-        .trend-down {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        /* Fake Chart Area */
-        .chart-container {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            border: 1px solid var(--gray-200);
-            margin-bottom: 32px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            height: 150px;
-            border-bottom: 2px solid var(--gray-100);
-            padding-bottom: 10px;
-        }
-
-        .bar-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            justify-content: flex-end;
-            height: 100%;
-        }
-
-        .bar {
-            width: 100%;
-            max-width: 40px;
-            background: var(--blue-mid);
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            transition: height 0.5s ease;
-        }
-
-        .bar-label {
-            font-size: 0.75rem;
-            color: var(--gray-500);
-            font-weight: 600;
-        }
-
-        .bar:hover::after {
-            content: attr(data-val);
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gray-800);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-        }
-
-        /* Tablas */
-        .admin-table-panel {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 0;
-            border: 1px solid var(--gray-200);
-            margin-bottom: 32px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .admin-table-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--gray-200);
-            background: var(--gray-50);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .admin-table-title {
-            font-weight: 700;
-            color: var(--blue-deep);
-            font-size: 1.1rem;
-        }
-
-        .action-row {
-            transition: all 0.3s ease;
-        }
-
-        .action-row.removed {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-
-        /* Toast de notificaciones */
-        .admin-toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--gray-800);
-            color: white;
-            padding: 16px 24px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            z-index: 3000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .admin-toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Generic Empty States for other views */
-        .empty-state {
-            padding: 60px 20px;
-            text-align: center;
-            color: var(--gray-500);
-        }
-
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        @media (max-width: 1024px) {
-            .admin-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-sidebar {
-                height: auto;
-                position: static;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .admin-nav-item {
-                flex: 1;
-                justify-content: center;
-            }
-        }
+        body { background: var(--gray-50); }
+        .admin-page { padding-top: calc(var(--nav-h) + 20px); min-height: 100vh; }
+        .admin-layout { display: grid; grid-template-columns: 250px 1fr; gap: 24px; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .admin-sidebar { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 24px 16px; height: calc(100vh - var(--nav-h) - 40px); position: sticky; top: calc(var(--nav-h) + 20px); display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .admin-nav-item { padding: 12px 16px; border-radius: var(--radius-md); color: var(--gray-600); font-weight: 500; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s ease; border: none; background: none; width: 100%; text-align: left; font-size: 0.95rem; }
+        .admin-nav-item:hover { background: var(--blue-pale); color: var(--blue-mid); }
+        .admin-nav-item.active { background: var(--blue-mid); color: var(--white); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+        .admin-main { padding-bottom: 60px; }
+        .admin-view { display: none; animation: fadeIn 0.3s ease; }
+        .admin-view.active-view { display: block; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .admin-title { font-size: 1.8rem; font-weight: 800; color: var(--blue-deep); }
+        .admin-subtitle { color: var(--gray-500); font-size: 0.95rem; }
+        .admin-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .admin-kpi-card { background: var(--white); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); }
+        .admin-kpi-title { font-size: 0.8rem; color: var(--gray-500); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .admin-kpi-value { font-size: 1.8rem; font-weight: 800; color: var(--gray-800); }
+        .admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--gray-200); }
+        .admin-table th { text-align: left; padding: 14px 16px; background: var(--gray-50); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); font-weight: 700; border-bottom: 1px solid var(--gray-200); }
+        .admin-table td { padding: 14px 16px; font-size: 0.9rem; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .badge-status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .badge-pendiente { background: #FEF3C7; color: #92400E; }
+        .badge-aprobado { background: #D1FAE5; color: #065F46; }
+        .badge-rechazado { background: #FEE2E2; color: #991B1B; }
+        .action-btn { padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; margin-right: 4px; }
+        .btn-approve { background: #D1FAE5; color: #065F46; }
+        .btn-approve:hover { background: #10B981; color: white; }
+        .btn-reject { background: #FEE2E2; color: #991B1B; }
+        .btn-reject:hover { background: #EF4444; color: white; }
+        .btn-delete { background: #FEE2E2; color: #991B1B; }
+        .btn-delete:hover { background: #DC2626; color: white; }
+        .btn-view { background: #DBEAFE; color: #1E40AF; }
+        .btn-view:hover { background: #3B82F6; color: white; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; } }
     </style>
 </head>
-
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar" style="background: var(--primary-blue); color: white; border: none;">
+    <nav class="navbar">
         <div class="container nav-content">
-            <a href="../index.html" class="logo" style="color: white;">
-                <i data-lucide="shield-check" style="color: var(--accent-orange);"></i>
-                Ayuda<span>Tercero</span> <span
-                    style="font-size: 0.7rem; background: var(--accent-orange); color: white; padding: 2px 8px; border-radius: 4px; margin-left: 10px;">ADMIN</span>
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
             </a>
             <div class="nav-links">
-                <a href="../index.html" style="color: white; opacity: 0.8;">Volver al Sitio</a>
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
             </div>
             <div class="nav-btns">
-                <span style="font-size: 0.9rem; margin-right: 15px; opacity: 0.8;">Hola, SuperAdmin</span>
-                <a href="login.html" class="btn btn-outline"
-                    style="border-color: white; color: white; padding: 8px 20px;">Cerrar Sesión</a>
+                <a href="notificaciones.html" id="nav-notif-link" style="position:relative;margin-right:12px;color:var(--primary-blue);font-size:1.3rem;cursor:pointer;">
+                    &#128276;
+                    <span id="notif-badge" style="display:none;position:absolute;top:-6px;right:-8px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:800;width:18px;height:18px;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="perfil.html" id="auth-btn" class="btn btn-outline btn-sm">Mi Perfil</a>
+                <a href="login.html" class="btn btn-ghost btn-sm" style="color:var(--red);background:#fee2e2;border:none;margin-left:10px;border-radius:8px;" onclick="App.logout(); return false;">Salir</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Container -->
     <section class="admin-page">
         <div class="admin-layout">
-
-            <!-- Sidebar -->
-            <aside class="admin-sidebar" id="adminSidebar">
-                <div class="admin-nav-item active" data-target="view-dashboard">
-                    <i data-lucide="bar-chart-3" size="18"></i> Dashboard
+            <aside class="admin-sidebar">
+                <div style="text-align:center;margin-bottom:20px;">
+                    <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue-mid),var(--green));color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;margin:0 auto 8px;">A</div>
+                    <div style="font-weight:700;color:var(--blue-deep);">Admin</div>
                 </div>
-                <div class="admin-nav-item" data-target="view-usuarios">
-                    <i data-lucide="users" size="18"></i> Gestión de Usuarios
-                </div>
-                <div class="admin-nav-item" data-target="view-casos">
-                    <i data-lucide="alert-circle" size="18"></i> Aprobación Casos <span class="badge badge-red"
-                        style="margin-left:auto;" id="badges-casos">2</span>
-                </div>
-                <div class="admin-nav-item" data-target="view-creditos">
-                    <i data-lucide="credit-card" size="18"></i> Préstamos Credifast <span class="badge badge-red"
-                        style="margin-left:auto;" id="badges-creditos">1</span>
-                </div>
-                <div class="admin-nav-item" data-target="view-marketplace">
-                    <i data-lucide="shopping-bag" size="18"></i> Revisión Marketplace
-                </div>
-                <div class="admin-nav-item" data-target="view-donaciones">
-                    <i data-lucide="heart" size="18"></i> Control Donaciones <span class="badge badge-amber"
-                        style="margin-left:auto;" id="badges-donaciones">0</span>
-                </div>
-                <div class="admin-nav-item" data-target="view-reportes">
-                    <i data-lucide="file-spreadsheet" size="18"></i> Reportes de Impacto
-                </div>
-                <div class="admin-nav-item" data-target="view-videos">
-                    <i data-lucide="video" size="18"></i> Gestión de Videos
-                </div>
+                <button class="admin-nav-item active" onclick="switchAdminTab('dashboard')">&#128202; Dashboard</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('vendors')">&#128100; Vendedores</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('products')">&#128722; Productos</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('donations')">&#10084; Donaciones</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('reports')">&#9888; Reportes</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('contacts')">&#128222; Contactos</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('notifications')">&#128276; Notificaciones</button>
             </aside>
 
-            <!-- Main Panel Container -->
             <main class="admin-main">
-
-                <!-- VIEW: DASHBOARD (Principal) -->
+                <!-- DASHBOARD -->
                 <div id="view-dashboard" class="admin-view active-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Panel de Control General</h1>
-                            <p class="admin-subtitle">Supervisión en tiempo real de actividades, donaciones y préstamos.
-                            </p>
-                        </div>
-                        <button class="btn btn-primary" onclick="window.print()"><i data-lucide="download"
-                                size="18"></i> Descargar
-                            Reporte</button>
+                        <div><h1 class="admin-title">Dashboard</h1><p class="admin-subtitle">Resumen general del sistema</p></div>
                     </div>
-
-                    <!-- KPIs -->
-                    <div class="admin-kpis">
-                        <div class="admin-kpi-card">
-                            <div class="admin-kpi-title">Usuarios Registrados</div>
-                            <div class="admin-kpi-value">12,543</div>
-                            <div class="admin-kpi-trend trend-up">↑ +5.2% esta semana</div>
-                        </div>
-                        <div class="admin-kpi-card">
-                            <div class="admin-kpi-title">Donaciones (Mes)</div>
-                            <div class="admin-kpi-value" id="kpi-donaciones">$45,800</div>
-                            <div class="admin-kpi-trend trend-up">↑ +12.4% este mes</div>
-                        </div>
-                        <div class="admin-kpi-card">
-                            <div class="admin-kpi-title">Casos Activos</div>
-                            <div class="admin-kpi-value" id="kpi-casos">184</div>
-                            <div class="admin-kpi-trend trend-up">↑ 12 nuevos</div>
-                        </div>
-                        <div class="admin-kpi-card">
-                            <div class="admin-kpi-title">Préstamos Otorgados</div>
-                            <div class="admin-kpi-value" id="kpi-creditos">$124,500</div>
-                            <div class="admin-kpi-trend trend-up">↑ 98% retorno</div>
-                        </div>
-                        <div class="admin-kpi-card">
-                            <div class="admin-kpi-title">Ventas Marketplace</div>
-                            <div class="admin-kpi-value">$15,200</div>
-                            <div class="admin-kpi-trend trend-down">↓ -1.5% esta semana</div>
-                        </div>
-                    </div>
-
-                    <!-- Chart Area -->
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3 class="admin-table-title">Dinámica de Plataforma (Últimos 6 meses)</h3>
-                            <select class="form-control"
-                                style="width: auto; padding: 4px 12px; border: 1px solid #E5E7EB; border-radius: 8px;">
-                                <option>Donaciones Recaudadas</option>
-                                <option>Nuevos Usuarios</option>
-                                <option>Créditos Desembolsados</option>
-                            </select>
-                        </div>
-                        <div class="chart-bars">
-                            <div class="bar-group">
-                                <div class="bar" style="height: 40%;" data-val="$24k"></div><span
-                                    class="bar-label">Oct</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="height: 55%;" data-val="$32k"></div><span
-                                    class="bar-label">Nov</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="height: 85%;" data-val="$48k"></div><span
-                                    class="bar-label">Dic</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="height: 45%;" data-val="$28k"></div><span
-                                    class="bar-label">Ene</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="height: 60%;" data-val="$35k"></div><span
-                                    class="bar-label">Feb</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="height: 80%; background: var(--green);" data-val="$45k"></div>
-                                <span class="bar-label">Mar (Actual)</span>
-                            </div>
-                        </div>
+                    <div class="admin-kpis" id="kpi-grid"></div>
+                    <div style="background:white;border-radius:var(--radius-lg);padding:24px;border:1px solid var(--gray-200);">
+                        <h3 style="margin-bottom:16px;color:var(--blue-deep);">Productos Más Vistos</h3>
+                        <div id="top-products"></div>
                     </div>
                 </div>
 
-                <!-- VIEW: GESTIÓN DE USUARIOS -->
-                <div id="view-usuarios" class="admin-view">
+                <!-- VENDORS -->
+                <div id="view-vendors" class="admin-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Gestión de Usuarios</h1>
-                            <p class="admin-subtitle">Administra los roles, vetos y estados de los perfiles.</p>
-                        </div>
-                        <div class="search-box"
-                            style="flex:unset; width: 300px; background:white; padding: 12px 16px; border-radius:12px; border:1px solid var(--gray-200); display: flex; align-items: center; gap: 10px;">
-                            <i data-lucide="search" size="18" style="color: var(--text-muted);"></i>
-                            <input type="text" id="userSearchInput" placeholder="Buscar por email o nombre..."
-                                style="border:none; outline:none; font-family:inherit; width:100%;"
-                                onkeyup="filterUsers()">
-                        </div>
+                        <div><h1 class="admin-title">Gestión de Vendedores</h1><p class="admin-subtitle">Solicitudes para convertirse en vendedor</p></div>
                     </div>
-
-                    <div class="admin-table-panel">
-                        <div class="admin-table-header">
-                            <h3 class="admin-table-title">Directorio Reciente</h3>
-                        </div>
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Usuario</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Rol</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Registro</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Estado</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTableBody">
-                                    <tr class="action-row" id="usr-1" style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px;"><strong>Carlos Valenzuela</strong><br><small
-                                                style="color:var(--gray-500);">carlos@email.com</small></td>
-                                        <td style="padding: 16px;"><span class="badge badge-blue">Donador</span></td>
-                                        <td style="padding: 16px;">Hoy</td>
-                                        <td style="padding: 16px;"><span class="badge badge-green">Activo</span></td>
-                                        <td style="padding: 16px; display: flex; gap: 8px;">
-                                            <button class="btn btn-primary btn-sm"
-                                                onclick="openEditUser('Carlos Valenzuela', 'Donador')">Editar</button>
-                                            <button class="btn btn-outline btn-sm"
-                                                onclick="banUser('usr-1', 'Carlos')">Suspender</button>
-                                        </td>
-                                    </tr>
-                                    <tr class="action-row" id="usr-2" style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px;"><strong>Laura Torres</strong><br><small
-                                                style="color:var(--gray-500);">laura@emprende.com</small></td>
-                                        <td style="padding: 16px;"><span class="badge badge-amber">Emprendedor</span>
-                                        </td>
-                                        <td style="padding: 16px;">Ayer</td>
-                                        <td style="padding: 16px;"><span class="badge badge-green">Activo</span></td>
-                                        <td style="padding: 16px; display: flex; gap: 8px;">
-                                            <button class="btn btn-primary btn-sm"
-                                                onclick="openEditUser('Laura Torres', 'Emprendedor')">Editar</button>
-                                            <button class="btn btn-outline btn-sm"
-                                                onclick="banUser('usr-2', 'Laura')">Suspender</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div id="vendors-content"></div>
                 </div>
 
-                <!-- VIEW: APROBACIÓN DE CASOS -->
-                <div id="view-casos" class="admin-view">
+                <!-- PRODUCTS -->
+                <div id="view-products" class="admin-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Casos Pendientes de Revisión</h1>
-                            <p class="admin-subtitle">Valida la veracidad de las solicitudes de ayuda urgente.</p>
-                        </div>
+                        <div><h1 class="admin-title">Gestión de Productos</h1><p class="admin-subtitle">Todos los productos del marketplace</p></div>
                     </div>
-                    <div class="admin-table-panel">
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;" id="tabla-casos">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">ID
-                                        </th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Solicitante</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Categoría</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Meta</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Evidencia</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-casos">
-                                </tbody>
-                            </table>
-                            <div id="no-casos"
-                                style="display:none; text-align:center; padding: 60px; color:var(--gray-500);">
-                                <i data-lucide="check-circle" size="48" style="margin-bottom: 16px; opacity: 0.3;"></i>
-                                <p>No hay casos pendientes actualmente. ✅</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="products-content"></div>
                 </div>
 
-                <!-- VIEW: PRÉSTAMOS CREDIFAST -->
-                <div id="view-creditos" class="admin-view">
+                <!-- DONATIONS -->
+                <div id="view-donations" class="admin-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Gestión Credifast</h1>
-                            <p class="admin-subtitle">Aprobación de microcréditos para la red.</p>
-                        </div>
+                        <div><h1 class="admin-title">Gestión de Donaciones</h1><p class="admin-subtitle">Solicitudes de donación recibidas</p></div>
                     </div>
-                    <div class="admin-table-panel">
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;"
-                                id="tabla-creditos">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">ID
-                                        </th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Usuario</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Tipo</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Score</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Monto</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-creditos">
-                                </tbody>
-                            </table>
-                            <div id="no-creditos"
-                                style="display:none; text-align:center; padding: 60px; color:var(--gray-500);">
-                                <i data-lucide="check-circle" size="48" style="margin-bottom: 16px; opacity: 0.3;"></i>
-                                <p>Todas las solicitudes de crédito han sido despachadas. ✅</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="donations-content"></div>
                 </div>
 
-                <!-- VIEW: MARKETPLACE -->
-                <div id="view-marketplace" class="admin-view">
+                <!-- REPORTS -->
+                <div id="view-reports" class="admin-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Auditoría de Marketplace</h1>
-                        </div>
+                        <div><h1 class="admin-title">Reportes</h1><p class="admin-subtitle">Reportes de productos enviados por usuarios</p></div>
                     </div>
-                    <div class="admin-table-panel">
-                        <div class="admin-table-header">
-                            <h3 class="admin-table-title">Artículos Pendientes de Revisión</h3>
-                        </div>
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;"
-                                id="tabla-marketplace">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">ID
-                                        </th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Vendedor</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Artículo</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Precio</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Estado</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-marketplace">
-                                    <tr class="action-row" id="MK-505" style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px; color: var(--gray-500);">#MK-505</td>
-                                        <td style="padding: 16px;"><strong>Artesanías S.A</strong></td>
-                                        <td style="padding: 16px;">Vasija Cerámica</td>
-                                        <td style="padding: 16px; font-weight: 700;">$35.00</td>
-                                        <td style="padding: 16px;"><span class="badge badge-amber">En Revisión</span>
-                                        </td>
-                                        <td style="padding: 16px; display: flex; gap: 8px;">
-                                            <button class="btn btn-primary btn-sm"
-                                                onclick="openEditPub('MK-505', 'Vasija Cerámica', 'Hermosa vasija hecha a mano', '$35.00', 'Marketplace')">Editar</button>
-                                            <button class="btn btn-outline btn-sm"
-                                                style="color: var(--red); border-color: var(--red);"
-                                                onclick="deletePub('MK-505', 'Vasija Cerámica')">Eliminar</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div id="no-marketplace"
-                                style="display:none; text-align:center; padding: 60px; color:var(--gray-500);">
-                                <i data-lucide="check-circle" size="48" style="margin-bottom: 16px; opacity: 0.3;"></i>
-                                <p>El Marketplace está completamente moderado y en orden. ✅</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="reports-content"></div>
                 </div>
 
-                <!-- VIEW: DONACIONES -->
-                <div id="view-donaciones" class="admin-view">
+                <!-- CONTACTS -->
+                <div id="view-contacts" class="admin-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Monitoreo de Donaciones</h1>
-                        </div>
+                        <div><h1 class="admin-title">Contactos</h1><p class="admin-subtitle">Registro de contactos por WhatsApp</p></div>
                     </div>
-                    <div class="admin-table-panel">
-                        <div class="admin-table-header">
-                            <h3 class="admin-table-title">Transacciones Recientes</h3>
-                        </div>
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;"
-                                id="tabla-donaciones">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">ID
-                                        </th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Donante</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Artículo</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Categoría</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Estado</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem;">
-                                            Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-donaciones">
-                                </tbody>
-                            </table>
-                            <div id="no-donaciones"
-                                style="display:none; text-align:center; padding: 60px; color:var(--gray-500);">
-                                <i data-lucide="check-circle" size="48" style="margin-bottom: 16px; opacity: 0.3;"></i>
-                                <p>No hay donaciones pendientes de revisión. ✅</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="contacts-content"></div>
                 </div>
 
-                <!-- VIEW: REPORTES DE IMPACTO -->
-                <div id="view-reportes" class="admin-view">
+                <!-- NOTIFICATIONS -->
+                <div id="view-notifications" class="admin-view">
                     <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Reportes de Impacto y Destino</h1>
-                            <p class="admin-subtitle">Auditoría detallada del origen y destino de cada recurso en la
-                                plataforma.</p>
-                        </div>
-                        <button class="btn btn-outline" onclick="window.print()">
-                            <i data-lucide="download"></i> Descargar Reporte (PDF/CSV)
-                        </button>
+                        <div><h1 class="admin-title">Notificaciones</h1><p class="admin-subtitle">Todas las notificaciones del sistema</p></div>
                     </div>
-
-                    <div class="admin-table-panel">
-                        <div class="admin-table-header">
-                            <h3 class="admin-table-title">Destino de los últimos Préstamos y Donaciones</h3>
-                        </div>
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Fecha</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Origen del Recurso</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Tipo de Impacto</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Beneficiario / Proyecto</th>
-                                        <th
-                                            style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
-                                            Monto / Valor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px;">15 Mar 2026</td>
-                                        <td style="padding: 16px;">Fondo Plataforma</td>
-                                        <td style="padding: 16px;"><span class="badge badge-blue">Préstamo
-                                                Credifast</span></td>
-                                        <td style="padding: 16px;">Taller de Costura Local</td>
-                                        <td style="padding: 16px; font-weight: 700;">$1,500.00</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px;">14 Mar 2026</td>
-                                        <td style="padding: 16px;">Donación Colectiva (120 donantes)</td>
-                                        <td style="padding: 16px;"><span class="badge badge-green">Ayuda Social
-                                                Directa</span></td>
-                                        <td style="padding: 16px;">Caso: Operación Pediátrica Lucas</td>
-                                        <td style="padding: 16px; font-weight: 700;">$7,500.00</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px;">12 Mar 2026</td>
-                                        <td style="padding: 16px;">Usuario: Carlos V.</td>
-                                        <td style="padding: 16px;"><span class="badge badge-amber">Artículo
-                                                Donado</span></td>
-                                        <td style="padding: 16px;">Familia Díaz (Lote de Abrigos)</td>
-                                        <td style="padding: 16px; color: var(--green); font-weight: 700;">GRATIS</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #F3F4F6;">
-                                        <td style="padding: 16px;">10 Mar 2026</td>
-                                        <td style="padding: 16px;">Compra Marketplace</td>
-                                        <td style="padding: 16px;"><span class="badge badge-gray">Ingreso
-                                                Emprendedor</span></td>
-                                        <td style="padding: 16px;">Cooperativa Tierra Verde (Café)</td>
-                                        <td style="padding: 16px; font-weight: 700;">$18.50</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div id="notifications-content"></div>
                 </div>
-
-                <!-- VIEW: GESTIÓN DE VIDEOS (NUEVO) -->
-                <div id="view-videos" class="admin-view">
-                    <div class="admin-header">
-                        <div>
-                            <h1 class="admin-title">Gestión de Contenido Multimedia</h1>
-                            <p class="admin-subtitle">Administra los testimonios y videos de impacto de la plataforma.</p>
-                        </div>
-                        <button class="btn btn-primary" onclick="openAddVideoModal()">
-                            <i data-lucide="plus-circle" size="18"></i> Agregar Nuevo Video
-                        </button>
-                    </div>
-
-                    <div class="admin-table-panel">
-                        <div class="admin-table-header">
-                            <h3 class="admin-table-title">Videos Publicados</h3>
-                        </div>
-                        <div style="overflow-x: auto; padding: 24px;">
-                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid var(--gray-50);">
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Miniatura</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Título / Historia</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Origen</th>
-                                        <th style="padding: 12px 16px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="videosTableBody">
-                                    <!-- Dinámico desde db_impacto -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
             </main>
         </div>
     </section>
 
-    <!-- Notificaciones Flotantes -->
-    <div class="admin-toast" id="systemToast">
-        <span id="toastIcon">⚠️</span>
-        <span id="toastMsg">Mensaje del sistema</span>
-    </div>
-
-    <!-- Visor de Documentos Simulado -->
-    <div class="modal-overlay" id="docViewer"
-        style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-        <div class="modal-content"
-            style="background: var(--white); width: 100%; max-width: 800px; border-radius: var(--radius-lg); padding: 40px; position: relative;">
-            <button
-                style="position: absolute; top: 25px; right: 25px; background:none; border:none; font-size: 1.5rem; cursor:pointer;"
-                onclick="document.getElementById('docViewer').style.display='none'"><i data-lucide="x"></i></button>
-            <h2 style="font-size: 1.75rem; color: var(--blue-deep); margin-bottom: 20px;">Visor de Evidencias</h2>
-            <div
-                style="background: var(--gray-50); height: 400px; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--gray-500); border: 2px dashed #E5E7EB;">
-                <i data-lucide="file-text" size="64" style="margin-bottom: 20px; opacity: 0.2;"></i>
-                <h3 style="margin-bottom: 8px; color: var(--primary-blue);">Documento Protegido</h3>
-                <p style="text-align: center; max-width: 450px; font-size: 0.95rem; line-height: 1.6;">Esta es una
-                    simulación del visor de evidencias. En un entorno real, aquí se mostrarían los archivos PDF o
-                    imágenes cargadas por los beneficiarios para validar sus casos.</p>
-            </div>
-            <div style="display: flex; gap: 15px; margin-top: 30px; justify-content: flex-end;">
-                <button class="btn btn-outline"
-                    onclick="document.getElementById('docViewer').style.display='none'">Cerrar Visor</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recibo Simulado -->
-    <div class="modal-overlay" id="receiptViewer"
-        style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-        <div class="modal-content"
-            style="background: var(--white); width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 40px; position: relative; text-align: center;">
-            <button
-                style="position: absolute; top: 25px; right: 25px; background:none; border:none; font-size: 1.5rem; cursor:pointer;"
-                onclick="document.getElementById('receiptViewer').style.display='none'"><i data-lucide="x"></i></button>
-            <i data-lucide="file-check" size="64" style="color: var(--green); margin-bottom: 20px;"></i>
-            <h2 style="font-size: 1.75rem; color: var(--blue-deep); margin-bottom: 16px;">Detalle de Transacción</h2>
-            <div
-                style="background: var(--gray-50); padding: 20px; border-radius: 12px; margin-bottom: 24px; text-align: left;">
-                <p style="margin-bottom: 10px; font-size: 0.9rem;"><strong style="color: var(--primary-blue);">ID
-                        Hash:</strong> <code id="receiptHash"
-                        style="background:#E5E7EB; padding:2px 6px; border-radius:4px;">TX-9981</code></p>
-                <p style="font-size: 0.9rem;"><strong style="color: var(--primary-blue);">Estado:</strong> <span
-                        style="color: var(--green); font-weight: 700;">Confirmada en Red</span></p>
-            </div>
-            <div style="display: flex; gap: 12px; justify-content: center;">
-                <button class="btn btn-primary" style="width: 100%;" onclick="window.print()"><i data-lucide="printer"
-                        size="18"></i> Imprimir PDF</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Editar Publicación Global -->
-    <div class="modal-overlay" id="editPubModal"
-        style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-        <div class="modal-content"
-            style="background: var(--white); width: 100%; max-width: 600px; border-radius: var(--radius-lg); padding: 40px; position: relative;">
-            <button
-                style="position: absolute; top: 25px; right: 25px; background:none; border:none; font-size: 1.5rem; cursor:pointer;"
-                onclick="document.getElementById('editPubModal').style.display='none'"><i data-lucide="x"></i></button>
-            <h2 style="font-size: 1.75rem; color: var(--blue-deep); margin-bottom: 10px;">Editar Publicación</h2>
-            <p id="editPubType" style="color: var(--accent-orange); font-weight: 700; margin-bottom: 20px;">Tipo:
-                Marketplace</p>
-
-            <form id="formEditPub" onsubmit="savePubChanges(event)">
-                <input type="hidden" id="editPubId">
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label">Título</label>
-                    <input type="text" id="editPubTitle" class="form-control"
-                        style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;">
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label">Descripción</label>
-                    <textarea id="editPubDesc" rows="4" class="form-control"
-                        style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; font-family: inherit;"></textarea>
-                </div>
-                <div style="margin-bottom: 30px;">
-                    <label class="form-label">Valor / Precio</label>
-                    <input type="text" id="editPubValue" class="form-control"
-                        style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;">
-                </div>
-
-                <div style="display: flex; gap: 15px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 2;">Guardar Cambios</button>
-                    <button type="button" class="btn btn-outline" style="flex: 1;"
-                        onclick="document.getElementById('editPubModal').style.display='none'">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="modal-overlay" id="editUserModal"
-        style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-        <div class="modal-content"
-            style="background: var(--white); width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 40px; position: relative;">
-            <button
-                style="position: absolute; top: 25px; right: 25px; background:none; border:none; font-size: 1.5rem; cursor:pointer;"
-                onclick="document.getElementById('editUserModal').style.display='none'"><i data-lucide="x"></i></button>
-            <h2 style="font-size: 1.75rem; color: var(--blue-deep); margin-bottom: 10px;">Gestión de Perfil</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px;">Editando permisos para:
-                <strong id="editUserName" style="color: var(--primary-blue);">Usuario</strong>
-            </p>
-
-            <form id="formEditUser" onsubmit="saveUserRoles(event)">
-                <div style="margin-bottom: 24px;">
-                    <label style="display:block; margin-bottom: 10px; font-weight: 700; color: var(--primary-blue);">Rol
-                        Principal</label>
-                    <select id="editUserRole" class="form-control"
-                        style="width: 100%; padding: 14px; border: 2px solid #F3F4F6; border-radius: 12px; background: #F9FAFB;">
-                        <option value="Donante">Donante Solidario</option>
-                        <option value="Emprendedor">Emprendedor (Marketplace)</option>
-                        <option value="Beneficiario">Beneficiario (Solicitante)</option>
-                        <option value="Admin">Administrador Moderador</option>
-                    </select>
-                </div>
-
-                <div
-                    style="margin-bottom: 30px; background: var(--gray-50); padding: 20px; border-radius: 16px; border: 1px solid #E5E7EB;">
-                    <h4 style="font-size: 1rem; margin-bottom: 15px; color: var(--primary-blue);">Permisos Específicos
-                    </h4>
-                    <label style="display:flex; align-items:center; gap:12px; margin-bottom:12px; cursor: pointer;">
-                        <input type="checkbox" checked
-                            style="width: 18px; height: 18px; accent-color: var(--primary-blue);"> Postear en
-                        Marketplace
-                    </label>
-                    <label style="display:flex; align-items:center; gap:12px; margin-bottom:12px; cursor: pointer;">
-                        <input type="checkbox" checked
-                            style="width: 18px; height: 18px; accent-color: var(--primary-blue);"> Solicitar
-                        Microcréditos
-                    </label>
-                    <label
-                        style="display:flex; align-items:center; gap:12px; color:var(--red); font-weight:700; cursor: pointer;">
-                        <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--red);"> Cuenta Bajo
-                        Investigación
-                    </label>
-                </div>
-
-                <div style="display: flex; gap: 15px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 2;">Actualizar Perfil</button>
-                    <button type="button" class="btn btn-outline" style="flex: 1;"
-                        onclick="document.getElementById('editUserModal').style.display='none'">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Base Database y Funciones de Datos (Simuladas) -->
-    <!-- Modal Agregar Video (NUEVO) -->
-    <div class="modal-overlay" id="addVideoModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-        <div class="modal-content" style="background: var(--white); width: 100%; max-width: 600px; border-radius: var(--radius-lg); padding: 40px; position: relative;">
-            <button style="position: absolute; top: 25px; right: 25px; background:none; border:none; font-size: 1.5rem; cursor:pointer;" onclick="closeAddVideoModal()"><i data-lucide="x"></i></button>
-            <h2 style="font-size: 1.75rem; color: var(--blue-deep); margin-bottom: 10px;">Subir Testimonio de Impacto</h2>
-            <p style="color: var(--text-muted); margin-bottom: 24px;">Agrega un nuevo video de éxito para inspirar a la comunidad.</p>
-
-            <form id="formAddVideo" onsubmit="saveNewVideo(event)">
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label" style="display:block; margin-bottom:8px; font-weight:700;">Nombre del Protagonista / Título</label>
-                    <input type="text" id="vTitle" class="form-control" placeholder="Ej. Juan Pérez - Nueva Oportunidad" required style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;">
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label" style="display:block; margin-bottom:8px; font-weight:700;">Ubicación</label>
-                    <input type="text" id="vLocation" class="form-control" placeholder="Ej. Monte Plata, R.D." required style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;">
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label" style="display:block; margin-bottom:8px; font-weight:700;">Breve Narrativa</label>
-                    <textarea id="vStory" rows="3" class="form-control" placeholder="Describe brevemente la historia de éxito..." required style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; font-family: inherit;"></textarea>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label" style="display:block; margin-bottom:8px; font-weight:700;">Tipo de Recurso</label>
-                    <select id="vSourceType" class="form-control" onchange="toggleVideoInputs()" style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;">
-                        <option value="link">Enlace Externo (YouTube/Vimeo/Drive)</option>
-                        <option value="local">Recurso Local</option>
-                    </select>
-                </div>
-                <div id="vLinkInput" style="margin-bottom: 30px;">
-                    <label class="form-label" style="display:block; margin-bottom:8px; font-weight:700;">Enlace del Video</label>
-                    <input type="url" id="vUrlInput" class="form-control" placeholder="https://youtube.com/..." style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;">
-                </div>
-                <div id="vLocalInput" style="margin-bottom: 30px; display: none;">
-                    <label class="form-label" style="display:block; margin-bottom:8px; font-weight:700;">Seleccionar Archivo Local</label>
-                    <div style="border: 2px dashed var(--gray-200); padding: 30px; border-radius: 12px; text-align: center; background: var(--gray-50); cursor: pointer;" onclick="document.getElementById('vLocalFile').click()">
-                        <i data-lucide="upload-cloud" size="32" style="color: var(--blue-mid); margin-bottom: 10px;"></i>
-                        <p style="font-size: 0.9rem; color: var(--gray-600);">Haz clic para seleccionar o arrastra un video de esta máquina</p>
-                        <input type="file" id="vLocalFile" style="display: none;" accept="video/*">
-                        <p id="vFileName" style="font-size: 0.8rem; color: var(--green); margin-top: 10px; font-weight: 700;"></p>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 15px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 2; justify-content: center;">Publicar Video de Impacto</button>
-                    <button type="button" class="btn btn-outline" style="flex: 1; justify-content: center;" onclick="closeAddVideoModal()">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Video Player Modal for Admin -->
-    <div class="modal-overlay" id="adminVideoPlayer" style="position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 6000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-        <div style="width: 90%; max-width: 900px; aspect-ratio: 16/9; position: relative;">
-            <button style="position: absolute; top: -40px; right: 0; color: white; background: none; border: none; font-size: 2rem; cursor: pointer;" onclick="closeAdminVideo()">&times;</button>
-            <iframe id="adminVideoIframe" width="100%" height="100%" src="" frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);"></iframe>
-        </div>
-    </div>
-
     <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/app.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAdminTables();
-            lucide.createIcons();
-            // Refrescar tablas automáticamente para simular tiempo real
-            setInterval(renderAdminTables, 5000);
-        });
+        lucide.createIcons();
 
-        function renderAdminTables() {
-            // Render Casos (Filtrar solo los que están en revisión)
-            const casos = DB.getCasos().filter(c => c.status === 'En Revisión' || c.status === 'Pendiente');
-            const tbCasos = document.querySelector('#tbody-casos');
-            if (tbCasos && casos.length > 0) {
-                tbCasos.innerHTML = casos.map(c => `
-                    <tr class="action-row" id="${c.id}" style="border-bottom: 1px solid #F3F4F6;">
-                        <td style="padding: 16px; color: var(--gray-500);">#${c.id}</td>
-                        <td style="padding: 16px;"><strong>${c.nombre || c.titulo}</strong></td>
-                        <td style="padding: 16px;">${c.categoria}</td>
-                        <td style="padding: 16px; font-weight: 700; color: var(--primary-blue);">${c.meta}</td>
-                        <td style="padding: 16px;"><button class="btn btn-link btn-sm" onclick="document.getElementById('docViewer').style.display='flex'"><i data-lucide="file-text" size="16"></i> Ver Pruebas</button></td>
-                        <td style="padding: 16px; display: flex; gap: 8px;">
-                            <button class="btn btn-sm" style="background: #D1FAE5; color: #065F46; border: none;" onclick="handleCase('${c.id}', true)">Aprobar</button>
-                            <button class="btn btn-sm" style="background: #FEE2E2; color: #991B1B; border: none;" onclick="handleCase('${c.id}', false)">Rechazar</button>
-                        </td>
-                    </tr>
-                `).join('');
-                document.getElementById('tabla-casos').style.display = 'table';
-                document.getElementById('no-casos').style.display = 'none';
-            } else if (tbCasos) {
-                document.getElementById('tabla-casos').style.display = 'none';
-                document.getElementById('no-casos').style.display = 'block';
+        // Auth check
+        (function() {
+            var user = DB.getCurrentUser();
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
             }
+        })();
 
-            // Render Créditos
-            const creditos = DB.getPrestamos().filter(p => p.status === 'Pendiente');
-            const tbCreditos = document.querySelector('#tbody-creditos');
-            if (tbCreditos && creditos.length > 0) {
-                tbCreditos.innerHTML = creditos.map(c => `
-                    <tr class="action-row" id="${c.id}" style="border-bottom: 1px solid #F3F4F6;">
-                        <td style="padding: 16px; color: var(--gray-500);">#${c.id}</td>
-                        <td style="padding: 16px;"><strong>${c.nombre}</strong></td>
-                        <td style="padding: 16px;">${c.tipo}</td>
-                        <td style="padding: 16px;"><span class="badge badge-green">${c.score}</span></td>
-                        <td style="padding: 16px; font-weight: 700; color: var(--primary-blue);">${c.monto}</td>
-                        <td style="padding: 16px; display: flex; gap: 8px;">
-                            <button class="btn btn-primary btn-sm" onclick="handleLoan('${c.id}', true)">Aprobar</button>
-                            <button class="btn btn-outline btn-sm" onclick="handleLoan('${c.id}', false)">Denegar</button>
-                        </td>
-                    </tr>
-                `).join('');
-                document.getElementById('tabla-creditos').style.display = 'table';
-                document.getElementById('no-creditos').style.display = 'none';
-            } else if (tbCreditos) {
-                document.getElementById('tabla-creditos').style.display = 'none';
-                document.getElementById('no-creditos').style.display = 'block';
-            }
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-nav-item').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.admin-view').forEach(function(v) { v.classList.remove('active-view'); });
+            document.getElementById('view-' + tabId).classList.add('active-view');
+            event.currentTarget.classList.add('active');
+            renderTab(tabId);
+        }
 
-            // Render Donaciones
-            const donItems = DB.getDonaciones().filter(d => d.status === 'En Revisión');
-            const tbDon = document.querySelector('#tbody-donaciones');
-            const badgeDon = document.getElementById('badges-donaciones');
-            if (badgeDon) badgeDon.innerText = donItems.length;
-
-            if (tbDon && donItems.length > 0) {
-                tbDon.innerHTML = donItems.map(d => `
-                    <tr class="action-row" id="${d.id}" style="border-bottom: 1px solid #F3F4F6;">
-                        <td style="padding: 16px; color: var(--gray-500);">#${d.id}</td>
-                        <td style="padding: 16px;"><strong>${d.nombre}</strong></td>
-                        <td style="padding: 16px;">${d.titulo}</td>
-                        <td style="padding: 16px;">${d.categoria}</td>
-                        <td style="padding: 16px;"><span class="badge badge-amber">${d.status}</span></td>
-                        <td style="padding: 16px; display: flex; gap: 8px;">
-                            <button class="btn btn-primary btn-sm" onclick="handleDonacion('${d.id}', true)">Aprobar</button>
-                            <button class="btn btn-outline btn-sm" style="color: var(--red); border-color: var(--red);" onclick="handleDonacion('${d.id}', false)">Bloquear</button>
-                            <button class="btn btn-sm" onclick="contactDonor('${d.id}', '${d.celular}', '${d.titulo}')" style="background: #25D366; color: white; border: none; padding: 5px 10px;">
-                                <i data-lucide="message-circle" size="16"></i> Notify
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-                document.getElementById('tabla-donaciones').style.display = 'table';
-                document.getElementById('no-donaciones').style.display = 'none';
-            } else if (tbDon) {
-                document.getElementById('tabla-donaciones').style.display = 'none';
-                document.getElementById('no-donaciones').style.display = 'block';
-            }
-
-            // Re-render Lucide icons for dynamic content
-            lucide.createIcons();
-
-            // Render Marketplace 
-            const mkpItems = DB.getMarketplace().filter(m => m.status === 'En Revisión');
-            const tbMkp = document.querySelector('#tbody-marketplace');
-            if (tbMkp && mkpItems.length > 0) {
-                tbMkp.innerHTML = mkpItems.map(m => `
-                    <tr class="action-row" id="${m.id}" style="border-bottom: 1px solid #F3F4F6;">
-                        <td style="padding: 16px; color: var(--gray-500);">#${m.id}</td>
-                        <td style="padding: 16px;"><strong>${m.nombre}</strong></td>
-                        <td style="padding: 16px;">${m.titulo}</td>
-                        <td style="padding: 16px; font-weight: 700;">${m.precio}</td>
-                        <td style="padding: 16px;"><span class="badge badge-amber">${m.status}</span></td>
-                        <td style="padding: 16px; display: flex; gap: 8px;">
-                            <button class="btn btn-primary btn-sm" onclick="handleMarketplace('${m.id}', true)">Validar</button>
-                            <button class="btn btn-outline btn-sm" style="color: var(--red); border-color: var(--red);" onclick="handleMarketplace('${m.id}', false)">Bloquear</button>
-                        </td>
-                    </tr>
-                `).join('');
-                document.getElementById('tabla-marketplace').style.display = 'table';
-                document.getElementById('no-marketplace').style.display = 'none';
-            } else if (tbMkp) {
-                document.getElementById('tabla-marketplace').style.display = 'none';
-                document.getElementById('no-marketplace').style.display = 'block';
-            }
-
-            // Render Videos (Impacto)
-            const videos = DB.getImpacto();
-            const tbVideos = document.querySelector('#videosTableBody');
-            if (tbVideos) {
-                tbVideos.innerHTML = videos.map(v => `
-                    <tr class="action-row" style="border-bottom: 1px solid #F3F4F6;">
-                        <td style="padding: 16px;">
-                            <img src="${v.thumb}" style="width: 80px; height: 50px; border-radius: 8px; object-fit: cover;">
-                        </td>
-                        <td style="padding: 16px;">
-                            <strong>${v.nombre}</strong><br>
-                            <small style="color:var(--gray-500);">${v.historia.substring(0, 50)}...</small>
-                        </td>
-                        <td style="padding: 16px;">
-                            <span class="badge ${v.origen === 'Recurso Local' ? 'badge-amber' : 'badge-blue'}">${v.origen || 'Externo'}</span>
-                        </td>
-                        <td style="padding: 16px;">
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-primary btn-sm" onclick="playAdminVideo('${v.videoUrl}')">
-                                    <i data-lucide="play" size="14"></i> Ver ahora
-                                </button>
-                                <button class="btn btn-outline btn-sm" style="color: var(--red); border-color: var(--red);" onclick="deleteVideo('${v.id}')">
-                                    <i data-lucide="trash-2" size="14"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-                lucide.createIcons();
+        function renderTab(tabId) {
+            switch(tabId) {
+                case 'dashboard': renderDashboard(); break;
+                case 'vendors': renderVendors(); break;
+                case 'products': renderProducts(); break;
+                case 'donations': renderDonations(); break;
+                case 'reports': renderReports(); break;
+                case 'contacts': renderContacts(); break;
+                case 'notifications': renderNotifications(); break;
             }
         }
 
-        // Lógica de Navegación de Pestañas
-        const navItems = document.querySelectorAll('.admin-nav-item');
-        const views = document.querySelectorAll('.admin-view');
-
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                views.forEach(view => view.classList.remove('active-view'));
-
-                item.classList.add('active');
-                const targetId = item.getAttribute('data-target');
-                if (targetId) {
-                    document.getElementById(targetId).classList.add('active-view');
-                }
+        // ── DASHBOARD ──
+        function renderDashboard() {
+            var stats = DB.getSystemStats();
+            var kpiGrid = document.getElementById('kpi-grid');
+            kpiGrid.innerHTML = '';
+            var kpis = [
+                { title: 'Usuarios', value: stats.totalUsers, color: 'var(--blue-mid)' },
+                { title: 'Vendedores', value: stats.totalVendors, color: 'var(--green)' },
+                { title: 'Productos', value: stats.totalProducts, color: 'var(--amber)' },
+                { title: 'Donaciones', value: stats.totalDonations, color: 'var(--red)' },
+                { title: 'Reportes', value: stats.totalReports, color: '#8B5CF6' },
+                { title: 'Contactos', value: stats.totalContacts, color: '#06B6D4' }
+            ];
+            kpis.forEach(function(k) {
+                kpiGrid.innerHTML += '<div class="admin-kpi-card"><div class="admin-kpi-title">' + k.title + '</div><div class="admin-kpi-value" style="color:' + k.color + ';">' + k.value + '</div></div>';
             });
-        });
 
-        // Sistema de Notificaciones (Toasts)
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('systemToast');
-            const toastMsg = document.getElementById('toastMsg');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastMsg.innerText = message;
-            toastIcon.innerText = type === 'success' ? '✅' : (type === 'error' ? '🚫' : '⚠️');
-            toast.style.background = type === 'success' ? '#059669' : (type === 'error' ? '#dc2626' : '#1f2937');
-
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3500);
-        }
-
-        // Simulación de Acciones
-        function banUser(rowId, name) {
-            if (confirm(`¿Suspender permanentemente a ${name}?`)) {
-                const row = document.getElementById(rowId);
-                row.classList.add('removed');
-                setTimeout(() => { row.remove(); showToast(`Cuenta de ${name} suspendida.`); }, 300);
-            }
-        }
-
-        function handleCase(id, isApprove) {
-            const row = document.getElementById(id);
-            if (row) row.classList.add('removed');
-
-            setTimeout(() => {
-                if (row) row.remove();
-
-                const status = isApprove ? 'Aprobado' : 'Rechazado';
-                DB.updateCasoStatus(id, status);
-
-                if (isApprove) {
-                    showToast(`Caso ${id} aprobado y publicado exitosamente.`);
-                } else {
-                    showToast(`Caso ${id} rechazado y notificado.`, 'error');
-                }
-                checkEmptyTables();
-                renderAdminTables(); // Recarga para actualizar badges si fuera necesario
-            }, 300);
-        }
-
-        function handleLoan(id, isApprove) {
-            const row = document.getElementById(id);
-            if (row) row.classList.add('removed');
-
-            setTimeout(() => {
-                if (row) row.remove();
-
-                const status = isApprove ? 'Aprobado' : 'Rechazado';
-                DB.updatePrestamoStatus(id, status);
-
-                if (isApprove) {
-                    showToast(`Microcrédito ${id} aprobado y enviado a tesorería.`);
-                } else {
-                    showToast(`Solicitud ${id} rechazada.`, 'error');
-                }
-                checkEmptyTables();
-                renderAdminTables();
-            }, 300);
-        }
-
-        function handleMarketplace(id, isApprove) {
-            const row = document.getElementById(id);
-            if (row) row.classList.add('removed');
-
-            setTimeout(() => {
-                if (row) row.remove();
-
-                const status = isApprove ? 'Aprobado' : 'Rechazado';
-                DB.updateMarketplaceStatus(id, status);
-
-                const itemData = DB.getMarketplace().find(m => m.id === id);
-                const nombreItem = itemData ? itemData.titulo : "Tu publicación";
-                const whats = itemData ? itemData.celular : "8091234567";
-
-                if (isApprove) {
-                    showToast(`Artículo ${id} validado para el Marketplace.`);
-                    if (confirm("¿Deseas enviar notificación de aprobación por WhatsApp al vendedor?")) {
-                        contactSeller(id, whats, nombreItem, "Aprobado");
-                    }
-                } else {
-                    showToast(`Artículo ${id} bloqueado por incumplimiento.`, 'error');
-                    if (confirm("¿Deseas notificar los motivos del rechazo por WhatsApp?")) {
-                        contactSeller(id, whats, nombreItem, "Rechazado");
-                    }
-                }
-                checkEmptyTables();
-                renderAdminTables();
-            }, 300);
-        }
-
-        function handleDonacion(id, isApprove) {
-            const row = document.getElementById(id);
-            if (row) row.classList.add('removed');
-
-            setTimeout(() => {
-                if (row) row.remove();
-
-                const status = isApprove ? 'Aprobado' : 'Rechazado';
-                DB.updateDonacionStatus(id, status);
-
-                const itemData = DB.getDonaciones().find(d => d.id === id);
-                const nombreItem = itemData ? itemData.titulo : "Tu donación";
-                const whats = itemData ? itemData.celular : "8095550000";
-
-                if (isApprove) {
-                    showToast(`Donación ${id} aprobada y ahora es pública.`);
-                    if (confirm("¿Deseas notificar la aprobación por WhatsApp al donante?")) {
-                        contactDonor(id, whats, nombreItem, "Aprobado");
-                    }
-                } else {
-                    showToast(`Donación ${id} rechazada.`, 'error');
-                    if (confirm("¿Deseas notificar el rechazo por WhatsApp?")) {
-                        contactDonor(id, whats, nombreItem, "Rechazado");
-                    }
-                }
-                checkEmptyTables();
-                renderAdminTables();
-            }, 300);
-        }
-
-        function contactSeller(id, phone, title, status) {
-            let message = "";
-            if (status === "Aprobado") {
-                message = `Hola, soy el Administrador de Ayuda a un Tercero. ¡Buenas noticias! Tu artículo "${title}" (ID: ${id}) ha sido aprobado y ya es visible en el Marketplace. ¡Éxito con tu venta!`;
-            } else if (status === "Rechazado") {
-                message = `Hola, soy el Administrador de Ayuda a un Tercero. Tu artículo "${title}" (ID: ${id}) no ha pasado la moderación. Por favor revisa nuestras políticas de seguridad y calidad.`;
-            } else {
-                message = `Hola, te contacto desde Ayuda a un Tercero sobre tu artículo "${title}" (ID: ${id})...`;
-            }
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        function contactDonor(id, phone, title, status) {
-            let message = "";
-            if (status === "Aprobado") {
-                message = `Hola, soy el Administrador de Ayuda a un Tercero. Tu donación de "${title}" (ID: ${id}) ha sido aprobada y ya está disponible para quien lo necesite. ¡Gracias por tu gran corazón!`;
-            } else if (status === "Rechazado") {
-                message = `Hola, soy el Administrador de Ayuda a un Tercero. Lamentablemente tu donación de "${title}" (ID: ${id}) no cumple con nuestras pautas actuales.`;
-            } else {
-                message = `Hola, te contacto sobre tu donación "${title}"...`;
-            }
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        function checkEmptyTables() {
-            // Recalcula si quedan filas en las tablas
-            document.querySelectorAll('tbody').forEach(tbody => {
-                const table = tbody.closest('table');
-                const emptyState = table.nextElementSibling;
-                if (tbody.children.length === 0 && emptyState && emptyState.classList.contains('empty-state') || emptyState && emptyState.id.startsWith('no-')) {
-                    table.style.display = 'none';
-                    emptyState.style.display = 'block';
-                }
+            // Top viewed products
+            var prods = DB.getProductos().sort(function(a, b) { return (b.views || 0) - (a.views || 0); }).slice(0, 5);
+            var topEl = document.getElementById('top-products');
+            if (prods.length === 0) { topEl.innerHTML = '<p style="color:var(--gray-400);">No hay productos.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Producto</th><th>Vendedor</th><th>Vistas</th><th>Estado</th></tr></thead><tbody>';
+            prods.forEach(function(p) {
+                html += '<tr><td>' + p.name + '</td><td>' + (p.vendorName || '-') + '</td><td>' + (p.views || 0) + '</td><td><span class="badge-status badge-' + p.status + '">' + p.status + '</span></td></tr>';
             });
+            html += '</tbody></table>';
+            topEl.innerHTML = html;
         }
 
-        function filterUsers() {
-            const filter = document.getElementById("userSearchInput").value.toUpperCase();
-            const rows = document.querySelectorAll("#usersTableBody tr");
-            rows.forEach(row => {
-                const name = row.querySelector("td").innerText.toUpperCase();
-                row.style.display = name.includes(filter) ? "" : "none";
+        // ── VENDORS ──
+        function renderVendors() {
+            var requests = DB.getVendorRequests();
+            var container = document.getElementById('vendors-content');
+            if (requests.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay solicitudes de vendedores.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Usuario</th><th>Email</th><th>WhatsApp</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>';
+            requests.forEach(function(r) {
+                html += '<tr><td>' + r.userName + '</td><td>' + r.userEmail + '</td><td>' + r.whatsapp + '</td><td><span class="badge-status badge-' + r.status + '">' + r.status + '</span></td><td>';
+                if (r.status === 'pendiente') {
+                    html += '<button class="action-btn btn-approve" onclick="approveVendor(\'' + r.id + '\')">Aprobar</button>';
+                    html += '<button class="action-btn btn-reject" onclick="rejectVendor(\'' + r.id + '\')">Rechazar</button>';
+                }
+                html += '</td></tr>';
             });
+            html += '</tbody></table>';
+            container.innerHTML = html;
         }
 
-        function showReceipt(txId) {
-            document.getElementById('receiptHash').innerText = txId;
-            document.getElementById('receiptViewer').style.display = 'flex';
+        function approveVendor(id) {
+            DB.approveVendor(id);
+            App.showToast('Vendedor aprobado', 'success');
+            renderVendors();
         }
 
-        function openEditUser(name, currentRole) {
-            document.getElementById('editUserName').innerText = name;
-            document.getElementById('editUserModal').style.display = 'flex';
+        function rejectVendor(id) {
+            DB.rejectVendor(id);
+            App.showToast('Vendedor rechazado', 'info');
+            renderVendors();
         }
 
-        function saveUserRoles(e) {
-            e.preventDefault();
-            document.getElementById('editUserModal').style.display = 'none';
-            showToast('Perfil actualizado correctamente.');
-        }
-
-        // --- GESTIÓN DE PUBLICACIONES GLOBAL ---
-        function openEditPub(id, title, desc, val, type) {
-            document.getElementById('editPubId').value = id;
-            document.getElementById('editPubTitle').value = title;
-            document.getElementById('editPubDesc').value = desc;
-            document.getElementById('editPubValue').value = val;
-            document.getElementById('editPubType').innerText = `Tipo: ${type}`;
-            document.getElementById('editPubModal').style.display = 'flex';
-        }
-
-        function savePubChanges(e) {
-            e.preventDefault();
-            const id = document.getElementById('editPubId').value;
-            const title = document.getElementById('editPubTitle').value;
-            showToast(`Publicación ${id} ("${title}") actualizada con éxito.`);
-            document.getElementById('editPubModal').style.display = 'none';
-        }
-
-        function deletePub(id, title) {
-            if (confirm(`¿Estás seguro de eliminar permanentemente la publicación "${title}" (ID: ${id})? Esta acción no se puede deshacer.`)) {
-                const row = document.getElementById(id);
-                if (row) {
-                    row.classList.add('removed');
-                    setTimeout(() => {
-                        row.remove();
-                        showToast('Publicación eliminada correctamente.');
-                    }, 300);
+        // ── PRODUCTS ──
+        function renderProducts() {
+            var products = DB.getProductos();
+            var container = document.getElementById('products-content');
+            if (products.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay productos.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Producto</th><th>Vendedor</th><th>Precio</th><th>Categoría</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>';
+            products.forEach(function(p) {
+                html += '<tr><td>' + p.name + '</td><td>' + (p.vendorName || '-') + '</td><td>RD$' + Number(p.price).toLocaleString() + '</td><td>' + p.category + '</td><td><span class="badge-status badge-' + p.status + '">' + p.status + '</span></td><td>';
+                if (p.status === 'pendiente') {
+                    html += '<button class="action-btn btn-approve" onclick="approveProduct(\'' + p.id + '\')">Aprobar</button>';
+                    html += '<button class="action-btn btn-reject" onclick="rejectProduct(\'' + p.id + '\')">Rechazar</button>';
                 }
-            }
+                html += '<button class="action-btn btn-delete" onclick="deleteProduct(\'' + p.id + '\')">Eliminar</button>';
+                html += '</td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
         }
 
-        // --- GESTIÓN DE VIDEOS (NUEVO) ---
-        function openAddVideoModal() {
-            document.getElementById('addVideoModal').style.display = 'flex';
-        }
+        function approveProduct(id) { DB.updateProduct(id, { status: 'aprobado' }); App.showToast('Producto aprobado', 'success'); renderProducts(); }
+        function rejectProduct(id) { DB.updateProduct(id, { status: 'rechazado' }); App.showToast('Producto rechazado', 'info'); renderProducts(); }
+        function deleteProduct(id) { if (confirm('¿Eliminar este producto?')) { DB.deleteProduct(id); App.showToast('Producto eliminado', 'info'); renderProducts(); } }
 
-        function closeAddVideoModal() {
-            document.getElementById('addVideoModal').style.display = 'none';
-        }
-
-        function toggleVideoInputs() {
-            const type = document.getElementById('vSourceType').value;
-            document.getElementById('vLinkInput').style.display = type === 'link' ? 'block' : 'none';
-            document.getElementById('vLocalInput').style.display = type === 'local' ? 'block' : 'none';
-        }
-
-        function saveNewVideo(e) {
-            e.preventDefault();
-            const type = document.getElementById('vSourceType').value;
-            const nova = {
-                id: 'VID-' + Date.now(),
-                nombre: document.getElementById('vTitle').value,
-                ubicacion: document.getElementById('vLocation').value,
-                historia: document.getElementById('vStory').value,
-                videoUrl: type === 'link' ? document.getElementById('vUrlInput').value : 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                thumb: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800",
-                votos: 0,
-                fecha: new Date().toISOString().split('T')[0],
-                origen: type === 'link' ? 'YouTube/External' : 'Recurso Local'
-            };
-            
-            DB.saveImpacto(nova);
-            showToast('Nuevo testimonio de impacto publicado con éxito.');
-            closeAddVideoModal();
-            e.target.reset();
-            renderAdminTables();
-        }
-
-        function playAdminVideo(url) {
-            if (!url) return;
-            let embedUrl = url;
-            try {
-                if (url.includes('youtube.com/watch?v=')) {
-                    const vid = url.split('v=')[1].split('&')[0];
-                    embedUrl = `https://www.youtube.com/embed/${vid}`;
-                } else if (url.includes('youtu.be/')) {
-                    const vid = url.split('youtu.be/')[1].split('?')[0];
-                    embedUrl = `https://www.youtube.com/embed/${vid}`;
-                } else if (url.includes('youtube.com/shorts/')) {
-                    const vid = url.split('shorts/')[1].split('?')[0];
-                    embedUrl = `https://www.youtube.com/embed/${vid}`;
+        // ── DONATIONS ──
+        function renderDonations() {
+            var donations = DB.getDonacionesV2();
+            var container = document.getElementById('donations-content');
+            if (donations.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay solicitudes de donación.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Nombre</th><th>Correo</th><th>Edad</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>';
+            donations.forEach(function(d) {
+                html += '<tr><td>' + d.nombre + ' ' + d.apellido + '</td><td>' + d.correo + '</td><td>' + d.edad + '</td><td style="max-width:200px;">' + (d.motivo || '').substring(0, 60) + '...</td><td><span class="badge-status badge-' + d.status + '">' + d.status + '</span></td><td>';
+                if (d.status === 'pendiente') {
+                    html += '<button class="action-btn btn-approve" onclick="approveDonation(\'' + d.id + '\')">Aprobar</button>';
+                    html += '<button class="action-btn btn-reject" onclick="rejectDonation(\'' + d.id + '\')">Rechazar</button>';
                 }
-            } catch (e) { console.error("URL Error:", e); }
-
-            document.getElementById('adminVideoIframe').src = embedUrl;
-            document.getElementById('adminVideoPlayer').style.display = 'flex';
+                html += '</td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
         }
 
-        function closeAdminVideo() {
-            document.getElementById('adminVideoPlayer').style.display = 'none';
-            document.getElementById('adminVideoIframe').src = '';
+        function approveDonation(id) { DB.updateDonation(id, { status: 'aprobado' }); App.showToast('Donación aprobada', 'success'); renderDonations(); }
+        function rejectDonation(id) { DB.updateDonation(id, { status: 'rechazado' }); App.showToast('Donación rechazada', 'info'); renderDonations(); }
+
+        // ── REPORTS ──
+        function renderReports() {
+            var reports = DB.getReports();
+            var container = document.getElementById('reports-content');
+            if (reports.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay reportes.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Producto</th><th>Razón</th><th>Reportado por</th><th>Respuesta</th><th>Acciones</th></tr></thead><tbody>';
+            reports.forEach(function(r) {
+                html += '<tr><td>' + (r.productName || '-') + '</td><td>' + r.reason + '</td><td>' + (r.reporterName || 'Anónimo') + '</td>';
+                html += '<td>' + (r.response || '<em style="color:var(--gray-400);">Sin respuesta</em>') + '</td><td>';
+                html += '<button class="action-btn btn-view" onclick="respondReport(\'' + r.id + '\')">Responder</button>';
+                html += '<button class="action-btn btn-delete" onclick="deleteReport(\'' + r.id + '\')">Eliminar</button>';
+                html += '</td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
         }
 
-        function deleteVideo(id) {
-            if(confirm('¿Seguro que deseas eliminar este video?')) {
-                DB.deleteImpacto(id);
-                showToast('Video eliminado correctamente.');
-                renderAdminTables();
-            }
+        function respondReport(id) {
+            var response = prompt('Escribe tu respuesta al reporte:');
+            if (response) { DB.updateReport(id, { response: response }); App.showToast('Respuesta guardada', 'success'); renderReports(); }
         }
+        function deleteReport(id) { if (confirm('¿Eliminar este reporte?')) { DB.deleteReport(id); App.showToast('Reporte eliminado', 'info'); renderReports(); } }
+
+        // ── CONTACTS ──
+        function renderContacts() {
+            var contacts = DB.getContacts();
+            var container = document.getElementById('contacts-content');
+            if (contacts.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay contactos registrados.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Producto</th><th>Vendedor</th><th>Comprador</th><th>Fecha</th></tr></thead><tbody>';
+            contacts.forEach(function(c) {
+                var date = new Date(c.createdAt);
+                html += '<tr><td>' + (c.productName || '-') + '</td><td>' + (c.vendorName || '-') + '</td><td>' + (c.buyerName || '-') + '</td><td>' + date.toLocaleDateString('es-ES') + '</td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // ── NOTIFICATIONS ──
+        function renderNotifications() {
+            var notifs = DB.getNotifications('admin').sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+            var container = document.getElementById('notifications-content');
+            if (notifs.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay notificaciones.</p>'; return; }
+            var html = '<div style="max-height:500px;overflow-y:auto;">';
+            notifs.forEach(function(n) {
+                var date = new Date(n.createdAt);
+                html += '<div style="padding:16px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center;' + (n.read ? '' : 'background:#FFF8F0;') + '">';
+                html += '<div><div style="font-weight:' + (n.read ? '400' : '600') + ';color:var(--gray-700);font-size:0.95rem;">' + n.message + '</div>';
+                html += '<div style="font-size:0.8rem;color:var(--gray-400);margin-top:4px;">' + date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+                if (!n.read) html += '<button class="action-btn btn-view" onclick="DB.markNotifRead(\'' + n.id + '\');renderNotifications();App.updateNotifBadge();">Marcar leída</button>';
+                html += '</div>';
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Initial render
+        renderDashboard();
     </script>
     <script src="../assets/js/accessibility.js"></script>
 </body>
-
 </html>
-

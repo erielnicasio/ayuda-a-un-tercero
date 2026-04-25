@@ -502,7 +502,12 @@
                 <a href="impacto.html">Impacto</a>
             </div>
             <div class="nav-btns">
-                <a href="perfil.html" class="btn btn-outline btn-sm">Mi Gestión</a>
+                <a href="notificaciones.html" id="nav-notif-link" style="display:none;position:relative;margin-right:12px;color:var(--primary-blue);font-size:1.3rem;cursor:pointer;">
+                    &#128276;
+                    <span id="notif-badge" style="display:none;position:absolute;top:-6px;right:-8px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:800;width:18px;height:18px;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="login.html" id="auth-btn" class="btn btn-outline btn-sm">Iniciar Sesión</a>
+                <a href="admin.html" id="nav-admin-link" class="btn btn-primary btn-sm" style="display:none;margin-left:10px">Admin</a>
             </div>
         </div>
     </nav>
@@ -1869,8 +1874,72 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
         }
     </script>
     <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // ── DONATION REQUEST SYSTEM ──
+        (function() {
+            // Add "Solicitar" button and donation list after existing content
+            var container = document.querySelector('.donaciones-layout') || document.querySelector('.container');
+            if (!container) return;
+
+            // Create donation request section
+            var section = document.createElement('div');
+            section.style.cssText = 'grid-column:1/-1;margin-top:40px;';
+            section.innerHTML = '<div style="background:white;border-radius:24px;padding:32px;border:1px solid var(--gray-200);box-shadow:var(--shadow-sm);margin-bottom:32px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;"><div><h2 style="font-size:1.5rem;color:var(--primary-blue);font-weight:800;">Solicitudes de Donación</h2><p style="color:var(--gray-500);font-size:0.95rem;">Solicita ayuda o explora las solicitudes aprobadas.</p></div><button class="btn btn--secondary btn--sm btn--full mt-16" onclick="openDonationForm()" style="background:var(--accent-orange);color:white;border:none;padding:12px 24px;border-radius:12px;font-weight:700;cursor:pointer;">Solicitar</button></div><div id="approved-donations" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;"></div></div>';
+            container.appendChild(section);
+
+            // Render approved donations from DB
+            renderApprovedDonations();
+        })();
+
+        function renderApprovedDonations() {
+            var list = document.getElementById('approved-donations');
+            if (!list) return;
+            var donations = DB.getDonacionesV2().filter(function(d) { return d.status === 'aprobado'; });
+            if (donations.length === 0) {
+                list.innerHTML = '<p style="color:var(--gray-400);text-align:center;padding:40px;">No hay solicitudes aprobadas aún.</p>';
+                return;
+            }
+            var html = '';
+            donations.forEach(function(d) {
+                html += '<div style="background:var(--gray-50);border-radius:16px;padding:20px;border:1px solid var(--gray-200);">';
+                html += '<h4 style="color:var(--primary-blue);margin-bottom:8px;">' + d.nombre + ' ' + d.apellido + '</h4>';
+                html += '<p style="font-size:0.9rem;color:var(--gray-600);line-height:1.5;margin-bottom:8px;">' + d.motivo + '</p>';
+                html += '<div style="font-size:0.8rem;color:var(--gray-400);display:flex;gap:12px;"><span>Edad: ' + d.edad + '</span><span>Correo: ' + d.correo + '</span></div>';
+                html += '</div>';
+            });
+            list.innerHTML = html;
+        }
+
+        function openDonationForm() {
+            var modal = document.getElementById('donationFormModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'donationFormModal';
+                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+                modal.innerHTML = '<div style="max-width:500px;width:90%;background:white;border-radius:24px;padding:32px;position:relative;max-height:90vh;overflow-y:auto;"><button onclick="document.getElementById(\'donationFormModal\').style.display=\'none\'" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button><h3 style="margin-bottom:16px;color:var(--primary-blue);font-size:1.3rem;">Solicitar Donación</h3><form onsubmit="submitDonationRequest(event)"><div style="margin-bottom:12px;"><label style="display:block;margin-bottom:4px;font-weight:600;font-size:0.9rem;">Nombre *</label><input type="text" id="don-nombre" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;"></div><div style="margin-bottom:12px;"><label style="display:block;margin-bottom:4px;font-weight:600;font-size:0.9rem;">Apellido *</label><input type="text" id="don-apellido" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;"></div><div style="margin-bottom:12px;"><label style="display:block;margin-bottom:4px;font-weight:600;font-size:0.9rem;">Edad *</label><input type="number" id="don-edad" required min="1" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;"></div><div style="margin-bottom:12px;"><label style="display:block;margin-bottom:4px;font-weight:600;font-size:0.9rem;">Número *</label><input type="tel" id="don-numero" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;"></div><div style="margin-bottom:12px;"><label style="display:block;margin-bottom:4px;font-weight:600;font-size:0.9rem;">Correo *</label><input type="email" id="don-correo" required style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;"></div><div style="margin-bottom:16px;"><label style="display:block;margin-bottom:4px;font-weight:600;font-size:0.9rem;">Motivo *</label><textarea id="don-motivo" required rows="3" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;"></textarea></div><button type="submit" style="width:100%;background:var(--accent-orange);color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;">Enviar Solicitud</button></form></div>';
+                document.body.appendChild(modal);
+            }
+            modal.style.display = 'flex';
+        }
+
+        function submitDonationRequest(e) {
+            e.preventDefault();
+            var donation = {
+                nombre: document.getElementById('don-nombre').value.trim(),
+                apellido: document.getElementById('don-apellido').value.trim(),
+                edad: parseInt(document.getElementById('don-edad').value),
+                numero: document.getElementById('don-numero').value.trim(),
+                correo: document.getElementById('don-correo').value.trim(),
+                motivo: document.getElementById('don-motivo').value.trim()
+            };
+            DB.addDonation(donation);
+            document.getElementById('donationFormModal').style.display = 'none';
+            App.showToast('Solicitud enviada para revisión', 'success');
+            renderApprovedDonations();
+        }
+    </script>
     <script src="../assets/js/accessibility.js"></script>
 </body>
-
 </html>
 

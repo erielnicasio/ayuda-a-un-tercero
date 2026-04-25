@@ -1035,3 +1035,52 @@ img {
         padding: 40px 24px;
     }
 }
+
+/* ── Toast Notification ── */
+.app-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+    z-index: 100000;
+    animation: toastIn 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.app-toast.success { background: #10B981; }
+.app-toast.error { background: #EF4444; }
+.app-toast.info { background: #2563EB; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Notification Badge ── */
+#notif-badge {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Dark Mode body/card overrides ── */
+[data-theme="dark"] body,
+[data-theme="dark"] .card,
+[data-theme="dark"] .admin-table,
+[data-theme="dark"] .admin-kpi-card,
+[data-theme="dark"] .admin-sidebar,
+[data-theme="dark"] .notif-item,
+[data-theme="dark"] .product-card {
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .navbar {
+    background: var(--bg-glass) !important;
+}
+
+/* ── Large text moderation ── */
+.large-text h1, .large-text h2, .large-text h3 { font-size: 1.1em; }
+.large-text p, .large-text span, .large-text a, .large-text li, .large-text td, .large-text th, .large-text label, .large-text button {
+    font-size: 1.1rem;
+}

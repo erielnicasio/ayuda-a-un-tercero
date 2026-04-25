@@ -30,8 +30,12 @@
                 <a href="pages/impacto.html">Impacto</a>
             </div>
             <div class="nav-btns">
-                <a href="pages/login.html" class="btn btn-outline btn-sm">Iniciar Sesión</a>
-                <a href="pages/admin.html" class="btn btn-primary btn-sm" style="margin-left:10px">Admin</a>
+                <a href="pages/notificaciones.html" id="nav-notif-link" class="notif-bell-link" style="display:none;position:relative;margin-right:12px;color:var(--primary-blue);font-size:1.3rem;cursor:pointer;">
+                    &#128276;
+                    <span id="notif-badge" style="display:none;position:absolute;top:-6px;right:-8px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:800;width:18px;height:18px;display:none;align-items:center;justify-content:center;">0</span>
+                </a>
+                <a href="pages/login.html" id="auth-btn" class="btn btn-outline btn-sm">Iniciar Sesión</a>
+                <a href="pages/admin.html" id="nav-admin-link" class="btn btn-primary btn-sm" style="display:none;margin-left:10px">Admin</a>
             </div>
         </div>
     </nav>
@@ -480,6 +484,7 @@
         });
     </script>
     <script src="assets/js/db.js"></script>
+    <script src="assets/js/app.js"></script>
     <script src="assets/js/accessibility.js"></script>
     <script>
         // Navbar scroll effect
