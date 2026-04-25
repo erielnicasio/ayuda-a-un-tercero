@@ -5,41 +5,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Información Legal | Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/styles-new.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .legal-page {
-            padding-top: calc(var(--nav-height) + 60px);
+            padding-top: calc(var(--nav-height) + 40px);
             padding-bottom: 80px;
             background: var(--bg-light);
             min-height: 100vh;
         }
 
         .legal-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            padding: 60px;
+            padding: 48px 60px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
         }
 
-        .legal-section {
+        @media (max-width: 768px) {
+            .legal-container { padding: 24px 20px; }
+        }
+
+        .legal-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .legal-nav a {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-decoration: none;
+            background: var(--bg-light);
+            transition: all 0.2s;
+        }
+
+        .legal-nav a:hover, .legal-nav a.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .legal-section {
+            margin-bottom: 48px;
+            scroll-margin-top: 100px;
         }
 
         .legal-section h2 {
             color: var(--primary-blue);
             margin-bottom: 20px;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-blue-light);
         }
 
-        .legal-section p {
+        .legal-section h3 {
+            color: var(--gray-800);
+            margin: 20px 0 12px;
+            font-size: 1.1rem;
+        }
+
+        .legal-section p, .legal-section li {
             color: var(--text-dark);
             line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .legal-section ul, .legal-section ol {
+            padding-left: 24px;
             margin-bottom: 16px;
+        }
+
+        .legal-section li {
+            margin-bottom: 8px;
         }
 
         .back-home {
@@ -49,11 +99,15 @@
             color: var(--primary-blue);
             text-decoration: none;
             font-weight: 600;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
-        .back-home:hover {
-            color: var(--accent-orange);
+        .back-home:hover { color: var(--accent-orange); }
+
+        .legal-update {
+            font-size: 0.85rem;
+            color: var(--gray-400);
+            margin-bottom: 32px;
         }
     </style>
 </head>
@@ -71,6 +125,10 @@
                 <a href="donaciones.html">Donaciones</a>
                 <a href="credifast.html">Préstamos</a>
                 <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="login.html" id="auth-btn" class="btn btn-outline btn-sm">Iniciar Sesión</a>
             </div>
         </div>
     </nav>
@@ -82,51 +140,195 @@
             </a>
 
             <div class="legal-container">
-                <div id="privacidad" class="legal-section">
-                    <h2><i data-lucide="shield-check"></i> Política de Privacidad</h2>
-                    <p>En **Ayuda a un Tercero**, valoramos y respetamos la privacidad de nuestros usuarios. Esta
-                        política describe cómo recopilamos, usamos y protegemos su información personal.</p>
-                    <p>1. **Recopilación de Datos**: Recopilamos información básica al registrarse, como nombre, correo
-                        electrónico y ubicación para facilitar las conexiones comunitarias.</p>
-                    <p>2. **Uso de la Información**: Sus datos se utilizan exclusivamente para validar su identidad en
-                        la plataforma y permitir la interacción segura en el marketplace y donaciones.</p>
-                    <p>3. **Protección**: Implementamos medidas de seguridad de grado bancario para asegurar que su
-                        información no sea accedida por terceros no autorizados.</p>
-                </div>
+                <h1 style="color: var(--primary-blue); margin-bottom: 8px; font-size: 2rem;">Información Legal</h1>
+                <p class="legal-update">Última actualización: Abril 2026</p>
 
+                <nav class="legal-nav">
+                    <a href="#terminos" class="active">Términos y Condiciones</a>
+                    <a href="#privacidad">Política de Privacidad</a>
+                    <a href="#datos">Uso de Datos</a>
+                    <a href="#responsabilidad">Responsabilidad del Usuario</a>
+                    <a href="#marketplace">Normas del Marketplace</a>
+                    <a href="#donaciones">Normas de Donaciones</a>
+                </nav>
+
+                <!-- Términos y Condiciones -->
                 <div id="terminos" class="legal-section">
                     <h2><i data-lucide="file-text"></i> Términos y Condiciones</h2>
-                    <p>Al utilizar nuestra plataforma, usted acepta los siguientes términos:</p>
-                    <p>1. **Uso Ético**: Los usuarios se comprometen a actuar de buena fe, tanto en la publicación de
-                        casos sociales como en las transacciones comerciales.</p>
-                    <p>2. **Validación**: Todas las publicaciones de ayuda están sujetas a revisión administrativa para
-                        prevenir fraudes.</p>
-                    <p>3. **Transparencia**: Ayuda a un Tercero no retiene comisiones de las donaciones directas; somos
-                        un facilitador tecnológico.</p>
+                    <p>Bienvenido a <strong>Ayuda a un Tercero</strong>. Al acceder y utilizar esta plataforma, usted acepta cumplir con los siguientes términos y condiciones. Si no está de acuerdo con alguno de estos términos, le solicitamos no utilizar nuestros servicios.</p>
+
+                    <h3>1. Objeto de la Plataforma</h3>
+                    <p>Ayuda a un Tercero es una plataforma digital solidaria que facilita la conexión entre personas que necesitan ayuda y personas dispuestas a contribuir. La plataforma ofrece un marketplace comunitario, sistema de donaciones, casos sociales, y servicios de microcréditos.</p>
+
+                    <h3>2. Registro y Cuentas</h3>
+                    <ul>
+                        <li>Para utilizar ciertas funcionalidades, deberá crear una cuenta proporcionando información veraz y actualizada.</li>
+                        <li>Usted es responsable de mantener la confidencialidad de sus credenciales de acceso.</li>
+                        <li>Cada persona solo puede mantener una cuenta activa en la plataforma.</li>
+                        <li>Nos reservamos el derecho de suspender o cancelar cuentas que violen estos términos.</li>
+                    </ul>
+
+                    <h3>3. Roles de Usuario</h3>
+                    <p>La plataforma distingue tres roles principales:</p>
+                    <ul>
+                        <li><strong>Usuario:</strong> Puede explorar el marketplace, solicitar donaciones, reportar contenido y participar en la comunidad.</li>
+                        <li><strong>Vendedor:</strong> Previa aprobación administrativa, puede publicar productos y servicios en el marketplace.</li>
+                        <li><strong>Administrador:</strong> Gestiona la plataforma, aprueba solicitudes y modera el contenido.</li>
+                    </ul>
+
+                    <h3>4. Modificaciones</h3>
+                    <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación. El uso continuado de la plataforma constituye la aceptación de los términos modificados.</p>
                 </div>
 
-                <div id="cookies" class="legal-section">
-                    <h2><i data-lucide="cookie"></i> Política de Cookies</h2>
-                    <p>Utilizamos cookies esenciales para mejorar su experiencia de navegación:</p>
-                    <p>1. **Sesión**: Para mantenerlo conectado mientras navega por los diferentes módulos.</p>
-                    <p>2. **Preferencias**: Para recordar configuraciones de idioma o ubicación.</p>
-                    <p>3. **Análisis**: Datos anónimos para entender cómo se utiliza la plataforma y poder mejorarla
-                        continuamente.</p>
+                <!-- Política de Privacidad -->
+                <div id="privacidad" class="legal-section">
+                    <h2><i data-lucide="shield-check"></i> Política de Privacidad</h2>
+                    <p>En Ayuda a un Tercero, valoramos y respetamos la privacidad de nuestros usuarios. Esta política describe cómo recopilamos, usamos, almacenamos y protegemos su información personal.</p>
+
+                    <h3>1. Información que Recopilamos</h3>
+                    <ul>
+                        <li><strong>Datos de registro:</strong> Nombre, correo electrónico, número de WhatsApp (para vendedores).</li>
+                        <li><strong>Datos de uso:</strong> Productos vistos, interacciones con el marketplace, donaciones realizadas.</li>
+                        <li><strong>Datos de ubicación:</strong> Geolocalización aproximada para mostrar productos cercanos (solo con su consentimiento).</li>
+                        <li><strong>Datos de contacto:</strong> Información proporcionada al solicitar donaciones o contactar vendedores.</li>
+                    </ul>
+
+                    <h3>2. Cómo Usamos su Información</h3>
+                    <ul>
+                        <li>Validar su identidad y gestionar su cuenta.</li>
+                        <li>Facilitar las transacciones en el marketplace.</li>
+                        <li>Procesar solicitudes de donación.</li>
+                        <li>Mejorar la experiencia del usuario.</li>
+                        <li>Enviar notificaciones relevantes sobre el estado de sus solicitudes.</li>
+                        <li>Generar estadísticas anónimas sobre el uso de la plataforma.</li>
+                    </ul>
+
+                    <h3>3. Almacenamiento y Seguridad</h3>
+                    <p>Sus datos se almacenan localmente en su navegador utilizando tecnología localStorage. Implementamos medidas de seguridad para proteger su información contra accesos no autorizados, alteración o divulgación.</p>
+
+                    <h3>4. Sus Derechos</h3>
+                    <p>Usted tiene derecho a acceder, rectificar, eliminar y portar sus datos personales. Para ejercer estos derechos, puede contactarnos a través de los canales disponibles en la plataforma.</p>
+                </div>
+
+                <!-- Uso de Datos -->
+                <div id="datos" class="legal-section">
+                    <h2><i data-lucide="database"></i> Uso de Datos</h2>
+                    <p>Detallamos aquí cómo la plataforma gestiona la información almacenada:</p>
+
+                    <h3>1. Datos del Marketplace</h3>
+                    <p>Los productos publicados son visibles para todos los usuarios. La información del vendedor (nombre y WhatsApp) se comparte solo cuando un usuario inicia contacto. Cada intento de contacto queda registrado en el sistema.</p>
+
+                    <h3>2. Datos de Donaciones</h3>
+                    <p>Las solicitudes de donación incluyen información personal del solicitante. Esta información es revisada por el administrador antes de hacerse pública. Solo las solicitudes aprobadas son visibles para la comunidad.</p>
+
+                    <h3>3. Datos de Geolocalización</h3>
+                    <p>La plataforma puede solicitar acceso a su ubicación para mostrar productos cercanos en el mapa. Esta información se utiliza exclusivamente para mejorar la relevancia de los resultados y no se comparte con terceros.</p>
+
+                    <h3>4. Persistencia de Datos</h3>
+                    <p>Todos los datos se almacenan en el navegador del usuario mediante localStorage. Los datos persisten entre sesiones pero pueden eliminarse limpiando el almacenamiento del navegador. No se transmiten datos a servidores externos.</p>
+                </div>
+
+                <!-- Responsabilidad del Usuario -->
+                <div id="responsabilidad" class="legal-section">
+                    <h2><i data-lucide="user-check"></i> Responsabilidad del Usuario</h2>
+
+                    <h3>1. Conducta General</h3>
+                    <p>Al utilizar la plataforma, el usuario se compromete a:</p>
+                    <ul>
+                        <li>Proporcionar información veraz y actualizada.</li>
+                        <li>No publicar contenido falso, engañoso o fraudulento.</li>
+                        <li>No utilizar la plataforma para fines ilegales o no autorizados.</li>
+                        <li>Respetar a todos los miembros de la comunidad.</li>
+                        <li>No intentar acceder a cuentas o datos de otros usuarios.</li>
+                    </ul>
+
+                    <h3>2. Contenido Publicado</h3>
+                    <p>Los usuarios son responsables del contenido que publican. La plataforma se reserva el derecho de eliminar contenido que viole estos términos sin previo aviso.</p>
+
+                    <h3>3. Reportes</h3>
+                    <p>Los usuarios pueden reportar contenido inapropiado. Los reportes falsos o malintencionados pueden resultar en la suspensión de la cuenta del reportante.</p>
+
+                    <h3>4. Transacciones</h3>
+                    <p>Ayuda a un Tercero actúa como intermediario tecnológico. Las transacciones entre usuarios son responsabilidad exclusiva de las partes involucradas. La plataforma no garantiza la calidad de productos o servicios ofrecidos.</p>
+                </div>
+
+                <!-- Normas del Marketplace -->
+                <div id="marketplace" class="legal-section">
+                    <h2><i data-lucide="shopping-bag"></i> Normas del Marketplace</h2>
+
+                    <h3>1. Publicación de Productos</h3>
+                    <ul>
+                        <li>Solo vendedores aprobados pueden publicar productos o servicios.</li>
+                        <li>Cada publicación debe incluir: nombre, precio, descripción, categoría, ubicación, estado y hasta 4 imágenes.</li>
+                        <li>Todas las publicaciones están sujetas a revisión administrativa.</li>
+                        <li>No se permite la publicación de productos ilegales, peligrosos o prohibidos.</li>
+                    </ul>
+
+                    <h3>2. Precios y Transacciones</h3>
+                    <ul>
+                        <li>Los precios deben expresarse en pesos dominicanos (RD$).</li>
+                        <li>Los vendedores son responsables de la exactitud de los precios publicados.</li>
+                        <li>Las negociaciones se realizan directamente entre comprador y vendedor vía WhatsApp.</li>
+                    </ul>
+
+                    <h3>3. Productos Prohibidos</h3>
+                    <p>Queda estrictamente prohibida la publicación de:</p>
+                    <ul>
+                        <li>Sustancias ilegales o controladas.</li>
+                        <li>Armas de cualquier tipo.</li>
+                        <li>Productos falsificados o robados.</li>
+                        <li>Contenido para adultos.</li>
+                        <li>Cualquier artículo cuya venta esté prohibida por la ley dominicana.</li>
+                    </ul>
+
+                    <h3>4. Sistema de Reportes</h3>
+                    <p>Cualquier usuario puede reportar un producto por: estafa, producto falso, contenido inapropiado, spam u otros motivos. Los reportes son revisados por el equipo administrativo y pueden resultar en la eliminación del producto y/o suspensión del vendedor.</p>
+                </div>
+
+                <!-- Normas de Donaciones -->
+                <div id="donaciones" class="legal-section">
+                    <h2><i data-lucide="heart-handshake"></i> Normas de Donaciones</h2>
+
+                    <h3>1. Solicitudes de Donación</h3>
+                    <ul>
+                        <li>Cualquier usuario registrado puede solicitar una donación completando el formulario obligatorio.</li>
+                        <li>El formulario requiere: nombre, apellido, edad, número de contacto, correo electrónico y motivo detallado.</li>
+                        <li>Todas las solicitudes son revisadas por el administrador antes de ser publicadas.</li>
+                    </ul>
+
+                    <h3>2. Casos Sociales</h3>
+                    <ul>
+                        <li>Los casos sociales destacados son verificados por el equipo administrativo.</li>
+                        <li>Cada caso incluye un objetivo de recaudación y progreso visible.</li>
+                        <li>La plataforma facilita la conexión entre donantes y beneficiarios pero no gestiona fondos directamente.</li>
+                    </ul>
+
+                    <h3>3. Transparencia</h3>
+                    <p>Ayuda a un Tercero se compromete a la transparencia total en la gestión de donaciones. El administrador puede visualizar y auditar todas las solicitudes, aprobaciones y rechazos. Las estadísticas de impacto se actualizan automáticamente y son visibles para toda la comunidad.</p>
+
+                    <h3>4. Donaciones en Compras</h3>
+                    <p>Al realizar contacto para una compra en el marketplace, se ofrece la opción voluntaria de agregar un porcentaje como donación solidaria. Esta donación es completamente opcional y su aceptación no afecta la transacción comercial.</p>
+                </div>
+
+                <div style="text-align:center;padding:32px 0 0;border-top:2px solid var(--gray-100);margin-top:40px;">
+                    <p style="color:var(--gray-400);font-size:0.85rem;">Ayuda a un Tercero &copy; 2026. Todos los derechos reservados.</p>
+                    <p style="color:var(--gray-400);font-size:0.8rem;margin-top:8px;">Para consultas legales, contacte al equipo administrativo a través de la plataforma.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="footer" style="margin-top: 0; background: white;">
-        <div class="container" style="text-align: center; color: var(--text-muted);">
-            © 2026 Ayuda a un Tercero. Todos los derechos reservados.
-        </div>
-    </footer>
-
     <script>
         lucide.createIcons();
+        document.querySelectorAll('.legal-nav a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                document.querySelectorAll('.legal-nav a').forEach(function(l) { l.classList.remove('active'); });
+                this.classList.add('active');
+            });
+        });
     </script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/app.js"></script>
 </body>
-
 </html>
-

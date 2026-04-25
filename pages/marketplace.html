@@ -1132,33 +1132,19 @@
         lucide.createIcons();
 
         // --- GLOBAL VARIABLES FOR MAPS ---
-        let mainMap = null;
-        let selectionMap = null;
-        let selectionMarker = null;
-        let mapActive = false;
-        let aiScanSuccess = false;
+        var mainMap = null;
+        var selectionMap = null;
+        var selectionMarker = null;
+        var mapActive = false;
+        var aiScanSuccess = false;
 
-        // --- INITIALIZE MAPS ---
+        // --- INITIALIZE MAPS --- (handled by initLeafletMap below)
         function initMainMap() {
+            // Delegated to initLeafletMap
             if (mainMap) return;
-            mainMap = L.map('leafletMap').setView([18.7951, -69.9547], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(mainMap);
-
-            // Add some dummy markers
-            const locations = [
-                { lat: 18.8051, lng: -69.9647, title: "Café Tostado Monte Plata", price: "$18.50" },
-                { lat: 18.7851, lng: -69.9447, title: "Diseño Web Emprendedor", price: "$150.00" },
-                { lat: 18.8151, lng: -69.9347, title: "Vasija de Cerámica", price: "$45.00" }
-            ];
-
-            locations.forEach(loc => {
-                L.marker([loc.lat, loc.lng]).addTo(mainMap)
-                    .bindPopup(`<b>${loc.title}</b><br>Precio: ${loc.price}`);
-            });
+            initLeafletMap();
         }
+        /* old initMainMap removed */
 
         function initSelectionMap() {
             if (selectionMap) {
@@ -1185,21 +1171,7 @@
             setTimeout(() => selectionMap.invalidateSize(), 300);
         }
 
-        function toggleMapView() {
-            const mapContainer = document.getElementById('mapaMarketplace');
-            const grid = document.querySelector('.products-grid');
-            mapActive = !mapActive;
-
-            if (mapActive) {
-                mapContainer.style.display = 'block';
-                grid.style.display = 'none';
-                initMainMap();
-                setTimeout(() => mainMap.invalidateSize(), 300);
-            } else {
-                mapContainer.style.display = 'none';
-                grid.style.display = 'grid';
-            }
-        }
+        // toggleMapView defined in second script block below
 
         // --- IMAGE & AI LOGIC ---
         function handleImagePreview(input) {
@@ -1468,64 +1440,37 @@
         }
 
         // --- RENDER FROM DB ---
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             renderMarketplaceFromDB();
-
-            // --- ADMIN MODE ---
-            const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
-            if (isAdmin) {
-                const adminBar = document.createElement('div');
-                adminBar.style = "background: #1e2937; color: white; padding: 10px; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; display: flex; justify-content: center; gap: 20px; font-weight: 700; font-size: 0.85rem;";
-                adminBar.innerHTML = `<span>🛡️ MODO ADMIN</span> <a href="admin.html" style="color: var(--accent-orange);">Ir al Panel Completo</a>`;
-                document.body.prepend(adminBar);
-            }
+            initCartUI();
+            initLeafletMap();
+            setupCategories();
+            var s = document.getElementById('mktSearch');
+            if (s) s.addEventListener('input', function() { renderMarketplaceFromDB(); });
         });
 
+        var _currentCategory = 'Todos';
+
         function renderMarketplaceFromDB() {
-            const grid = document.querySelector('.products-grid');
-            // Render original DB items
-            const items = DB.getMarketplace().filter(m => m.status === 'Aprobado');
-            items.forEach(item => {
-                const newCard = `
-                    <article class="product-card" id="card-${item.id}" data-category="${item.categoria || 'general'}" data-type="${item.tipo}" data-location="monte-plata" data-price="${item.precio.replace('$', '')}" style="position: relative;">
-                        <img src="${item.img || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80'}" class="product-img">
-                        <div class="product-body">
-                            <div class="product-seller"><i data-lucide="user" size="14"></i> ${item.nombre}</div>
-                            <h3 class="product-title">${item.titulo}</h3>
-                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Monte Plata, RD</div>
-                            <p class="product-desc">Publicación verificada por la comunidad.</p>
-                            <div class="product-price">${item.precio}</div>
-                        </div>
-                        <div class="product-footer">
-                            <span class="badge badge-blue">Verificado</span>
-                            <button class="btn btn-green btn-sm" onclick="contactarVendedorDirecto('${item.celular}', '${item.titulo}', '${item.precio.replace('$', '')}')" style="background: #25D366; border: none;">
-                                <i data-lucide="message-circle"></i> Contactar
-                            </button>
-                        </div>
-                    </article>
-                `;
+            var grid = document.querySelector('.products-grid');
+            grid.querySelectorAll('.new-product-card').forEach(function(c) { c.remove(); });
+
+            var items = DB.getMarketplace().filter(function(m) { return m.status === 'Aprobado'; });
+            items.forEach(function(item) {
+                var newCard = '<article class="product-card" id="card-' + item.id + '" data-category="' + (item.categoria || 'general') + '" data-type="' + item.tipo + '" data-location="monte-plata" data-price="' + (item.precio || '').toString().replace('$', '') + '" style="position:relative;"><img src="' + (item.img || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500') + '" class="product-img"><div class="product-body"><div class="product-seller"><i data-lucide="user" size="14"></i> ' + item.nombre + '</div><h3 class="product-title">' + item.titulo + '</h3><div class="product-location"><i data-lucide="map-pin" size="14"></i> Monte Plata, RD</div><p class="product-desc">Publicación verificada.</p><div class="product-price">' + item.precio + '</div></div><div class="product-footer"><span class="badge badge-blue">Verificado</span><button class="btn btn-green btn-sm" style="background:#25D366;border:none;" onclick="event.stopPropagation();contactarWhatsapp(this)"><i data-lucide="message-circle"></i> Contactar</button></div></article>';
                 grid.insertAdjacentHTML('afterbegin', newCard);
             });
 
-            // Render new product system items with slider
-            renderNewProducts(grid);
-            lucide.createIcons();
-        }
-
-        function renderNewProducts(grid) {
             var products = DB.getApprovedProducts();
-            var search = document.getElementById('searchInput');
-            var query = search ? search.value.toLowerCase() : '';
+            var searchEl = document.getElementById('mktSearch');
+            var query = searchEl ? searchEl.value.toLowerCase() : '';
 
             products.forEach(function(p) {
                 if (query && !(p.name + p.category + p.location + p.description).toLowerCase().includes(query)) return;
-
-                // Increment views
-                p.views = (p.views || 0) + 1;
-                DB.updateProduct(p.id, { views: p.views });
+                if (_currentCategory !== 'Todos' && p.category !== _currentCategory) return;
 
                 var sliderId = 'slider-' + p.id;
-                var sliderHTML = '<div class="product-slider" id="' + sliderId + '" style="width:100%;height:200px;position:relative;overflow:hidden;">';
+                var sliderHTML = '<div class="product-slider" id="' + sliderId + '" style="width:100%;height:220px;position:relative;overflow:hidden;cursor:pointer;">';
                 if (p.images && p.images.length > 0) {
                     p.images.forEach(function(img, i) {
                         sliderHTML += '<img src="' + img + '" alt="' + p.name + '" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:' + (i === 0 ? '1' : '0') + ';transition:opacity 0.5s;" class="slide-img" data-index="' + i + '">';
@@ -1538,137 +1483,239 @@
                 }
                 sliderHTML += '</div>';
 
-                var card = `
-                    <article class="product-card new-product-card" data-product-id="${p.id}" data-category="${p.category}" data-price="${p.price}" style="position:relative;border-radius:16px;overflow:hidden;background:white;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow-soft);">
-                        ${sliderHTML}
-                        <div class="product-body" style="padding:16px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                                <span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">${p.category}</span>
-                                <span style="font-size:0.75rem;color:var(--gray-400);">${p.condition === 'nuevo' ? 'Nuevo' : 'Usado'} · ${p.location}</span>
-                            </div>
-                            <h3 class="product-title" style="font-size:1rem;margin:8px 0 4px;color:var(--gray-800);">${p.name}</h3>
-                            <p class="product-desc" style="font-size:0.85rem;color:var(--gray-500);margin-bottom:8px;line-height:1.4;">${p.description.substring(0, 80)}...</p>
-                            <div class="product-price" style="font-size:1.2rem;font-weight:800;color:var(--accent-orange);">RD$${Number(p.price).toLocaleString()}</div>
-                        </div>
-                        <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:6px;">
-                            <button class="btn btn--primary btn--sm btn--full mt-16" style="background:#25D366;border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="contactProductWhatsapp('${p.id}')">Contactar</button>
-                            <button style="background:none;border:1px solid var(--gray-200);padding:8px;border-radius:10px;font-size:0.85rem;color:var(--gray-500);cursor:pointer;font-weight:600;" onclick="reportProduct('${p.id}','${p.name.replace(/'/g, "\\'")}')">Reportar</button>
-                        </div>
-                    </article>
-                `;
+                var escapedName = p.name.replace(/'/g, "\\'");
+                var card = '<article class="product-card new-product-card" data-product-id="' + p.id + '" data-category="' + p.category + '" data-price="' + p.price + '" style="position:relative;border-radius:16px;overflow:hidden;background:white;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow-soft);cursor:pointer;" onclick="openProductPreview(\'' + p.id + '\')">' + sliderHTML + '<div class="product-body" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">' + p.category + '</span><span style="font-size:0.75rem;color:var(--gray-400);">' + (p.condition === 'nuevo' ? 'Nuevo' : 'Usado') + ' &middot; ' + p.location + '</span></div><h3 class="product-title" style="font-size:1rem;margin:8px 0 4px;color:var(--gray-800);">' + p.name + '</h3><p class="product-desc" style="font-size:0.85rem;color:var(--gray-500);margin-bottom:8px;line-height:1.4;">' + p.description.substring(0, 80) + '...</p><div class="product-price" style="font-size:1.2rem;font-weight:800;color:var(--accent-orange);">RD$' + Number(p.price).toLocaleString() + '</div></div><div style="padding:0 16px 16px;display:flex;gap:6px;"><button class="btn btn--primary btn--sm" style="flex:1;background:#25D366;border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();contactProductWhatsapp(\'' + p.id + '\')">Contactar</button><button style="flex:1;background:var(--primary-blue);border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();addToCartUI(\'' + p.id + '\')">&#128722; Agregar</button></div><div style="padding:0 16px 12px;"><button style="background:none;border:1px solid var(--gray-200);padding:8px;border-radius:10px;font-size:0.85rem;color:var(--gray-500);cursor:pointer;font-weight:600;width:100%;" onclick="event.stopPropagation();reportProduct(\'' + p.id + '\',\'' + escapedName + '\')">Reportar</button></div></article>';
                 grid.insertAdjacentHTML('beforeend', card);
             });
 
-            // Initialize sliders
             initProductSliders();
+            lucide.createIcons();
         }
 
-        // Product slider auto-advance
         var sliderIntervals = {};
         function initProductSliders() {
+            Object.values(sliderIntervals).forEach(function(i) { clearInterval(i); });
+            sliderIntervals = {};
             document.querySelectorAll('.product-slider').forEach(function(slider) {
                 var imgs = slider.querySelectorAll('.slide-img');
                 var dots = slider.querySelectorAll('.dot');
                 if (imgs.length <= 1) return;
-                var current = 0;
-                var paused = false;
-
+                var current = 0; var paused = false;
                 function showSlide(idx) {
                     imgs.forEach(function(img, i) { img.style.opacity = i === idx ? '1' : '0'; });
                     dots.forEach(function(dot, i) { dot.style.background = i === idx ? '#fff' : 'rgba(255,255,255,0.5)'; });
                     current = idx;
                 }
-
-                var interval = setInterval(function() {
-                    if (!paused) showSlide((current + 1) % imgs.length);
-                }, 3000);
+                var interval = setInterval(function() { if (!paused) showSlide((current + 1) % imgs.length); }, 3000);
                 sliderIntervals[slider.id] = interval;
-
                 slider.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('dot')) {
-                        paused = true;
-                        showSlide(parseInt(e.target.dataset.dot));
-                    } else if (e.target.classList.contains('slide-img')) {
-                        paused = true;
-                        // Open image viewer
-                        openImageViewer(e.target.src);
-                    }
+                    if (e.target.classList.contains('dot')) { e.stopPropagation(); paused = true; showSlide(parseInt(e.target.dataset.dot)); }
                 });
             });
         }
 
-        function openImageViewer(src) {
-            var viewer = document.getElementById('imageViewer');
-            if (!viewer) {
-                viewer = document.createElement('div');
-                viewer.id = 'imageViewer';
-                viewer.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:99999;display:flex;align-items:center;justify-content:center;cursor:pointer;';
-                viewer.innerHTML = '<img style="max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.5);" id="viewerImg"><button style="position:absolute;top:20px;right:20px;background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.5rem;cursor:pointer;">&times;</button>';
-                viewer.addEventListener('click', function() { viewer.style.display = 'none'; });
-                document.body.appendChild(viewer);
+        // --- PRODUCT PREVIEW MODAL ---
+        function openProductPreview(productId) {
+            var p = DB.findProduct(productId);
+            if (!p) return;
+            p.views = (p.views || 0) + 1;
+            DB.updateProduct(p.id, { views: p.views });
+            var imgs = p.images || [];
+            var modal = document.getElementById('productPreviewModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'productPreviewModal';
+                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;';
+                modal.innerHTML = '<div id="previewContent" style="background:white;border-radius:24px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;position:relative;"></div>';
+                modal.addEventListener('click', function(e) { if (e.target === modal) closeProductPreview(); });
+                document.body.appendChild(modal);
             }
-            document.getElementById('viewerImg').src = src;
-            viewer.style.display = 'flex';
+            var content = document.getElementById('previewContent');
+            content.innerHTML = '<button onclick="closeProductPreview()" style="position:absolute;top:16px;right:16px;background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.5rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&times;</button>' +
+                '<div style="position:relative;width:100%;height:400px;overflow:hidden;border-radius:24px 24px 0 0;">' +
+                '<img id="previewMainImg" src="' + (imgs[0] || '') + '" style="width:100%;height:100%;object-fit:cover;">' +
+                '<button onclick="event.stopPropagation();previewNav(-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#8249;</button>' +
+                '<button onclick="event.stopPropagation();previewNav(1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#8250;</button>' +
+                '<div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;" id="previewDots"></div></div>' +
+                '<div style="padding:32px;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;"><span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;">' + p.category + '</span><span style="font-size:0.85rem;color:var(--gray-400);">' + (p.condition === 'nuevo' ? 'Nuevo' : 'Usado') + ' &middot; ' + p.location + '</span></div>' +
+                '<h2 style="color:var(--primary-blue);margin-bottom:8px;">' + p.name + '</h2>' +
+                '<p style="color:var(--gray-500);line-height:1.7;margin-bottom:16px;">' + p.description + '</p>' +
+                '<div style="font-size:2rem;font-weight:800;color:var(--accent-orange);margin-bottom:16px;">RD$' + Number(p.price).toLocaleString() + '</div>' +
+                '<p style="font-size:0.85rem;color:var(--gray-400);margin-bottom:20px;">Vendedor: <strong>' + p.vendorName + '</strong> &middot; ' + (p.views || 0) + ' vistas</p>' +
+                '<div style="display:flex;gap:12px;flex-wrap:wrap;"><button onclick="contactProductWhatsapp(\'' + p.id + '\')" style="flex:1;min-width:140px;background:#25D366;color:white;border:none;padding:14px;border-radius:14px;font-weight:700;cursor:pointer;font-size:1rem;">Contactar</button><button onclick="addToCartUI(\'' + p.id + '\')" style="flex:1;min-width:140px;background:var(--primary-blue);color:white;border:none;padding:14px;border-radius:14px;font-weight:700;cursor:pointer;font-size:1rem;">&#128722; Agregar al Carrito</button></div></div>';
+
+            var dotsEl = document.getElementById('previewDots');
+            dotsEl.innerHTML = '';
+            imgs.forEach(function(img, i) {
+                var dot = document.createElement('span');
+                dot.style.cssText = 'width:10px;height:10px;border-radius:50%;background:' + (i === 0 ? '#fff' : 'rgba(255,255,255,0.5)') + ';cursor:pointer;';
+                dot.onclick = function(e) { e.stopPropagation(); window._previewIdx = i; updatePreviewImg(); };
+                dotsEl.appendChild(dot);
+            });
+            window._previewImgs = imgs;
+            window._previewIdx = 0;
+            modal.style.display = 'flex';
         }
+        function previewNav(dir) {
+            if (!window._previewImgs || !window._previewImgs.length) return;
+            window._previewIdx = (window._previewIdx + dir + window._previewImgs.length) % window._previewImgs.length;
+            updatePreviewImg();
+        }
+        function updatePreviewImg() {
+            var img = document.getElementById('previewMainImg');
+            var dots = document.querySelectorAll('#previewDots span');
+            if (img && window._previewImgs) img.src = window._previewImgs[window._previewIdx];
+            dots.forEach(function(d, i) { d.style.background = i === window._previewIdx ? '#fff' : 'rgba(255,255,255,0.5)'; });
+        }
+        function closeProductPreview() {
+            var modal = document.getElementById('productPreviewModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // --- CART ---
+        function initCartUI() {
+            var cartBtn = document.createElement('div');
+            cartBtn.id = 'cartFloatingBtn';
+            cartBtn.style.cssText = 'position:fixed;bottom:120px;right:40px;width:60px;height:60px;background:var(--primary-blue);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.3);cursor:pointer;z-index:1500;font-size:1.5rem;';
+            cartBtn.innerHTML = '&#128722;<span id="cartBadge" style="position:absolute;top:-4px;right:-4px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.7rem;font-weight:800;width:22px;height:22px;display:none;align-items:center;justify-content:center;">0</span>';
+            cartBtn.onclick = openCartModal;
+            document.body.appendChild(cartBtn);
+            updateCartBadge();
+        }
+        function updateCartBadge() {
+            var count = DB.getCartCount();
+            var badge = document.getElementById('cartBadge');
+            if (badge) { badge.style.display = count > 0 ? 'flex' : 'none'; badge.textContent = count > 9 ? '+9' : count; }
+        }
+        function addToCartUI(productId) {
+            DB.addToCart(productId);
+            updateCartBadge();
+            if (typeof App !== 'undefined') App.showToast('Producto agregado al carrito', 'success');
+        }
+        function openCartModal() {
+            var modal = document.getElementById('cartModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'cartModal';
+                modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;';
+                modal.innerHTML = '<div id="cartContent" style="background:white;border-radius:24px;max-width:600px;width:100%;max-height:80vh;overflow-y:auto;padding:32px;position:relative;"></div>';
+                modal.addEventListener('click', function(e) { if (e.target === modal) modal.style.display = 'none'; });
+                document.body.appendChild(modal);
+            }
+            renderCartContent();
+            modal.style.display = 'flex';
+        }
+        function renderCartContent() {
+            var el = document.getElementById('cartContent');
+            var cart = DB.getCart();
+            var html = '<button onclick="document.getElementById(\'cartModal\').style.display=\'none\'" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button><h2 style="color:var(--primary-blue);margin-bottom:20px;">&#128722; Mi Carrito</h2>';
+            if (cart.length === 0) {
+                html += '<p style="color:var(--gray-400);text-align:center;padding:40px 0;">El carrito está vacío</p>';
+            } else {
+                var total = 0;
+                cart.forEach(function(item) {
+                    var p = DB.findProduct(item.productId);
+                    if (!p) return;
+                    total += p.price * item.qty;
+                    html += '<div style="display:flex;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid #eee;"><img src="' + (p.images && p.images[0] ? p.images[0] : '') + '" style="width:70px;height:70px;border-radius:12px;object-fit:cover;"><div style="flex:1;"><h4 style="margin:0 0 4px;">' + p.name + '</h4><p style="margin:0;color:var(--accent-orange);font-weight:700;">RD$' + Number(p.price).toLocaleString() + '</p></div><div style="display:flex;align-items:center;gap:8px;"><button onclick="changeQty(\'' + item.productId + '\',-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid #ddd;background:white;cursor:pointer;font-size:1.1rem;">&minus;</button><span style="font-weight:700;min-width:24px;text-align:center;">' + item.qty + '</span><button onclick="changeQty(\'' + item.productId + '\',1)" style="width:32px;height:32px;border-radius:8px;border:1px solid #ddd;background:white;cursor:pointer;font-size:1.1rem;">+</button></div><button onclick="removeCartItem(\'' + item.productId + '\')" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:1.2rem;">&times;</button></div>';
+                });
+                html += '<div style="margin-top:20px;padding:20px;background:var(--bg-light);border-radius:16px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.1rem;font-weight:700;">Total:</span><span style="font-size:1.5rem;font-weight:800;color:var(--accent-orange);">RD$' + Number(total).toLocaleString() + '</span></div>';
+                html += '<button onclick="DB.clearCart();renderCartContent();updateCartBadge();" style="width:100%;margin-top:12px;padding:14px;background:#EF4444;color:white;border:none;border-radius:14px;font-weight:700;cursor:pointer;">Vaciar Carrito</button>';
+            }
+            el.innerHTML = html;
+        }
+        function changeQty(pid, d) { var c = DB.getCart(); var it = c.find(function(x) { return x.productId === pid; }); if (it) DB.updateCartQty(pid, it.qty + d); renderCartContent(); updateCartBadge(); }
+        function removeCartItem(pid) { DB.removeFromCart(pid); renderCartContent(); updateCartBadge(); }
+
+        // --- CATEGORIES ---
+        function setupCategories() {
+            var cats = ['Todos'];
+            DB.getApprovedProducts().forEach(function(p) { if (cats.indexOf(p.category) === -1) cats.push(p.category); });
+            var container = document.querySelector('.filter-chips');
+            if (!container) return;
+            container.innerHTML = '';
+            cats.forEach(function(cat) {
+                var btn = document.createElement('button');
+                btn.className = 'chip' + (cat === _currentCategory ? ' active' : '');
+                btn.textContent = cat;
+                btn.onclick = function() {
+                    _currentCategory = cat;
+                    container.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('active'); });
+                    btn.classList.add('active');
+                    renderMarketplaceFromDB();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // --- LEAFLET MAP ---
+        function initLeafletMap() {
+            var mapEl = document.getElementById('leafletMap');
+            if (!mapEl || mainMap) return;
+            mainMap = L.map('leafletMap').setView([18.8, -70.0], 8);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
+            addProductMarkers();
+        }
+        function addProductMarkers() {
+            if (!mainMap) return;
+            DB.getApprovedProducts().forEach(function(p) {
+                if (p.lat && p.lng) {
+                    L.marker([p.lat, p.lng]).addTo(mainMap).bindPopup('<div style="text-align:center;min-width:150px;"><img src="' + (p.images && p.images[0] ? p.images[0] : '') + '" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;"><b>' + p.name + '</b><br>RD$' + Number(p.price).toLocaleString() + '<br><button onclick="openProductPreview(\'' + p.id + '\')" style="margin-top:6px;padding:4px 12px;background:var(--primary-blue);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;">Ver Detalle</button></div>');
+                }
+            });
+        }
+        function toggleMapView() {
+            var mc = document.getElementById('mapaMarketplace');
+            if (mc.style.display === 'block') { mc.style.display = 'none'; } else { mc.style.display = 'block'; setTimeout(function() { if (mainMap) mainMap.invalidateSize(); }, 200); }
+        }
+
+        // --- ESC HANDLER ---
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProductPreview();
+                var cm = document.getElementById('cartModal'); if (cm) cm.style.display = 'none';
+                var rm = document.getElementById('reportModal'); if (rm) rm.classList.remove('active');
+                var co = document.getElementById('checkoutDonationModal'); if (co) co.classList.remove('active');
+                var pm = document.getElementById('publishModal'); if (pm) pm.classList.remove('active');
+                var iv = document.getElementById('imageViewer'); if (iv) iv.style.display = 'none';
+            }
+        });
 
         function contactProductWhatsapp(productId) {
             var p = DB.findProduct(productId);
             if (!p) return;
             var user = DB.getCurrentUser();
-            DB.addContact({
-                productId: p.id, productName: p.name,
-                vendorId: p.vendorId, vendorName: p.vendorName,
-                buyerName: user ? user.name : 'Visitante',
-                buyerEmail: user ? user.email : ''
-            });
-            var msg = encodeURIComponent('Hola, me interesa el producto "' + p.name + '" publicado en Ayuda a un Tercero por RD$' + Number(p.price).toLocaleString() + '. ¿Está disponible?');
+            DB.addContact({ productId: p.id, productName: p.name, vendorId: p.vendorId, vendorName: p.vendorName, buyerName: user ? user.name : 'Visitante', buyerEmail: user ? user.email : '' });
+            var msg = encodeURIComponent('Hola, me interesa "' + p.name + '" por RD$' + Number(p.price).toLocaleString() + '. Disponible?');
             window.open('https://wa.me/' + (p.vendorWhatsapp || '18091234567') + '?text=' + msg, '_blank');
         }
 
         function reportProduct(productId, productName) {
             var modal = document.getElementById('reportModal');
             if (!modal) {
-                var m = document.createElement('div');
-                m.id = 'reportModal';
-                m.className = 'modal';
-                m.innerHTML = '<div class="modal-content" style="max-width:500px;margin:10vh auto;background:white;border-radius:24px;padding:32px;position:relative;box-shadow:var(--shadow-premium);"><button onclick="document.getElementById(\'reportModal\').classList.remove(\'active\')" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button><h3 style="margin-bottom:16px;color:var(--primary-blue);">Reportar Producto</h3><p style="margin-bottom:16px;">Producto: <strong id="reportProdName"></strong></p><input type="hidden" id="reportProdId"><div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;" id="reportReasons"><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Estafa"> Estafa</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Producto falso"> Producto falso</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Contenido inapropiado"> Contenido inapropiado</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Spam"> Spam</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Otro"> Otro</label></div><div id="reportOtherField" style="display:none;margin-bottom:16px;"><textarea id="reportOtherText" style="width:100%;padding:12px;border:1px solid var(--gray-200);border-radius:10px;font-family:inherit;" placeholder="Describe el motivo..."></textarea></div><button onclick="submitReport()" class="btn btn-primary" style="width:100%;background:#EF4444;border-color:#EF4444;">Enviar Reporte</button></div>';
+                var m = document.createElement('div'); m.id = 'reportModal'; m.className = 'modal';
+                m.innerHTML = '<div class="modal-content" style="max-width:500px;margin:10vh auto;background:white;border-radius:24px;padding:32px;position:relative;box-shadow:var(--shadow-premium);"><button onclick="document.getElementById(\'reportModal\').classList.remove(\'active\')" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button><h3 style="margin-bottom:16px;color:var(--primary-blue);">Reportar Producto</h3><p style="margin-bottom:16px;">Producto: <strong id="reportProdName"></strong></p><input type="hidden" id="reportProdId"><div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Estafa"> Estafa</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Producto falso"> Producto falso</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Contenido inapropiado"> Contenido inapropiado</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Spam"> Spam</label><label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--gray-200);border-radius:10px;cursor:pointer;"><input type="radio" name="reportReason" value="Otro"> Otro</label></div><div id="reportOtherField" style="display:none;margin-bottom:16px;"><textarea id="reportOtherText" style="width:100%;padding:12px;border:1px solid var(--gray-200);border-radius:10px;font-family:inherit;" placeholder="Describe el motivo..." rows="3"></textarea></div><button class="btn btn-primary" style="width:100%;padding:14px;border-radius:14px;" onclick="submitReport()">Enviar Reporte</button></div>';
                 document.body.appendChild(m);
-                // Handle "Otro" radio
-                document.querySelectorAll('input[name="reportReason"]').forEach(function(r) {
-                    r.addEventListener('change', function() {
-                        document.getElementById('reportOtherField').style.display = this.value === 'Otro' ? 'block' : 'none';
-                    });
-                });
+                document.querySelectorAll('input[name="reportReason"]').forEach(function(r) { r.addEventListener('change', function() { document.getElementById('reportOtherField').style.display = this.value === 'Otro' ? 'block' : 'none'; }); });
             }
             document.getElementById('reportProdId').value = productId;
             document.getElementById('reportProdName').textContent = productName;
             document.getElementById('reportModal').classList.add('active');
         }
-
         function submitReport() {
-            var reason = document.querySelector('input[name="reportReason"]:checked');
-            if (!reason) { alert('Selecciona una razón'); return; }
-            var reasonValue = reason.value;
-            if (reasonValue === 'Otro') {
-                var otherText = document.getElementById('reportOtherText').value.trim();
-                if (!otherText) { alert('Describe el motivo del reporte'); return; }
-                reasonValue = 'Otro: ' + otherText;
-            }
-            var user = DB.getCurrentUser();
-            DB.addReport({
-                productId: document.getElementById('reportProdId').value,
-                productName: document.getElementById('reportProdName').textContent,
-                reason: reasonValue,
-                reporterName: user ? user.name : 'Anónimo',
-                reporterEmail: user ? user.email : ''
-            });
+            var r = document.querySelector('input[name="reportReason"]:checked');
+            if (!r) { alert('Selecciona una razón'); return; }
+            var v = r.value;
+            if (v === 'Otro') { var t = document.getElementById('reportOtherText').value.trim(); if (!t) { alert('Describe el motivo'); return; } v = 'Otro: ' + t; }
+            var u = DB.getCurrentUser();
+            DB.addReport({ productId: document.getElementById('reportProdId').value, productName: document.getElementById('reportProdName').textContent, reason: v, reporterName: u ? u.name : 'Anónimo', reporterEmail: u ? u.email : '' });
             document.getElementById('reportModal').classList.remove('active');
-            App.showToast('Reporte enviado correctamente', 'success');
+            if (typeof App !== 'undefined') App.showToast('Reporte enviado', 'success');
         }
 
         function contactarVendedorDirecto(phone, title, price) {
-            pendingTitle = title;
-            pendingPrice = parseFloat(price) || 0;
+            pendingTitle = title; pendingPrice = parseFloat(price) || 0;
             document.getElementById('buyPrice').innerText = "$" + pendingPrice.toFixed(2);
             document.getElementById('donationPrice').innerText = "$" + (pendingPrice * 0.03).toFixed(2);
             document.getElementById('checkoutDonationModal').classList.add('active');
@@ -1679,4 +1726,3 @@
     <script src="../assets/js/app.js"></script>
 </body>
 </html>
-

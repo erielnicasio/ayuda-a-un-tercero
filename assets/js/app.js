@@ -90,6 +90,34 @@ var App = {
 // Global toast function for backward compatibility
 function showToast(msg, type) { App.showToast(msg, type); }
 
+App.injectFooter = function() {
+    if (document.getElementById('global-footer')) return;
+    var isSubpage = this.isSubpage;
+    var bp = isSubpage ? '../' : '';
+    var pp = isSubpage ? '' : 'pages/';
+    var footer = document.createElement('footer');
+    footer.id = 'global-footer';
+    footer.style.cssText = 'background:#0f172a;color:#94a3b8;padding:48px 24px 24px;margin-top:60px;';
+    footer.innerHTML = '<div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;margin-bottom:32px;">' +
+        '<div><h4 style="color:white;margin-bottom:12px;font-size:1.1rem;">Ayuda a un Tercero</h4><p style="font-size:0.85rem;line-height:1.6;">Plataforma solidaria de comercio, donaciones y apoyo comunitario en República Dominicana.</p></div>' +
+        '<div><h4 style="color:white;margin-bottom:12px;font-size:1rem;">Navegación</h4><div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;"><a href="' + bp + 'index.html" style="color:#94a3b8;text-decoration:none;">Inicio</a><a href="' + pp + 'marketplace.html" style="color:#94a3b8;text-decoration:none;">Marketplace</a><a href="' + pp + 'donaciones.html" style="color:#94a3b8;text-decoration:none;">Donaciones</a><a href="' + pp + 'casos.html" style="color:#94a3b8;text-decoration:none;">Casos Sociales</a><a href="' + pp + 'impacto.html" style="color:#94a3b8;text-decoration:none;">Impacto</a></div></div>' +
+        '<div><h4 style="color:white;margin-bottom:12px;font-size:1rem;">Servicios</h4><div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;"><a href="' + pp + 'credifast.html" style="color:#94a3b8;text-decoration:none;">Préstamos</a><a href="' + pp + 'perfil.html" style="color:#94a3b8;text-decoration:none;">Mi Perfil</a><a href="' + pp + 'notificaciones.html" style="color:#94a3b8;text-decoration:none;">Notificaciones</a></div></div>' +
+        '<div><h4 style="color:white;margin-bottom:12px;font-size:1rem;">Legal</h4><div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;"><a href="' + pp + 'legal.html#terminos" style="color:#94a3b8;text-decoration:none;">Términos y Condiciones</a><a href="' + pp + 'legal.html#privacidad" style="color:#94a3b8;text-decoration:none;">Política de Privacidad</a><a href="' + pp + 'legal.html#datos" style="color:#94a3b8;text-decoration:none;">Uso de Datos</a></div></div>' +
+        '</div><div style="border-top:1px solid #1e293b;padding-top:20px;text-align:center;font-size:0.8rem;"><p>&copy; 2026 Ayuda a un Tercero. Todos los derechos reservados.</p></div>';
+    document.body.appendChild(footer);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     App.init();
+    App.injectFooter();
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active, .modal.active').forEach(function(m) { m.classList.remove('active'); });
+        ['productPreviewModal', 'cartModal', 'imageViewer', 'donationFormModal', 'vPlayer'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) { el.style.display = 'none'; el.classList.remove('active'); }
+        });
+    }
 });

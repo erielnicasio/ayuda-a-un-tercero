@@ -1269,7 +1269,14 @@
                 });
             }
         }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active, .modal.active').forEach(function(m) { m.classList.remove('active'); });
+            }
+        });
     </script>
+    <script src="../assets/js/app.js"></script>
 </body>
 
 </html>

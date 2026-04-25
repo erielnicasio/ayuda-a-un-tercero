@@ -255,6 +255,8 @@
             margin-top: 16px;
             border-top: 1px solid var(--gray-100);
             padding-top: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .d-item-donor {
@@ -264,6 +266,19 @@
             font-size: 0.85rem;
             font-weight: 600;
             color: var(--gray-700);
+            flex-wrap: wrap;
+            min-width: 0;
+        }
+
+        @media (max-width: 480px) {
+            .d-item-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .d-item-footer .btn {
+                width: 100%;
+                text-align: center;
+            }
         }
 
         .d-avatar {
@@ -1925,19 +1940,31 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
 
         function submitDonationRequest(e) {
             e.preventDefault();
+            var motivo = document.getElementById('don-motivo').value.trim();
+            if (!motivo) { alert('El motivo es obligatorio'); return; }
             var donation = {
                 nombre: document.getElementById('don-nombre').value.trim(),
                 apellido: document.getElementById('don-apellido').value.trim(),
                 edad: parseInt(document.getElementById('don-edad').value),
                 numero: document.getElementById('don-numero').value.trim(),
                 correo: document.getElementById('don-correo').value.trim(),
-                motivo: document.getElementById('don-motivo').value.trim()
+                motivo: motivo
             };
+            if (!donation.nombre || !donation.apellido || !donation.numero || !donation.correo) {
+                alert('Todos los campos son obligatorios'); return;
+            }
             DB.addDonation(donation);
             document.getElementById('donationFormModal').style.display = 'none';
-            App.showToast('Solicitud enviada para revisión', 'success');
+            if (typeof App !== 'undefined') App.showToast('Solicitud enviada para revisión', 'success');
             renderApprovedDonations();
         }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var m = document.getElementById('donationFormModal');
+                if (m) m.style.display = 'none';
+            }
+        });
     </script>
     <script src="../assets/js/accessibility.js"></script>
 </body>
