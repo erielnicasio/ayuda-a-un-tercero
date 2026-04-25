@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias de Envios - Ayuda a un Tercero</title>
+    <!-- Leaflet CSS & JS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --blue-deep: #0f172a;
+            --blue-mid: #2563eb;
+            --blue-light: #eff6ff;
+            --vibrant-green: #10B981;
+            --vibrant-orange: #FF7F32;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+        }
+
+        .impacto-page {
+            padding-top: calc(var(--nav-h) + 20px);
+            background: var(--gray-50);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Specialized 3-Column Layout */
+        .impacto-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 340px;
+            gap: 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        @media (max-width: 1200px) {
+            .impacto-layout { grid-template-columns: 250px 1fr; }
+            .impacto-right-panel { display: none; }
+        }
+
+        @media (max-width: 900px) {
+            .impacto-layout { grid-template-columns: 1fr; }
+            .impacto-sidebar { display: none; }
+        }
+
+        /* Geo-Hero Zone */
+        .geo-hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.85)), 
+                        url('impact_hero_bg_1774293874945.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--radius-lg);
+            padding: 64px 48px;
+            margin-bottom: 32px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .geo-hero h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1px; }
+        .geo-hero p { font-size: 1.25rem; color: rgba(255, 255, 255, 0.9); max-width: 800px; margin: 0 auto 40px; line-height: 1.6; }
+
+        .search-impacto {
+            display: flex;
+            gap: 12px;
+            background: white;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .search-impacto input {
+            border: none;
+            padding: 12px 20px;
+            flex: 1;
+            outline: none;
+            font-size: 1rem;
+            color: var(--blue-deep);
+        }
+
+        /* Impact Cards */
+        .impact-card-v2 {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .impact-card-v2:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); }
+
+        .impact-media {
+            height: 220px;
+            position: relative;
+            background: var(--blue-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .impact-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: transform 0.6s ease;
+        }
+
+        .impact-card-v2:hover .impact-media img { transform: scale(1.1); opacity: 0.6; }
+
+        .play-btn {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue-mid);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover { transform: scale(1.1); background: var(--blue-mid); color: white; }
+
+        .impact-body { padding: 24px; }
+        .impact-user { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .user-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--blue-mid); border: 2px solid white; box-shadow: var(--shadow-sm); }
+        .user-info h4 { font-size: 1rem; color: var(--blue-deep); margin: 0; }
+        .user-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+        .impact-text { font-size: 0.95rem; color: #475569; line-height: 1.6; margin-bottom: 20px; font-style: italic; }
+        
+        .impact-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid var(--gray-100); }
+        .vote-btn { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--blue-deep); cursor: pointer; transition: all 0.2s; }
+        .vote-btn:hover { color: var(--vibrant-orange); }
+
+        /* Stats Sidebar */
+        .impact-stats-box {
+            background: linear-gradient(135deg, var(--blue-deep) 0%, #1e293b 100%);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .stat-item { margin-bottom: 20px; }
+        .stat-val { font-size: 2.2rem; font-weight: 800; color: var(--vibrant-orange); display: block; line-height: 1; margin-bottom: 4px; }
+        .stat-lbl { font-size: 0.85rem; opacity: 0.8; font-weight: 600; text-transform: uppercase; }
+
+        /* Modal Video */
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-modal.active { display: flex; }
+        .video-container { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: black; border-radius: 16px; overflow: hidden; position: relative; }
+        .close-video { position: absolute; top: -50px; right: 0; color: white; cursor: pointer; font-size: 2rem; }
+
+        /* Sidebar filter items */
+        .c-sidebar-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .c-sidebar-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--blue-deep);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--gray-100);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html" class="active">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline btn-sm">Mi Cuenta</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="impacto-page">
+        <!-- Hero Zone -->
+        <div style="max-width: 1440px; margin: 0 auto; padding: 0 24px;">
+            <div class="geo-hero">
+                <h1>Voces que Transforman</h1>
+                <p>Descubre historias reales de personas cuyas vidas cambiaron gracias a la solidaridad de nuestra comunidad. Cada gesto cuenta una historia de esperanza.</p>
+                <div class="search-impacto">
+                    <i data-lucide="search" style="color: var(--blue-mid); margin-left: 10px; align-self: center;"></i>
+                    <input type="text" id="impactoSearch" placeholder="Busca historias por ubicación o palabras clave...">
+                    <button class="btn btn-primary" onclick="window.scrollTo({top: 800, behavior: 'smooth'})">Explorar Historias</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="impacto-layout">
+            <!-- Sidebar: Categories & Inspiration -->
+            <aside class="impacto-sidebar">
+                <div class="c-sidebar-box">
+                    <h3 class="c-sidebar-title">Filtrar por Tipo</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display: flex; gap: 10px; align-items: center; cursor: pointer;">
+                            <input type="checkbox" checked> 🎥 Video Testimonios
+                        </label>
+                        <label style="display: flex; gap: 10px; align-items: center; cursor: pointer;">
+                            <input type="checkbox" checked> 📝 Historias Escritas
+                        </label>
+                        <label style="display: flex; gap: 10px; align-items: center; cursor: pointer;">
+                            <input type="checkbox"> 📸 Antes y Después
+                        </label>
+                    </div>
+                </div>
+
+                <div class="c-sidebar-box" style="background: var(--blue-light); border-color: var(--blue-mid);">
+                    <h3 class="c-sidebar-title">Inspira a Otros</h3>
+                    <p style="font-size: 0.85rem; color: var(--blue-deep); margin-bottom: 20px;">¿Has recibido ayuda o has impactado a alguien? Comparte tu experiencia.</p>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="openImpactoModal()">+ Contar mi Historia</button>
+                </div>
+            </aside>
+
+            <!-- Main Feed -->
+            <main>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                    <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--blue-deep);">Historias de la Comunidad</h2>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-outline btn-sm active">Tendencias</button>
+                        <button class="btn btn-outline btn-sm">Más Recientes</button>
+                    </div>
+                </div>
+
+                <div id="impactoGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+                    <!-- Cargado por JS -->
+                </div>
+            </main>
+
+            <!-- Right Sidebar: Global Impact -->
+            <aside class="impacto-right-panel">
+                <div class="impact-stats-box">
+                    <h3 class="c-sidebar-title" style="color: white; border-color: rgba(255,255,255,0.1);">📊 Impacto Global</h3>
+                    <div class="stat-item">
+                        <span class="stat-val" id="statVidas">1,245</span>
+                        <span class="stat-lbl">Vidas Transformadas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val" id="statDonaciones">$3,892</span>
+                        <span class="stat-lbl">Donaciones Entregadas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val" id="statCasos">184</span>
+                        <span class="stat-lbl">Casos Exitosos</span>
+                    </div>
+                </div>
+
+                <div class="c-sidebar-box">
+                    <h3 class="c-sidebar-title">📍 Mapa de Impacto</h3>
+                    <div id="impactMap" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--gray-200);"></div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Visualiza las comunidades que están creciendo gracias a ti.</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Modal: Publicar Historia -->
+    <div class="modal-overlay" id="impactoModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" style="position: absolute; top: 25px; right: 25px; background: none; border: none; cursor: pointer;"
+                onclick="document.getElementById('impactoModal').classList.remove('active')">
+                <i data-lucide="x" style="width: 28px; height: 28px; color: var(--text-muted);"></i>
+            </button>
+            <div style="margin-bottom: 32px;">
+                <h2 style="font-size: 2rem; font-weight: 800; color: var(--blue-deep);">Comparte tu Experiencia</h2>
+                <p style="color: var(--text-muted);">Tu historia puede ser la inspiración que alguien más necesita.</p>
+            </div>
+            <form id="formImpacto" style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label class="form-label" style="font-weight: 700; display: block; margin-bottom: 8px;">Tu Nombre o Alias</label>
+                    <input type="text" id="impNombre" class="form-input" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--gray-200);" placeholder="Ej. Familia Pérez" required>
+                </div>
+                <div>
+                    <label class="form-label" style="font-weight: 700; display: block; margin-bottom: 8px;">Ubicación</label>
+                    <input type="text" id="impUbic" class="form-input" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--gray-200);" placeholder="Ciudad o Barrio" required>
+                </div>
+                <div>
+                    <label class="form-label" style="font-weight: 700; display: block; margin-bottom: 8px;">Cuéntanos qué pasó</label>
+                    <textarea id="impHistoria" rows="5" class="form-input" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--gray-200); resize: none;" placeholder="¿Cómo te ayudó la plataforma? ¿Qué impacto viste?" required></textarea>
+                </div>
+                <div>
+                    <label class="form-label" style="font-weight: 700; display: block; margin-bottom: 8px;">Subir Video (Link YouTube/Drive) o Foto</label>
+                    <input type="text" id="impMedia" class="form-input" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--gray-200);" placeholder="Pega el link de tu video aquí">
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 10px;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('impactoModal').classList.remove('active')">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">Publicar Historia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video Modal Player -->
+    <div class="video-modal" id="vPlayer">
+        <div class="video-container">
+            <span class="close-video" onclick="closeVideo()">&times;</span>
+            <iframe id="videoIframe" width="100%" height="100%" src="" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script src="../assets/js/db.js"></script>
+    <script>
+        function openImpactoModal() {
+            document.getElementById('impactoModal').classList.add('active');
+        }
+
+        function playVideo(url) {
+            if (!url) return;
+            let embedUrl = url;
+            try {
+                if (url.includes('youtube.com/watch?v=')) {
+                    const vid = url.split('v=')[1].split('&')[0];
+                    embedUrl = `https://www.youtube.com/embed/${vid}`;
+                } else if (url.includes('youtu.be/')) {
+                    const vid = url.split('youtu.be/')[1].split('?')[0];
+                    embedUrl = `https://www.youtube.com/embed/${vid}`;
+                } else if (url.includes('youtube.com/shorts/')) {
+                    const vid = url.split('shorts/')[1].split('?')[0];
+                    embedUrl = `https://www.youtube.com/embed/${vid}`;
+                }
+            } catch (e) { console.error("URL Error:", e); }
+
+            document.getElementById('videoIframe').src = embedUrl;
+            document.getElementById('vPlayer').classList.add('active');
+        }
+
+        function closeVideo() {
+            document.getElementById('vPlayer').classList.remove('active');
+            document.getElementById('videoIframe').src = '';
+        }
+
+        function renderImpacto() {
+            const grid = document.getElementById('impactoGrid');
+            const data = DB.getImpacto();
+            
+            grid.innerHTML = data.map(item => `
+                <div class="impact-card-v2">
+                    <div class="impact-media">
+                        <img src="${item.thumb}" alt="${item.nombre}">
+                        ${item.videoUrl ? `<div class="play-btn" onclick="playVideo('${item.videoUrl}')"><i data-lucide="play" fill="currentColor"></i></div>` : ''}
+                    </div>
+                    <div class="impact-body">
+                        <div class="impact-user">
+                            <div class="user-avatar">${item.nombre.charAt(0)}</div>
+                            <div class="user-info">
+                                <h4>${item.nombre}</h4>
+                                <span>📍 ${item.ubicacion}</span>
+                            </div>
+                        </div>
+                        <p class="impact-text">"${item.historia}"</p>
+                        <div class="impact-footer">
+                            <div class="vote-btn" onclick="vote('${item.id}', this)">
+                                <i data-lucide="heart" size="18"></i>
+                                <span>Me inspira (${item.votos})</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
+                                ${item.fecha}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function vote(id, el) {
+            DB.voteImpacto(id);
+            const span = el.querySelector('span');
+            const current = parseInt(span.innerText.match(/\d+/)[0]);
+            span.innerText = `Me inspira (${current + 1})`;
+            el.style.color = 'var(--vibrant-orange)';
+            el.style.pointerEvents = 'none';
+        }
+
+        function initImpactMap() {
+            const map = L.map('impactMap').setView([18.7951, -69.9547], 8);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            
+            // Random markers for impact
+            const impactNodes = [
+                [18.4861, -69.9312], [19.4517, -70.6970], [18.8093, -69.8118], [18.4526, -69.6461]
+            ];
+            
+            impactNodes.forEach(pos => {
+                L.circleMarker(pos, {
+                    radius: 8,
+                    fillColor: "#FF7F32",
+                    color: "#fff",
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderImpacto();
+            initImpactMap();
+            
+            // Sync global stats
+            const stats = DB.getStats();
+            document.getElementById('statVidas').innerText = stats.vidas_impactadas.toLocaleString();
+            document.getElementById('statDonaciones').innerText = `$${stats.donaciones_totales.toLocaleString()}`;
+            document.getElementById('statCasos').innerText = stats.casos_exitosos.toLocaleString();
+
+            document.getElementById('formImpacto').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nova = {
+                    nombre: document.getElementById('impNombre').value,
+                    ubicacion: document.getElementById('impUbic').value,
+                    historia: document.getElementById('impHistoria').value,
+                    videoUrl: document.getElementById('impMedia').value,
+                    thumb: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800",
+                    categoriaIcons: ["heart"]
+                };
+                DB.saveImpacto(nova);
+                alert('¡Gracias por compartir! Tu historia ha sido publicada y servirá de inspiración para toda la comunidad.');
+                document.getElementById('impactoModal').classList.remove('active');
+                e.target.reset();
+                renderImpacto();
+            });
+
+            lucide.createIcons();
+        });
+    </script>
+    <style>
+        /* Extra consistency adjustments */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+        .modal-content {
+            background: white;
+            width: 95%;
+            max-width: 950px;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</body>
+
+</html>
+
+

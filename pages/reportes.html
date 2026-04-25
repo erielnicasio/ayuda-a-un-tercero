@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Transparencia - Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .report-section {
+            padding-top: calc(var(--nav-h) + 40px);
+            background: var(--bg-light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .stats-hero {
+            background: linear-gradient(135deg, var(--blue-pale), #ffffff);
+            border-radius: var(--radius-lg);
+            padding: 60px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .stats-grid-top {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .stat-box-large {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            border-bottom: 4px solid var(--blue-mid);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--blue-deep);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 40px;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--blue-deep);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .impact-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .impact-item {
+            padding: 20px;
+            background: white;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            border-left: 4px solid var(--green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-soft);
+        }
+
+        @media (max-width: 1024px) {
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline btn-sm">Mi Perfil</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="report-section">
+        <div class="container">
+            <header class="stats-hero">
+                <h1 style="font-size: 2.5rem; color: var(--blue-deep); margin-bottom: 16px;">Portal de Transparencia
+                </h1>
+                <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                    Cada centavo y cada artículo donado es rastreado para asegurar que llegue a quien más lo necesita.
+                    Aquí presentamos el impacto real consolidado de nuestra comunidad en Monte Plata.
+                </p>
+
+                <div class="stats-grid-top">
+                    <div class="stat-box-large">
+                        <span class="stat-number">$145,280</span>
+                        <span class="stat-label">Fondos Recaudados</span>
+                    </div>
+                    <div class="stat-box-large">
+                        <span class="stat-number">1,420</span>
+                        <span class="stat-label">Artículos Donados</span>
+                    </div>
+                    <div class="stat-box-large" style="border-bottom-color: var(--green);">
+                        <span class="stat-number">85%</span>
+                        <span class="stat-label">Casos Completados</span>
+                    </div>
+                    <div class="stat-box-large" style="border-bottom-color: var(--accent-orange);">
+                        <span class="stat-number">12,400</span>
+                        <span class="stat-label">Vidas Impactadas</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="report-grid">
+                <div class="main-reports">
+                    <div class="chart-card">
+                        <h3 class="chart-title"><i data-lucide="bar-chart-3"></i> Distribución del Impacto por Categoría
+                        </h3>
+                        <canvas id="impactChart" height="150"></canvas>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title"><i data-lucide="line-chart"></i> Crecimiento de la Solidaridad (Mensual)
+                        </h3>
+                        <canvas id="growthChart" height="150"></canvas>
+                    </div>
+                </div>
+
+                <aside class="sidebar-reports">
+                    <div class="chart-card">
+                        <h3 class="chart-title" style="font-size: 1rem;"><i data-lucide="check-circle-2"></i> Últimas
+                            Verificaciones</h3>
+                        <ul class="impact-list">
+                            <li class="impact-item">
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.9rem;">Caso: Lucas H.</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">Factura Médica
+                                        Certificada</div>
+                                </div>
+                                <span class="badge badge-green">VERIFICADO</span>
+                            </li>
+                            <li class="impact-item">
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.9rem;">Escuela Rural #4</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">Recibo de Entrega</div>
+                                </div>
+                                <span class="badge badge-green">CONFIRMADO</span>
+                            </li>
+                            <li class="impact-item">
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.9rem;">Comedor Esperanza</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">Auditoría de Fondos</div>
+                                </div>
+                                <span class="badge badge-green">EXITOSO</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="chart-card" style="background: var(--blue-deep); color: white;">
+                        <h3 class="chart-title" style="color: white; font-size: 1rem;"><i
+                                data-lucide="shield-check"></i> Compromiso Cero Corrupción</h3>
+                        <p style="font-size: 0.85rem; opacity: 0.8; line-height: 1.6;">
+                            El 100% de las donaciones directas llegan al beneficiario. Nuestra plataforma se sostiene
+                            mediante aportes voluntarios de mantenimiento y comisiones mínimas del marketplace.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Impact Chart (Doughnut)
+            const ctx1 = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Salud', 'Educación', 'Vivienda', 'Alimentación', 'Emprendimiento'],
+                    datasets: [{
+                        data: [45, 25, 15, 10, 5],
+                        backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            // Growth Chart (Line)
+            const ctx2 = document.getElementById('growthChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Donaciones ($)',
+                        data: [12000, 19000, 15000, 25000, 22000, 31000],
+                        borderColor: '#2563EB',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información Legal | Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .legal-page {
+            padding-top: calc(var(--nav-height) + 60px);
+            padding-bottom: 80px;
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        .legal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-premium);
+        }
+
+        .legal-section {
+            margin-bottom: 40px;
+        }
+
+        .legal-section h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .legal-section p {
+            color: var(--text-dark);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .back-home:hover {
+            color: var(--accent-orange);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar scrolled">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="legal-page">
+        <div class="container">
+            <a href="../index.html" class="back-home">
+                <i data-lucide="arrow-left" size="18"></i> Volver al inicio
+            </a>
+
+            <div class="legal-container">
+                <div id="privacidad" class="legal-section">
+                    <h2><i data-lucide="shield-check"></i> Política de Privacidad</h2>
+                    <p>En **Ayuda a un Tercero**, valoramos y respetamos la privacidad de nuestros usuarios. Esta
+                        política describe cómo recopilamos, usamos y protegemos su información personal.</p>
+                    <p>1. **Recopilación de Datos**: Recopilamos información básica al registrarse, como nombre, correo
+                        electrónico y ubicación para facilitar las conexiones comunitarias.</p>
+                    <p>2. **Uso de la Información**: Sus datos se utilizan exclusivamente para validar su identidad en
+                        la plataforma y permitir la interacción segura en el marketplace y donaciones.</p>
+                    <p>3. **Protección**: Implementamos medidas de seguridad de grado bancario para asegurar que su
+                        información no sea accedida por terceros no autorizados.</p>
+                </div>
+
+                <div id="terminos" class="legal-section">
+                    <h2><i data-lucide="file-text"></i> Términos y Condiciones</h2>
+                    <p>Al utilizar nuestra plataforma, usted acepta los siguientes términos:</p>
+                    <p>1. **Uso Ético**: Los usuarios se comprometen a actuar de buena fe, tanto en la publicación de
+                        casos sociales como en las transacciones comerciales.</p>
+                    <p>2. **Validación**: Todas las publicaciones de ayuda están sujetas a revisión administrativa para
+                        prevenir fraudes.</p>
+                    <p>3. **Transparencia**: Ayuda a un Tercero no retiene comisiones de las donaciones directas; somos
+                        un facilitador tecnológico.</p>
+                </div>
+
+                <div id="cookies" class="legal-section">
+                    <h2><i data-lucide="cookie"></i> Política de Cookies</h2>
+                    <p>Utilizamos cookies esenciales para mejorar su experiencia de navegación:</p>
+                    <p>1. **Sesión**: Para mantenerlo conectado mientras navega por los diferentes módulos.</p>
+                    <p>2. **Preferencias**: Para recordar configuraciones de idioma o ubicación.</p>
+                    <p>3. **Análisis**: Datos anónimos para entender cómo se utiliza la plataforma y poder mejorarla
+                        continuamente.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" style="margin-top: 0; background: white;">
+        <div class="container" style="text-align: center; color: var(--text-muted);">
+            © 2026 Ayuda a un Tercero. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
+

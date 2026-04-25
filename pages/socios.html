@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socio Solidario | Alianzas Estratégicas</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .partners-hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(rgba(30, 58, 138, 0.9), rgba(30, 58, 138, 0.9)),
+                url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1600') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--blue-mid);
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .price-box {
+            background: white;
+            padding: 48px;
+            border-radius: 30px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .price-box.featured {
+            border: 2px solid var(--blue-mid);
+            transform: scale(1.05);
+            z-index: 2;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .price-tag {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--blue-deep);
+            margin: 24px 0;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 32px 0;
+            text-align: left;
+        }
+
+        .check-list li {
+            margin-bottom: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .check-list i {
+            color: var(--green);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="socios.html" class="active">Socios</a>
+                <a href="casos.html">Casos Sociales</a>
+            </div>
+            <div class="nav-btns">
+                <a href="login.html" class="btn btn-primary btn-sm">Unirse como Empresa</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="partners-hero">
+        <div class="container">
+            <h1 style="font-size: 3.5rem; margin-bottom: 24px;">Impulsa tu Marca con Propósito</h1>
+            <p style="font-size: 1.25rem; max-width: 800px; margin: 0 auto; opacity: 0.9; line-height: 1.6;">
+                Convierte tu negocio en un motor de cambio para Monte Plata. Únete a nuestra red de "Negocios
+                Solidarios" y conecta con una comunidad que valora la responsabilidad social.
+            </p>
+        </div>
+    </header>
+
+    <section style="padding: 100px 0; background: var(--bg-light);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.5rem; color: var(--blue-deep);">¿Por qué ser un Socio Solidario?</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+                <div class="benefit-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 20px;">🎖️</div>
+                    <h3>Diferenciación de Marca</h3>
+                    <p style="color: var(--text-muted);">Posiciónate por encima de la competencia con el sello oficial
+                        de Negocio Solidario en nuestra plataforma.</p>
+                </div>
+                <div class="benefit-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 20px;">📈</div>
+                    <h3>Incremento en Ventas</h3>
+                    <p style="color: var(--text-muted);">Los usuarios de nuestra comunidad priorizan compras en negocios
+                        que reinvierten en proyectos sociales locales.</p>
+                </div>
+                <div class="benefit-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 20px;">🤝</div>
+                    <h3>Responsabilidad Corporativa</h3>
+                    <p style="color: var(--text-muted);">Canaliza tus donaciones de forma transparente y visualiza el
+                        impacto real de tu inversión social.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 100px 0;">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.5rem; color: var(--blue-deep);">Planes de Alianza</h2>
+                <p style="color: var(--text-muted);">Elige nivel de impacto que tu empresa desea generar.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Plan Bronce -->
+                <div class="price-box">
+                    <h3>Emprendedor Solidario</h3>
+                    <div class="price-tag">Gratis</div>
+                    <ul class="check-list">
+                        <li><i data-lucide="check"></i> Badge de Verificado</li>
+                        <li><i data-lucide="check"></i> Publicaciones en Marketplace</li>
+                        <li><i data-lucide="check"></i> 1% Donación Voluntaria</li>
+                    </ul>
+                    <a href="perfil.html" class="btn btn-outline" style="width: 100%;">Empezar Ahora</a>
+                </div>
+
+                <!-- Plan Oro -->
+                <div class="price-box featured">
+                    <div
+                        style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); background: var(--accent-orange); color: white; padding: 8px 24px; border-radius: 20px; font-weight: 800; font-size: 0.8rem;">
+                        MÁS POPULAR</div>
+                    <h3>Pilar Comunitario</h3>
+                    <div class="price-tag">$49.99<span style="font-size: 1rem;">/mes</span></div>
+                    <ul class="check-list">
+                        <li><i data-lucide="check"></i> Sello DORADO de Negocio</li>
+                        <li><i data-lucide="check"></i> Publicaciones Destacadas</li>
+                        <li><i data-lucide="check"></i> Reporte Semanal de Impacto</li>
+                        <li><i data-lucide="check"></i> Logo en Portal de Transparencia</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;"
+                        onclick="alert('Iniciando proceso de registro corporativo...')">Elegir Plan Oro</button>
+                </div>
+
+                <!-- Plan Platino -->
+                <div class="price-box">
+                    <h3>Guardian de la Región</h3>
+                    <div class="price-tag">$199<span style="font-size: 1rem;">/mes</span></div>
+                    <ul class="check-list">
+                        <li><i data-lucide="check"></i> Todo lo del Plan Oro</li>
+                        <li><i data-lucide="check"></i> Banner "Patrocinador" en Casos Oro</li>
+                        <li><i data-lucide="check"></i> Publi-reportaje en Impacto Social</li>
+                        <li><i data-lucide="check"></i> Canal Directo de Alianzas</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%;"
+                        onclick="alert('Dírigiendote a nuestro equipo de Alianzas VIP...')">Contactar Ventas</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container" style="text-align: center;">
+            <p>© 2026 Ayuda a un Tercero - División de Alianzas Corporativas</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
+

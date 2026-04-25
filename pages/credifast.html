@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credifast - Microcréditos y Préstamos</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --blue-deep: var(--primary-blue);
+            --blue-mid: var(--primary-blue-mid);
+            --blue-light: var(--primary-blue-light);
+            --green: #10B981;
+            --green-dark: #059669;
+            --amber: var(--accent-orange);
+            --red: #EF4444;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-full: 999px;
+            --shadow-md: var(--shadow-premium);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .credifast-page {
+            padding-top: calc(var(--nav-height) + 40px);
+            background: var(--gray-50);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .credifast-hero-banner {
+            background: linear-gradient(135deg, var(--blue-deep), #1d4ed8);
+            border-radius: var(--radius-xl);
+            padding: 64px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            margin-bottom: 60px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .credifast-hero-banner::after {
+            content: '💳';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16rem;
+            opacity: .05;
+            pointer-events: none;
+        }
+
+        .credifast-title {
+            font-size: clamp(2rem, 3vw, 2.8rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+
+        .credifast-title span {
+            color: #6EE7B7;
+        }
+
+        .credifast-desc {
+            color: rgba(255, 255, 255, .7);
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        /* Loan Simulator */
+        .simulator-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            z-index: 2;
+        }
+
+        .sim-label {
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 10px;
+        }
+
+        .sim-range {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(90deg, var(--blue-mid) var(--p, 50%), var(--gray-200) var(--p, 50%));
+            outline: none;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .sim-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--blue-mid);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, .4);
+            border: 3px solid var(--white);
+        }
+
+        .sim-value {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--blue-deep);
+            margin-bottom: 24px;
+        }
+
+        .sim-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .sim-result-item {
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+        }
+
+        .sim-result-label {
+            font-size: .75rem;
+            color: var(--gray-400);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .sim-result-value {
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .dashboard-panel {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            padding: 32px;
+            margin-bottom: 40px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--gray-100);
+            padding-bottom: 16px;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--blue-deep);
+        }
+
+        /* Modal Publish */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+            .credifast-hero-banner {
+                grid-template-columns: 1fr;
+                padding: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html" class="active">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline btn-sm">Mi Cuenta</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <section class="credifast-page">
+        <div class="container">
+
+            <div class="credifast-hero-banner">
+                <div class="credifast-content">
+                    <h1 class="credifast-title">Microcréditos <span>Justos</span> y Rápidos</h1>
+                    <p class="credifast-desc">Financiamos tus ideas de negocio y oportunidades económicas generadas por
+                        los aportes de nuestra red solidaria. Accede a préstamos con bajo interés aunque no califiques
+                        en la banca tradicional.</p>
+                    <button class="btn btn-green btn-lg"
+                        onclick="document.getElementById('loanModal').classList.add('active')">Solicitar
+                        Préstamo</button>
+                    <button class="btn btn-ghost btn-lg"
+                        onclick="document.getElementById('gestionPanel').scrollIntoView({behavior:'smooth'});"
+                        style="margin-top:12px;">Gestionar mis pagos</button>
+                </div>
+
+                <div class="simulator-card">
+                    <h3 style="margin-bottom: 20px; font-size: 1.2rem; font-weight: 700; color: var(--blue-deep);">
+                        Simulador de Crédito</h3>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label class="sim-label" style="margin-bottom: 6px; display:inline-block;">Tipo de
+                            Crédito</label>
+                        <select id="sim-tipo" class="form-control" style="padding: 8px; font-size: 0.9rem;"
+                            onchange="updateSimulator()">
+                            <option value="0.050">Microcrédito Emprendedor (5.0% TEA)</option>
+                            <option value="0.080">Préstamo Personal (8.0% TEA)</option>
+                        </select>
+                    </div>
+
+                    <div class="sim-label">Monto Solicitado</div>
+                    <input type="range" class="sim-range" min="100" max="5000" value="1500" id="montoRange">
+                    <div class="sim-value" id="montoValue">$1,500</div>
+
+                    <div class="sim-label">Plazo (meses)</div>
+                    <input type="range" class="sim-range" min="3" max="24" value="12" id="plazoRange" style="--p: 40%;">
+                    <div class="sim-value" id="plazoValue" style="font-size: 1.5rem;">12 meses</div>
+
+                    <div class="sim-results">
+                        <div class="sim-result-item">
+                            <div class="sim-result-label">Cuota Estimada</div>
+                            <div class="sim-result-value" id="cuotaValue">$128.41 / mes</div>
+                        </div>
+                        <div class="sim-result-item">
+                            <div class="sim-result-label">Interés Aplicado</div>
+                            <div class="sim-result-value" id="tasaValue">5.0% TEA</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline"
+                        style="width: 100%; margin-top: 20px; justify-content: center; border-color: var(--blue-mid); color: var(--blue-mid);"
+                        onclick="showAmortizationTable()">📊 Ver Tabla de Amortización</button>
+                </div>
+            </div>
+
+            <div class="loan-types" style="margin-bottom: 60px;">
+                <div class="loan-type-card">
+                    <div class="loan-type-icon">🚀</div>
+                    <div class="loan-type-name">Microcrédito para Emprendimiento</div>
+                    <div class="loan-type-rate">5.0% <span>TEA anual</span></div>
+                    <p class="loan-type-desc">Dirigidos a personas que desean iniciar un negocio o no califican para
+                        préstamos bancarios tradicionales. Obtienes un <strong>interés bajo</strong> y <strong>plazos
+                            flexibles</strong>.</p>
+                </div>
+                <div class="loan-type-card">
+                    <div class="loan-type-icon">🛡️</div>
+                    <div class="loan-type-name">Préstamos Personales</div>
+                    <div class="loan-type-rate">8.0% <span>TEA anual</span></div>
+                    <p class="loan-type-desc">Exclusivo para usuarios con buen historial dentro de la plataforma
+                        (donadores o compradores). Aprobación rápida con <strong>interés moderado</strong> para
+                        proyectos o emergencias.</p>
+                </div>
+            </div>
+
+            <!-- Dashboard de Pagos / Historial -->
+            <div id="gestionPanel" class="dashboard-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Mi Estado Crediticio</h2>
+                    <span class="badge badge-green" style="font-size: 0.85rem;">Historial Excelente ⭐</span>
+                </div>
+
+                <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 32px;">
+                    <div class="kpi-card">
+                        <div class="kpi-icon blue">💳</div>
+                        <div class="kpi-label">Préstamo Activo</div>
+                        <div class="kpi-value">$1,500<span style="font-size: 1rem;">.00</span></div>
+                        <div class="kpi-change">Emprendimiento (5.0% TEA)</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon amber">⏳</div>
+                        <div class="kpi-label">Próxima Cuota</div>
+                        <div class="kpi-value">$128<span style="font-size: 1rem;">.41</span></div>
+                        <div class="kpi-change" style="color: var(--gray-500);">Vence en: 10 días</div>
+                    </div>
+                    <div class="kpi-card"
+                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+                        <button class="btn btn-primary btn-lg" id="btnPagarDashboard"
+                            style="width: 100%; justify-content: center;" onclick="openCredifastPayment()">Pagar Cuota
+                            Ahora</button>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.1rem; color: var(--gray-800); margin-bottom: 16px;">Historial de Solicitudes y
+                    Pagos</h3>
+                <div style="overflow-x: auto;">
+                    <table class="recent-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo de Solicitud / Transacción</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credifastTablaBody">
+                            <tr>
+                                <td>15 Mar 2026</td>
+                                <td><strong style="color: var(--gray-800);">Pago de Cuota (1/12)</strong></td>
+                                <td style="font-weight: 700;">$128.41</td>
+                                <td><span class="badge badge-gray">Pendiente</span></td>
+                                <td><button class="btn btn-outline btn-sm"
+                                        onclick="openCredifastPayment()">Pagar</button></td>
+                            </tr>
+                            <tr>
+                                <td>15 Feb 2026</td>
+                                <td>Solicitud Microcrédito Emprendedor</td>
+                                <td>$1,500.00</td>
+                                <td><span class="badge badge-green">Aprobado</span></td>
+                                <td><span style="color:var(--gray-400); font-size:0.85rem;">Desembolsado</span></td>
+                            </tr>
+                            <tr>
+                                <td>10 Nov 2025</td>
+                                <td style="color: var(--gray-500);">Solicitud Préstamo Personal</td>
+                                <td style="color: var(--gray-500);">$800.00</td>
+                                <td><span class="badge badge-red">Rechazado</span></td>
+                                <td><span style="color:var(--gray-400); font-size:0.85rem;">Falta historial</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recomendaciones Futuras -->
+        <div
+            style="background: linear-gradient(135deg, var(--blue-deep), #1e3a8a); border-radius: var(--radius-lg); padding: 40px; color: var(--white); margin-top: 40px; box-shadow: var(--shadow-xl); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; right: -20px; top: -20px; font-size: 10rem; opacity: 0.05; pointer-events: none;">
+                🔒</div>
+            <h3
+                style="font-size: 1.5rem; margin-bottom: 12px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                Roadmap Tecnológico <span>🚀</span>
+            </h3>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 24px; font-size: 0.95rem; max-width: 800px;">Nuestro
+                compromiso es llevar Credifast a estándares de nivel Fintech. Actualmente en fase de diseño, aquí se
+                proponen las implementaciones imperativas para la salida a producción:</p>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; position: relative; z-index: 2;">
+
+                <div
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
+                    <div style="font-size: 1.5rem; margin-bottom: 12px;">🧮</div>
+                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Doble Verificación de
+                        Amortización</h4>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">La
+                        lógica de cálculo de intereses será respaldada por validaciones en el Backend para garantizar la
+                        no manipulación.</p>
+                    <button class="btn btn-outline btn-sm"
+                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
+                        onclick="openDemo('backend')">Simular Servidor</button>
+                </div>
+
+                <div
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
+                    <div style="font-size: 1.5rem; margin-bottom: 12px;">🛡️</div>
+                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Cobros Tokenizados (PCI-DSS)
+                    </h4>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">
+                        Integrar pasarelas de pago certificadas para que nadie toque los datos de tarjeta originales,
+                        usando "bóveda tokenizada".</p>
+                    <button class="btn btn-outline btn-sm"
+                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
+                        onclick="openDemo('vault')">Simular Bóveda</button>
+                </div>
+
+                <div
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
+                    <div style="font-size: 1.5rem; margin-bottom: 12px;">🆔</div>
+                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Regulación KYC Completa</h4>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">Módulo
+                        de escaneo de Cédula/Pasaporte y prueba de vida facial con Inteligencia Artificial como
+                        requisito fundamental.</p>
+                    <button class="btn btn-outline btn-sm"
+                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
+                        onclick="openDemo('kyc')">Prueba Biometría</button>
+                </div>
+
+                <div
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
+                    <div style="font-size: 1.5rem; margin-bottom: 12px;">📊</div>
+                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Integración API Buró</h4>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">Generar
+                        Scores Financieros y algoritmos de riesgo crediticio conectados directamente al Buró de forma
+                        automática.</p>
+                    <button class="btn btn-outline btn-sm"
+                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
+                        onclick="openDemo('buro')">Consultar API</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE TRANSPARENCIA (Solo visible para usuarios con préstamos aprobados) -->
+        <div id="transparencySection" class="container"
+            style="display: none; margin-top: 60px; animation: fadeIn 0.8s ease;">
+            <div class="dashboard-panel" style="border-top: 4px solid var(--blue-mid);">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title" style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="shield-check" style="color: var(--blue-mid);"></i>
+                            Reporte de Transparencia e Impacto
+                        </h2>
+                        <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: 4px;">Acceso exclusivo para
+                            miembros activos con financiamiento aprobado.</p>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="window.print()">
+                        <i data-lucide="download"></i> Descargar Reporte
+                    </button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="recent-table">
+                        <thead>
+                            <tr style="background: var(--gray-50);">
+                                <th style="padding: 12px 16px;">Fecha</th>
+                                <th style="padding: 12px 16px;">Origen del Recurso</th>
+                                <th style="padding: 12px 16px;">Tipo de Impacto</th>
+                                <th style="padding: 12px 16px;">Beneficiario / Proyecto</th>
+                                <th style="padding: 12px 16px;">Monto / Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 16px;">15 Mar 2026</td>
+                                <td style="padding: 16px;">Fondo Plataforma</td>
+                                <td style="padding: 16px;"><span class="badge badge-blue">Préstamo Credifast</span></td>
+                                <td style="padding: 16px;">Taller de Costura Local</td>
+                                <td style="padding: 16px; font-weight: 700;">$1,500.00</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 16px;">14 Mar 2026</td>
+                                <td style="padding: 16px;">Donación Colectiva (120 donantes)</td>
+                                <td style="padding: 16px;"><span class="badge badge-green">Ayuda Social Directa</span>
+                                </td>
+                                <td style="padding: 16px;">Caso: Operación Pediátrica Lucas</td>
+                                <td style="padding: 16px; font-weight: 700;">$7,500.00</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 16px;">12 Mar 2026</td>
+                                <td style="padding: 16px;">Usuario: Carlos V.</td>
+                                <td style="padding: 16px;"><span class="badge badge-amber">Artículo Donado</span></td>
+                                <td style="padding: 16px;">Familia Díaz (Lote de Abrigos)</td>
+                                <td style="padding: 16px; color: var(--green); font-weight: 700;">GRATIS</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 16px;">10 Mar 2026</td>
+                                <td style="padding: 16px;">Compra Marketplace</td>
+                                <td style="padding: 16px;"><span class="badge badge-gray">Ingreso Emprendedor</span>
+                                </td>
+                                <td style="padding: 16px;">Cooperativa Tierra Verde (Café)</td>
+                                <td style="padding: 16px; font-weight: 700;">$18.50</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    style="margin-top: 20px; padding: 16px; background: rgba(30, 58, 138, 0.05); border-radius: 12px; font-size: 0.85rem; color: var(--blue-deep); display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="info" size="20"></i>
+                    Esta información es visible para ti por ser un usuario con préstamos aprobados, garantizando que el
+                    origen y destino de los fondos sea transparente para toda la comunidad participante.
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </section>
+
+    <!-- Modal Solicitar Préstamo -->
+    <div class="modal-overlay" id="loanModal">
+        <div class="modal-content">
+            <button class="modal-close"
+                onclick="document.getElementById('loanModal').classList.remove('active')">&times;</button>
+            <h3 style="font-size: 1.5rem; color: var(--blue-deep); margin-bottom: 12px;">Solicitud de Financiamiento
+            </h3>
+            <p style="color: var(--gray-500); margin-bottom: 24px; font-size: 0.9rem;">Completa este formulario. Tu
+                solicitud será evaluada de acuerdo a tu historial en la plataforma y el impacto de tu proyecto.</p>
+
+            <form id="formCredifast" style="display: flex; flex-direction: column; gap: 16px;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block;">Tipo de
+                            Préstamo</label>
+                        <select id="credTipoInput" class="form-control"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;"
+                            required>
+                            <option value="">Seleccionar...</option>
+                            <option value="emprendimiento">Microcrédito Emprendimiento (5.0%)</option>
+                            <option value="personal">Préstamo Personal (8.0%)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block;">Monto
+                            Solicitado ($)</label>
+                        <input id="credMontoInput" type="number" step="10" min="100" max="5000" class="form-control"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;"
+                            placeholder="Ej. 1500" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block;">Tiempo de
+                        Pago (Meses)</label>
+                    <input type="number" min="3" max="24" class="form-control"
+                        style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px;"
+                        placeholder="De 3 a 24 meses" required>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block;">Descripción
+                        del Proyecto o Necesidad</label>
+                    <textarea class="form-control" rows="3"
+                        style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; font-family: inherit;"
+                        placeholder="¿De qué trata tu idea o situación? Cuéntanos brevemente..." required></textarea>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; display: block;">Plan
+                        detallado de uso del dinero</label>
+                    <textarea class="form-control" rows="3"
+                        style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; font-family: inherit;"
+                        placeholder="Ej. $500 materiales, $300 publicidad, $700 herramientas..." required></textarea>
+                </div>
+
+                <div
+                    style="background: rgba(16,185,129,0.05); padding: 16px; border-radius: 8px; font-size: 0.85rem; color: var(--green-dark); border: 1px solid rgba(16,185,129,0.2);">
+                    <strong>Aviso:</strong> La aprobación de préstamos personales estará basada en tu historial positivo
+                    en la plataforma (casos apoyados, compras, antigüedad).
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button type="submit" class="btn btn-green"
+                        style="flex: 1; justify-content: center; font-size: 1rem;">Enviar Solicitud Crediticia</button>
+                    <button type="button" class="btn btn-outline" style="justify-content: center;"
+                        onclick="document.getElementById('loanModal').classList.remove('active')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Amortización -->
+    <div class="modal-overlay" id="amortizationModal">
+        <div class="modal-content" style="max-width: 700px; padding-top: 40px;">
+            <button class="modal-close" onclick="closeAmortizationTable()">&times;</button>
+            <h3 style="font-size: 1.5rem; color: var(--blue-deep); margin-bottom: 8px;">Tabla de Amortización</h3>
+            <p style="color: var(--gray-500); margin-bottom: 24px; font-size: 0.9rem;">Detalles de los pagos proyectados
+                según método de cuotas fijas niveladas y el impacto mes a mes de tu préstamo.</p>
+
+            <div style="max-height: 40vh; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 8px;">
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: var(--gray-50); z-index: 1;">
+                        <tr>
+                            <th
+                                style="padding: 12px; border-bottom: 2px solid var(--gray-200); font-weight: 700; color: var(--gray-700);">
+                                #</th>
+                            <th
+                                style="padding: 12px; border-bottom: 2px solid var(--gray-200); font-weight: 700; color: var(--gray-700);">
+                                Cuota Mensual</th>
+                            <th
+                                style="padding: 12px; border-bottom: 2px solid var(--gray-200); font-weight: 700; color: var(--gray-700);">
+                                Amort. Capital</th>
+                            <th
+                                style="padding: 12px; border-bottom: 2px solid var(--gray-200); font-weight: 700; color: var(--gray-700);">
+                                Intereses</th>
+                            <th
+                                style="padding: 12px; border-bottom: 2px solid var(--gray-200); font-weight: 700; color: var(--gray-700);">
+                                Saldo Restante</th>
+                        </tr>
+                    </thead>
+                    <tbody id="amortizationBody">
+                        <!-- Generado via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 24px; gap: 12px;">
+                <button class="btn btn-outline" onclick="window.print()" title="Imprimir tabla">🖨️ Imprimir</button>
+                <button class="btn btn-green" onclick="closeAmortizationTable()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Metodo de Pago Credifast -->
+    <div class="modal-overlay" id="paymentCredifastModal">
+        <div class="modal-content" style="max-width: 550px;">
+            <button class="modal-close" onclick="closeCredifastPayment()">&times;</button>
+            <h3 style="font-size: 1.5rem; color: var(--blue-deep); margin-bottom: 8px;">Realizar Pago</h3>
+            <p style="color: var(--gray-500); margin-bottom: 20px;">Vas a pagar tu cuota de <strong
+                    style="color:var(--green); font-size:1.1rem;">$128.41</strong>. Selecciona el método que deseas
+                usar:</p>
+
+            <!-- Payment Tabs -->
+            <div
+                style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--gray-200); padding-bottom: 12px;">
+                <button type="button" class="btn btn-outline pay-tab active-tab"
+                    style="flex:1; justify-content:center; border:none; background:var(--blue-pale); color:var(--blue-mid);"
+                    onclick="switchPayTab(this, 'tabTar')">💳 Tarjeta</button>
+                <button type="button" class="btn btn-outline pay-tab"
+                    style="flex:1; justify-content:center; border:none; color:var(--gray-500);"
+                    onclick="switchPayTab(this, 'tabPay')">🅿️ PayPal</button>
+                <button type="button" class="btn btn-outline pay-tab"
+                    style="flex:1; justify-content:center; border:none; color:var(--gray-500);"
+                    onclick="switchPayTab(this, 'tabTrans')">🏦 Transf.</button>
+            </div>
+
+            <form id="formCredifastPayment" style="display: flex; flex-direction: column; gap: 16px;">
+
+                <!-- Contenido Tarjeta -->
+                <div id="tabTar" class="pay-content">
+                    <p style="font-size: 0.9rem; margin-bottom: 10px; font-weight: 600;">Ingresa tu nueva tarjeta o usa
+                        la guardada:</p>
+
+                    <div
+                        style="background: var(--gray-50); padding: 14px; border-radius: 8px; border: 1px solid var(--gray-300); display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; cursor: pointer;">
+                        <label style="display:flex; align-items:center; gap:12px; cursor:pointer; width:100%;">
+                            <input type="radio" name="tarjSaved" checked
+                                style="accent-color: var(--blue-mid); width:18px; height:18px;">
+                            <span style="font-size: 1.5rem;">💳</span>
+                            <div>
+                                <div style="font-weight: 700; color: var(--gray-800);">Visa terminada en 4242</div>
+                                <div style="font-size: 0.8rem; color: var(--gray-500);">Expira 12/28</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                        <hr style="flex:1; border:none; border-top:1px solid var(--gray-200);">
+                        <span style="color:var(--gray-400); font-size:0.8rem;">o agregar una nueva</span>
+                        <hr style="flex:1; border:none; border-top:1px solid var(--gray-200);">
+                    </div>
+
+                    <div style="position:relative; margin-bottom: 12px;">
+                        <input type="text" class="form-control"
+                            style="width: 100%; padding: 12px; padding-left:40px; border: 1px solid var(--gray-300); border-radius: 8px;"
+                            placeholder="Número de Tarjeta (0000 0000 0000 0000)">
+                        <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%);">🌐</span>
+                    </div>
+                </div>
+
+                <!-- Contenido PayPal -->
+                <div id="tabPay" class="pay-content" style="display: none; text-align:center; padding: 20px 0;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🅿️</div>
+                    <h4 style="color:var(--blue-deep); margin-bottom:8px;">Pagar con PayPal</h4>
+                    <p style="color:var(--gray-500); font-size:0.9rem; margin-bottom: 16px;">Serás redirigido a la
+                        plataforma oficial de PayPal para procesar tu pago de forma segura. No guardamos información de
+                        tu cuenta.</p>
+                </div>
+
+                <!-- Contenido Transferencia -->
+                <div id="tabTrans" class="pay-content" style="display: none; padding: 10px;">
+                    <p style="color:var(--gray-600); font-size:0.9rem; margin-bottom: 12px;">Realiza el depósito
+                        directamente a nuestra cuenta bancaria. <strong>Asegúrate de agregar tu número de cédula en el
+                            concepto.</strong></p>
+                    <div
+                        style="background:var(--blue-pale); padding:16px; border-radius:8px; border:1px dashed var(--blue-mid); display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between;"><span>Banco:</span> <strong>Banco de
+                                Reservas</strong></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Cuenta Corriente:</span>
+                            <strong>960-XXXXXXXX-X</strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between;"><span>A Nombre de:</span>
+                            <strong>Fund. Ayuda a un Tercero</strong>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; display: block;">Sube tu
+                            comprobante de pago (Opcional)</label>
+                        <input type="file" class="form-control"
+                            style="width: 100%; padding: 8px; border: 1px solid var(--gray-300); border-radius: 8px;">
+                    </div>
+                </div>
+
+                <!-- Footer Form -->
+                <div style="margin-top: 16px; position:relative;">
+                    <button type="submit" id="btnProcesarCredifast" class="btn btn-green"
+                        style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 14px;">Confirmar Pago
+                        de $128.41 🔒</button>
+                    <!-- Loading overlay para simular -->
+                    <div id="paymentLoadingCredifast"
+                        style="display:none; position:absolute; inset:0; background:rgba(255,255,255,0.9); align-items:center; justify-content:center; border-radius: 8px; font-weight:700; color:var(--green);">
+                        Procesando en Pasarela... ⏳
+                    </div>
+                </div>
+                <div style="text-align: center; font-size: 0.75rem; color: var(--gray-400); margin-top: 8px;">
+                    Seguridad encriptada y resguardada para cada transacción.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Credifast Loan Simulator Completo
+        const montoRange = document.getElementById('montoRange');
+        const plazoRange = document.getElementById('plazoRange');
+        const montoValue = document.getElementById('montoValue');
+        const plazoValue = document.getElementById('plazoValue');
+        const cuotaValue = document.getElementById('cuotaValue');
+        const tipoSelect = document.getElementById('sim-tipo');
+        const tasaValue = document.getElementById('tasaValue');
+
+        function updateSimulator() {
+            if (!montoRange || !plazoRange) return;
+
+            const monto = parseFloat(montoRange.value);
+            const plazo = parseInt(plazoRange.value);
+
+            // Obtener tipo de interés del select
+            const interesAnual = parseFloat(tipoSelect.value); // 0.065 or 0.080
+            const interesMensual = interesAnual / 12;
+
+            // Calculate monthly payment formula (PMT)
+            const cuota = (monto * interesMensual) / (1 - Math.pow(1 + interesMensual, -plazo));
+
+            montoValue.textContent = '$' + monto.toLocaleString('es-US');
+            plazoValue.textContent = plazo + ' meses';
+            cuotaValue.textContent = '$' + cuota.toFixed(2) + ' / mes';
+            tasaValue.textContent = (interesAnual * 100).toFixed(1) + '% TEA';
+
+            // Update range background progress properties
+            const mP = ((monto - montoRange.min) / (montoRange.max - montoRange.min)) * 100;
+            montoRange.style.setProperty('--p', mP + '%');
+
+            const pP = ((plazo - plazoRange.min) / (plazoRange.max - plazoRange.min)) * 100;
+            plazoRange.style.setProperty('--p', pP + '%');
+        }
+
+        if (montoRange && plazoRange) {
+            montoRange.addEventListener('input', updateSimulator);
+            plazoRange.addEventListener('input', updateSimulator);
+            updateSimulator();
+        }
+    </script>
+    <!-- Base Database y Scripts -->
+    <script src="../assets/js/db.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkTransparencyVisibility();
+            renderHistorialCredifast();
+        });
+
+        function checkTransparencyVisibility() {
+            const userName = localStorage.getItem('userName');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            if (isLoggedIn && userName) {
+                // Verificar si tiene al menos un préstamo APROBADO
+                const misPrestamos = DB.getPrestamos().filter(p => p.nombre === userName);
+                const tieneAprobado = misPrestamos.some(p => p.status === 'Aprobado');
+
+                if (tieneAprobado) {
+                    const section = document.getElementById('transparencySection');
+                    if (section) section.style.display = 'block';
+                }
+            }
+        }
+
+        // --- SOLICITAR PRÉSTAMO ---
+        const formCredifast = document.getElementById('formCredifast');
+        const tablaBody = document.getElementById('credifastTablaBody');
+
+        formCredifast.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const tipoObj = document.getElementById('credTipoInput');
+            const tipoText = tipoObj.options[tipoObj.selectedIndex].text;
+            const monto = parseFloat(document.getElementById('credMontoInput').value);
+
+            document.getElementById('loanModal').classList.remove('active');
+
+            // Start Sequence: KYC -> Buro -> Backend Amortization Verification
+            const demoModal = document.getElementById('demoFintechModal');
+            const demoIcon = document.getElementById('demoFintechIcon');
+            const demoTitle = document.getElementById('demoFintechTitle');
+            const demoText = document.getElementById('demoFintechText');
+            const demoLoader = document.getElementById('demoFintechLoader');
+            const demoResult = document.getElementById('demoFintechResult');
+            const demoBtn = document.getElementById('demoFintechBtn');
+
+            demoModal.classList.add('active');
+            demoBtn.style.display = 'none';
+            demoResult.style.display = 'none';
+            demoLoader.style.display = 'block';
+
+            demoIcon.innerHTML = '📸';
+            demoTitle.innerText = 'Paso 1: Identidad Biométrica KYC';
+            demoText.innerText = 'Escaneando rostro y validando con base de datos gubernamental (JCE)...';
+
+            setTimeout(() => {
+                demoIcon.innerHTML = '📈';
+                demoTitle.innerText = 'Paso 2: Integración API Buró';
+                demoText.innerText = 'Generando Score Financiero. Puntuación automática en la red...';
+
+                setTimeout(() => {
+                    demoIcon.innerHTML = '🧮';
+                    demoTitle.innerText = 'Paso 3: Doble Verificación Backend/Amortización';
+                    demoText.innerText = 'Asegurando integridad. Generando Hash de protección PCI...';
+
+                    setTimeout(() => {
+                        demoLoader.style.display = 'none';
+                        demoResult.style.display = 'block';
+                        demoResult.innerHTML = `
+                        <span style="color:var(--green); font-weight:bold;">[KYC API]</span> Rostro Coincide (100%). Prueba de Vida superada.<br>
+                        <span style="color:var(--green); font-weight:bold;">[BURÓ API]</span> FICO Score: 780 (Riesgo Bajo).<br>
+                        <span style="color:var(--green); font-weight:bold;">[BACKEND]</span> <span style="font-size: 0.85rem">Calculo Amortización blindado. Checksum Ok.</span><br>
+                        <hr style="margin:8px 0; border:1px solid var(--gray-200);">
+                        <span style="font-weight:bold; color:var(--blue-deep);">📋 Todas las validaciones completas.</span>
+                        `;
+
+                        demoBtn.style.display = 'flex';
+                        demoBtn.innerText = 'Continuar 👉';
+                        demoBtn.onclick = () => {
+                            closeDemoFintech();
+
+                            // Insertar en la Base de Datos Local
+                            const userName = localStorage.getItem('userName') || "Usuario Anónimo";
+                            const nuevoPrestamo = DB.savePrestamo({
+                                nombre: userName,
+                                tipo: tipoText,
+                                score: '95/100',
+                                monto: `$${monto.toLocaleString('en-US', { minimumFractionDigits: 2 })} (Varios meses)`
+                            });
+
+                            // Re-renderizamos para actualizar visualmente
+                            renderHistorialCredifast();
+
+                            alert('¡Solicitud enviada a revisión y evaluada biométricamente con éxito!');
+                            formCredifast.reset();
+                        };
+                    }, 2500);
+                }, 2000);
+            }, 2000);
+        });
+
+        // --- EDITAR Y ELIMINAR SOLICITUDES PROPIAS EN REVISIÓN ---
+        function eliminarPrestamo(btn) {
+            if (confirm("¿Estás seguro de que deseas cancelar tu solicitud de préstamo?")) {
+                const row = btn.closest('tr');
+                row.style.opacity = '0';
+                setTimeout(() => {
+                    row.remove();
+                }, 300);
+            }
+        }
+
+        function editarPrestamo(btn) {
+            const row = btn.closest('tr');
+            const descEl = row.querySelector('.cred-desc-cell');
+            const montoEl = row.querySelector('.cred-monto-cell');
+
+            if (btn.innerText.includes("Editar")) {
+                descEl.contentEditable = "true";
+                montoEl.contentEditable = "true";
+                descEl.focus();
+
+                descEl.style.borderBottom = "2px dashed var(--blue-mid)";
+                montoEl.style.borderBottom = "2px dashed var(--blue-mid)";
+                descEl.style.outline = "none";
+                montoEl.style.outline = "none";
+
+                btn.innerHTML = "💾 Guardar";
+                btn.style.background = "var(--green)";
+                btn.style.color = "white";
+                btn.style.borderColor = "var(--green)";
+            } else {
+                descEl.contentEditable = "false";
+                montoEl.contentEditable = "false";
+
+                descEl.style.borderBottom = "none";
+                montoEl.style.borderBottom = "none";
+
+                btn.innerHTML = "✎ Editar";
+                btn.style.background = "transparent";
+                btn.style.color = "var(--blue-deep)";
+                btn.style.borderColor = "var(--gray-300)";
+
+                alert("¡Tu solicitud de préstamo fue actualizada! Esto podría requerir validaciones extras.");
+            }
+        }
+
+        // --- TABLA DE AMORTIZACION ---
+        function generateAmortizationSchedule(monto, tasaMensual, plazo, cuotaFija) {
+            let saldo = monto;
+            const schedule = [];
+
+            for (let i = 1; i <= plazo; i++) {
+                let interesPagar = saldo * tasaMensual;
+                let capitalPagar = cuotaFija - interesPagar;
+
+                // Adjust last payment rounding issues
+                if (i === plazo) {
+                    capitalPagar = saldo;
+                    cuotaFija = capitalPagar + interesPagar;
+                }
+
+                saldo -= capitalPagar;
+                if (saldo < 0) saldo = 0;
+
+                schedule.push({
+                    mes: i,
+                    cuota: cuotaFija,
+                    capital: capitalPagar,
+                    interes: interesPagar,
+                    saldo: saldo
+                });
+            }
+            return schedule;
+        }
+
+        function showAmortizationTable() {
+            const monto = parseFloat(montoRange.value);
+            const plazo = parseInt(plazoRange.value);
+            const interesAnual = parseFloat(tipoSelect.value);
+            const interesMensual = interesAnual / 12;
+            const cuota = (monto * interesMensual) / (1 - Math.pow(1 + interesMensual, -plazo));
+
+            const table = generateAmortizationSchedule(monto, interesMensual, plazo, cuota);
+            const tbody = document.getElementById('amortizationBody');
+            tbody.innerHTML = ''; // clear
+
+            let formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            table.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding: 12px; border-bottom: 1px solid var(--gray-100); color: var(--gray-500); font-weight: 600;">${row.mes}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--gray-100); font-weight: 700; color: var(--blue-deep); background: var(--blue-pale);">${formatter.format(row.cuota)}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700);">${formatter.format(row.capital)}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700);">${formatter.format(row.interes)}</td>
+                    <td style="padding: 12px; border-bottom: 1px solid var(--gray-100); font-weight: 600; color: var(--green-dark);">${formatter.format(row.saldo)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('amortizationModal').classList.add('active');
+        }
+
+        function closeAmortizationTable() {
+            document.getElementById('amortizationModal').classList.remove('active');
+        }
+
+        // --- PAGO DE CUOTAS CREDIFAST ---
+        const paymentCredifastModal = document.getElementById('paymentCredifastModal');
+        const formCredifastPayment = document.getElementById('formCredifastPayment');
+        const paymentLoadingCredifast = document.getElementById('paymentLoadingCredifast');
+
+        function openCredifastPayment() {
+            paymentCredifastModal.classList.add('active');
+        }
+
+        function closeCredifastPayment() {
+            paymentCredifastModal.classList.remove('active');
+            paymentLoadingCredifast.style.display = 'none';
+        }
+
+        // Helper para cambiar tabs en el modal de pago
+        function switchPayTab(btn, targetId) {
+            // Reset buttons styling
+            const allBtn = document.querySelectorAll('.pay-tab');
+            allBtn.forEach(b => {
+                b.style.background = 'transparent';
+                b.style.color = 'var(--gray-500)';
+                b.classList.remove('active-tab');
+            });
+
+            // Activate current button
+            btn.style.background = 'var(--blue-pale)';
+            btn.style.color = 'var(--blue-mid)';
+            btn.classList.add('active-tab');
+
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.pay-content');
+            contents.forEach(c => c.style.display = 'none');
+
+            // Show selected content
+            document.getElementById(targetId).style.display = 'block';
+        }
+
+        formCredifastPayment.addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeCredifastPayment();
+
+            // Start Sequence: Vault Tokenization PCI-DSS
+            const demoModal = document.getElementById('demoFintechModal');
+            const demoIcon = document.getElementById('demoFintechIcon');
+            const demoTitle = document.getElementById('demoFintechTitle');
+            const demoText = document.getElementById('demoFintechText');
+            const demoLoader = document.getElementById('demoFintechLoader');
+            const demoResult = document.getElementById('demoFintechResult');
+            const demoBtn = document.getElementById('demoFintechBtn');
+
+            demoModal.classList.add('active');
+            demoBtn.style.display = 'none';
+            demoResult.style.display = 'none';
+            demoLoader.style.display = 'block';
+
+            demoIcon.innerHTML = '🛡️';
+            demoTitle.innerText = 'Bóveda Tokenizada PCI-DSS';
+            demoText.innerText = 'Conectando con pasarela encriptada. Sustituyendo datos de la tarjeta por un Token temporal...';
+
+            setTimeout(() => {
+                demoLoader.style.display = 'none';
+                demoResult.style.display = 'block';
+                demoResult.innerHTML = `
+                <span style="color:var(--green); font-weight:bold;">[VAULT SECURE SDK]</span> Tarjeta Ofuscada -> Token "tok_1NjX90".<br>
+                <span style="color:var(--green); font-weight:bold;">[BANK API]</span> Verificando fondos y completando cargo...<br>
+                <hr style="margin:8px 0; border:1px solid var(--gray-200);">
+                <span style="font-weight:bold; color:var(--blue-deep);">Pago Exitoso. Cumplimiento de Normativa Logrado.</span>
+                `;
+
+                demoBtn.style.display = 'flex';
+                demoBtn.innerText = 'Finalizar Transacción';
+                demoBtn.onclick = () => {
+                    closeDemoFintech();
+
+                    // Actualizar Botón Dashboard
+                    const btnPay = document.getElementById('btnPagarDashboard');
+                    if (btnPay) {
+                        btnPay.style.background = 'var(--gray-300)';
+                        btnPay.style.color = 'var(--gray-700)';
+                        btnPay.style.borderColor = 'var(--gray-300)';
+                        btnPay.innerText = '✓ Cuota Al Día';
+                        btnPay.disabled = true;
+                    }
+
+                    // Actualizar la fila en la tabla
+                    const filas = document.querySelectorAll('#credifastTablaBody tr');
+                    for (let tr of filas) {
+                        if (tr.innerText.includes('Pendiente')) {
+                            const badge = tr.querySelector('.badge');
+                            if (badge) {
+                                badge.className = 'badge badge-green';
+                                badge.innerText = 'Pagado';
+                            }
+                            const btn = tr.querySelector('button');
+                            if (btn) btn.remove();
+                            break;
+                        }
+                    }
+
+                    alert("✅ Pago procesado exitosamente mediante la Bóveda Segura.\n\nGracias por mantenerte al día con tus cuotas.");
+                };
+            }, 3000);
+        });
+
+        // --- SIMULADORES ROADMAP FINTECH ---
+        const demoModal = document.getElementById('demoFintechModal');
+        const demoIcon = document.getElementById('demoFintechIcon');
+        const demoTitle = document.getElementById('demoFintechTitle');
+        const demoText = document.getElementById('demoFintechText');
+        const demoLoader = document.getElementById('demoFintechLoader');
+        const demoResult = document.getElementById('demoFintechResult');
+        const demoBtn = document.getElementById('demoFintechBtn');
+        let currentDemoType = '';
+
+        function openDemo(type) {
+            currentDemoType = type;
+            demoResult.style.display = 'none';
+            demoLoader.style.display = 'none';
+            demoBtn.style.display = 'flex';
+            demoBtn.innerText = 'Iniciar Ejecución de Prueba';
+            // Sobrescribe el onclick por si se había reemplazado
+            demoBtn.onclick = runDemoAction;
+
+            if (type === 'backend') {
+                demoIcon.innerHTML = '🧮';
+                demoTitle.innerText = 'Verificación Backend';
+                demoText.innerText = 'Este módulo encriptará los datos de la solicitud y simulará la confirmación del servidor mediante un Hash seguro, evitando alteraciones del usuario.';
+            } else if (type === 'vault') {
+                demoIcon.innerHTML = '🛡️';
+                demoTitle.innerText = 'Bóveda de Pagos Segura';
+                demoText.innerText = 'Simula el comportamiento del SDK de pagos PCI-DSS: encriptar la tarjeta de pago y solicitar un Token seguro desde la pasarela internacional.';
+            } else if (type === 'kyc') {
+                demoIcon.innerHTML = '📸';
+                demoTitle.innerText = 'Identidad Biométrica KYC';
+                demoText.innerText = 'Este proceso solicitaría al usuario su cámara frontal para escanear su identidad y cotejar los puntos de su rostro contra la base de la JCE.';
+            } else if (type === 'buro') {
+                demoIcon.innerHTML = '📈';
+                demoTitle.innerText = 'Evaluador de Riesgo (Buró)';
+                demoText.innerText = 'Ejecutará el algoritmo que extrae los datos de Buró y Datacrédito (Simulado) para puntuar la salud financiera del cliente instantáneamente.';
+            }
+            demoModal.classList.add('active');
+        }
+
+        function closeDemoFintech() {
+            demoModal.classList.remove('active');
+        }
+
+        function runDemoAction() {
+            demoBtn.style.display = 'none';
+            demoLoader.style.display = 'block';
+            demoResult.style.display = 'none';
+
+            // Tiempo simulado extra para efecto dramático (2.5segs)
+            setTimeout(() => {
+                demoLoader.style.display = 'none';
+                demoResult.style.display = 'block';
+
+                if (currentDemoType === 'backend') {
+                    demoResult.innerHTML = `<span style="color:var(--green); font-weight:bold;">[200 OK]</span> SERVIDOR API RESP: <br>> <code>Checksum Hash: 98A7F4B2...</code><br>> Recalculando matrices de amortización...<br>> Cuota servidor: $135.50 (Coincide)<br>> <span style="font-weight:bold; color:var(--green-dark);">Estado: Seguro e Íntegro</span>.`;
+                } else if (currentDemoType === 'vault') {
+                    demoResult.innerHTML = `<span style="color:var(--green); font-weight:bold;">[201 CREATED]</span> STRIPE VAULT RESP: <br>> Tarjeta encriptada exitosamente.<br>> Token Devuelto: <code style="color:var(--blue-mid); background: #eff6ff; padding: 2px;">tok_1NjX9X...</code><br>> <span style="font-weight:bold;">Guardado en bóveda PCI Nivel 1</span>.`;
+                } else if (currentDemoType === 'kyc') {
+                    demoResult.innerHTML = `<span style="color:var(--green); font-weight:bold;">[100% MATCH]</span> BIOMETRIC ENGINE RESP: <br>> OCR Extracción: Exitosa (Cédula).<br>> Test de Vida (Anti-Spoofing): Humano Real.<br>> <span style="font-weight:bold; color:var(--blue-deep);">Identidad Autenticada</span>.`;
+                } else if (currentDemoType === 'buro') {
+                    demoResult.innerHTML = `<span style="color:var(--green); font-weight:bold;">[DATA FETCH]</span> EQUIFAX / EXPERIAN RESP: <br>> Cédula Consultada: 402-XXXXXXX-X<br>> FICO Score: <span style="font-size:1.3rem; color:var(--blue-mid); font-weight:900;">745 (A)</span><br>> <span style="font-weight:bold; color:var(--green-dark);">Riesgo Muy Bajo (Aprobación Pre-Concebida)</span>.`;
+                }
+
+                demoBtn.style.display = 'flex';
+                demoBtn.innerText = 'Entendido / Finalizar';
+                demoBtn.onclick = closeDemoFintech;
+            }, 2500);
+        }
+    </script>
+
+    <!-- Modal Demo Fintech HTML -->
+    <div class="modal-overlay" id="demoFintechModal">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <button class="modal-close" onclick="closeDemoFintech()">&times;</button>
+            <div id="demoFintechIcon" style="font-size: 3rem; margin-bottom: 16px;">🚀</div>
+            <h3 id="demoFintechTitle" style="font-size: 1.4rem; color: var(--blue-deep); margin-bottom: 12px;">
+                Simulación</h3>
+            <p id="demoFintechText"
+                style="color: var(--gray-600); font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5;">Conectando...
+            </p>
+
+            <div id="demoFintechLoader" style="display: none; padding: 20px;">
+                <div
+                    style="width: 40px; height: 40px; border: 4px solid var(--gray-200); border-top-color: var(--blue-mid); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;">
+                </div>
+                <div style="font-weight: 600; color: var(--blue-deep);">Ejecutando proceso complejo...</div>
+            </div>
+
+            <div id="demoFintechResult"
+                style="display: none; background: var(--gray-50); padding: 16px; border-radius: 8px; border: 1px solid var(--gray-200); text-align: left; font-size: 0.9rem; font-family: monospace; color: var(--gray-800); max-height: 250px; overflow-y: auto; line-height: 1.6;">
+                // Resumen
+            </div>
+
+            <button id="demoFintechBtn" class="btn btn-green"
+                style="width: 100%; justify-content: center; margin-top: 24px; font-weight: bold; font-size: 1.05rem;"
+                onclick="runDemoAction()">Iniciar Ejecución</button>
+        </div>
+    </div>
+    <!-- Base Database y Scripts -->
+    <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar Iconos
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            // Ejecutar verificaciones de estado
+            checkTransparencyVisibility();
+            renderHistorialCredifast();
+        });
+
+        function checkTransparencyVisibility() {
+            const userName = localStorage.getItem('userName');
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            if (isLoggedIn && userName) {
+                // Verificar si tiene al menos un préstamo APROBADO en la base de datos
+                const misPrestamos = DB.getPrestamos().filter(p => p.nombre === userName);
+                const tieneAprobado = misPrestamos.some(p => p.status === 'Aprobado');
+
+                if (tieneAprobado) {
+                    const section = document.getElementById('transparencySection');
+                    if (section) section.style.display = 'block';
+                }
+            }
+        }
+
+        function renderHistorialCredifast() {
+            const userName = localStorage.getItem('userName');
+            const tablaBody = document.getElementById('credifastTablaBody');
+
+            if (userName && tablaBody) {
+                const misTramos = DB.getPrestamos().filter(p => p.nombre === userName);
+
+                // Limpiar filas dinámicas previas (marcadas con data-db-id)
+                const realRows = Array.from(tablaBody.querySelectorAll('tr')).filter(tr => tr.dataset.dbId);
+                realRows.forEach(row => row.remove());
+
+                misTramos.forEach(item => {
+                    const statusClass = item.status === 'Pendiente' ? 'badge-amber' :
+                        (item.status === 'Aprobado' ? 'badge-green' : 'badge-red');
+
+                    const actions = item.status === 'Pendiente' ? `
+                        <div style="display: flex; gap: 4px;">
+                            <button class="btn btn-outline btn-sm" style="padding: 4px;">✎ Editar</button>
+                            <button class="btn btn-outline btn-sm" style="padding: 4px; color:var(--red); border-color:var(--red);">🗑️ Borrar</button>
+                        </div>` : `<i style="color:var(--gray-500); font-size:0.85rem">Gestión Cerrada</i>`;
+
+                    const dateString = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                    const newRowHTML = `
+                        <tr style="background: rgba(37,99,235,0.01);" data-db-id="${item.id}">
+                            <td>${dateString}</td>
+                            <td><strong>${item.tipo}</strong></td>
+                            <td style="font-weight: 700;">${item.monto}</td>
+                            <td><span class="badge ${statusClass}">${item.status === 'Pendiente' ? 'En Revisión' : item.status}</span></td>
+                            <td>${actions}</td>
+                        </tr>
+                    `;
+                    tablaBody.insertAdjacentHTML('afterbegin', newRowHTML);
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
+

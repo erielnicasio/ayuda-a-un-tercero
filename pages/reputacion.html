@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reputación y Confianza - Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --blue-deep: var(--primary-blue);
+            --blue-mid: var(--primary-blue-mid);
+            --blue-light: var(--primary-blue-light);
+            --green: #10B981;
+            --amber: var(--accent-orange);
+            --red: #EF4444;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+        }
+
+        .reputacion-page {
+            padding-top: calc(var(--nav-height) + 40px);
+            background: var(--gray-50);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .trust-hero {
+            background: linear-gradient(135deg, var(--blue-pale), var(--white));
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-bottom: 40px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .trust-hero-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .trust-hero h1 {
+            font-size: 2.2rem;
+            color: var(--blue-deep);
+            margin-bottom: 16px;
+        }
+
+        .trust-hero p {
+            font-size: 1.05rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Profile Layout */
+        .public-profile-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 900px) {
+            .public-profile-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Profile Card Sidebar */
+        .trust-sidebar {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            border: 1px solid var(--gray-200);
+            position: sticky;
+            top: calc(var(--nav-h) + 20px);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .trust-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--blue-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--blue-mid);
+            font-weight: 800;
+            margin: 0 auto 20px;
+            border: 4px solid var(--green-light);
+            position: relative;
+        }
+
+        .trust-verified-tick {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--green);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border: 3px solid var(--white);
+        }
+
+        .trust-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+
+        .trust-joined {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin-bottom: 24px;
+        }
+
+        .trust-score-big {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--amber);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .trust-stars {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--gray-300);
+        }
+
+        .trust-stars .filled {
+            color: var(--amber);
+        }
+
+        .trust-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 32px;
+            text-align: left;
+        }
+
+        .trust-badge-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-100);
+        }
+
+        .trust-badge-icon {
+            font-size: 1.5rem;
+        }
+
+        .trust-badge-info h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+
+        .trust-badge-info p {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        /* Main Content */
+        .trust-main {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .panel-box {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--blue-deep);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Review Items */
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-item {
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reviewer-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-600);
+        }
+
+        .reviewer-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .review-context {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+
+        .review-rating {
+            color: var(--amber);
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            border: 1px solid var(--gray-100);
+        }
+
+        .stat-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--blue-mid);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline" style="padding: 10px 24px; border-radius: 12px;">Mi
+                    Cuenta</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <section class="reputacion-page">
+        <div class="container">
+
+            <!-- Hero -->
+            <div class="trust-hero">
+                <div class="trust-hero-icon">🛡️</div>
+                <h1>Sistema de Reputación y Confianza</h1>
+                <p>Nuestra prioridad es crear un ecosistema seguro para todos. Evalúa, comenta y construye tu historial
+                    positivo en la plataforma ayudando a otros o vendiendo tus productos con honestidad.</p>
+            </div>
+
+            <div class="public-profile-layout">
+
+                <!-- Sidebar: Trust Profile -->
+                <aside class="trust-sidebar">
+                    <div class="trust-avatar">
+                        CV
+                        <div class="trust-verified-tick">✓</div>
+                    </div>
+                    <h2 class="trust-name">Carlos Valenzuela</h2>
+                    <div class="trust-joined">Miembro desde Octubre 2025</div>
+
+                    <div class="trust-score-big">4.9</div>
+                    <div class="trust-stars">
+                        <span class="filled">★</span><span class="filled">★</span><span class="filled">★</span><span
+                            class="filled">★</span><span class="filled">★</span>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--gray-500); margin-bottom: 24px;">(124 evaluaciones)
+                    </div>
+
+                    <button class="btn btn-outline"
+                        style="width: 100%; justify-content: center; margin-bottom: 8px;">Contactar Usuario</button>
+                    <button class="btn btn-ghost"
+                        style="width: 100%; justify-content: center; color: var(--red);">Reportar Perfil</button>
+
+                    <hr style="border: none; border-top: 1px solid var(--gray-200); margin: 24px 0;">
+
+                    <h3
+                        style="font-size: 0.95rem; font-weight: 700; color: var(--gray-800); text-align: left; margin-bottom: 16px;">
+                        Indicadores de Confianza</h3>
+
+                    <div class="trust-badges">
+                        <div class="trust-badge-item">
+                            <div class="trust-badge-icon">🛡️</div>
+                            <div class="trust-badge-info">
+                                <h4>Usuario Confiable</h4>
+                                <p>Identidad verificada exitosamente.</p>
+                            </div>
+                        </div>
+                        <div class="trust-badge-item">
+                            <div class="trust-badge-icon">💖</div>
+                            <div class="trust-badge-info">
+                                <h4>Donador Frecuente</h4>
+                                <p>Ha apoyado más de 10 casos o artículos.</p>
+                            </div>
+                        </div>
+                        <div class="trust-badge-item">
+                            <div class="trust-badge-icon">🚀</div>
+                            <div class="trust-badge-info">
+                                <h4>Emprendedor Verificado</h4>
+                                <p>Historial intachable en el Marketplace.</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content: Stats and Reviews -->
+                <main class="trust-main">
+
+                    <!-- Stats Panel -->
+                    <div class="panel-box">
+                        <h3 class="panel-title"><span>📊</span> Resumen de Actividad</h3>
+                        <p style="color: var(--gray-500); font-size: 0.9rem; margin-bottom: 24px;">Estas métricas
+                            reflejan el comportamiento y aporte general del usuario a la red de Ayuda a un Tercero.</p>
+
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-num">14</div>
+                                <div class="stat-label">Casos Apoyados</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-num">38</div>
+                                <div class="stat-label">Artículos Donados</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-num">100%</div>
+                                <div class="stat-label">Entregas a Tiempo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Panel -->
+                    <div class="panel-box">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                            <h3 class="panel-title" style="margin-bottom: 0;"><span>💬</span> Comentarios y
+                                Calificaciones</h3>
+                            <button class="btn btn-outline btn-sm">Dejar Reseña</button>
+                        </div>
+
+                        <div class="review-list">
+                            <!-- Review 1 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar">MR</div>
+                                        <div>
+                                            <div class="reviewer-name">María R. <span class="badge badge-gray"
+                                                    style="font-size: 0.65rem; padding: 2px 6px;">Comprador</span></div>
+                                            <div class="review-context">Hace 2 días • Compra en Marketplace (Mesa de
+                                                noche)</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">★★★★★</div>
+                                </div>
+                                <p class="review-text">Excelente vendedor. El mueble estaba en perfectas condiciones,
+                                    justo como lo describió en las fotos. Además fue muy puntual a la hora de acordar la
+                                    entrega.</p>
+                            </div>
+
+                            <!-- Review 2 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar"
+                                            style="background: var(--blue-pale); color: var(--blue-deep);">JL</div>
+                                        <div>
+                                            <div class="reviewer-name">Juan L. <span class="badge badge-green"
+                                                    style="font-size: 0.65rem; padding: 2px 6px;">Beneficiario</span>
+                                            </div>
+                                            <div class="review-context">Hace 1 semana • Donación de Artículos (Talla M)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">★★★★★</div>
+                                </div>
+                                <p class="review-text">Carlos es una persona increíble. Me donó un lote de ropa de
+                                    invierno que me ha salvado en esta temporada. Totalmente agradecido por su
+                                    amabilidad y empatía.</p>
+                            </div>
+
+                            <!-- Review 3 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <div class="reviewer-avatar" style="background: #fef3c7; color: #b45309;">AD
+                                        </div>
+                                        <div>
+                                            <div class="reviewer-name">Ana Díaz</div>
+                                            <div class="review-context">Hace 1 mes • Préstamo Credifast Solidario</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">★★★★<span style="color: var(--gray-300);">★</span></div>
+                                </div>
+                                <p class="review-text">Gracias a los aportes de donadores como Carlos, pude obtener mi
+                                    microcrédito. Dejo esta reseña para destacar que su perfil apoya constantemente
+                                    causas familiares.</p>
+                            </div>
+
+                        </div>
+                        <div style="text-align: center; margin-top: 24px;">
+                            <button class="btn btn-ghost">Cargar más comentarios</button>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+
+        </div>
+    </section>
+
+    <script src="../assets/js/accessibility.js"></script>
+</body>
+
+</html>
+

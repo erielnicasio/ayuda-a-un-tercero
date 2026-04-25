@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casos de Ayuda Social - Ayuda a un Tercero</title>
+    <!-- Leaflet CSS & JS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --blue-deep: #0f172a;
+            --blue-mid: #2563eb;
+            --blue-light: #eff6ff;
+            --vibrant-green: #10B981;
+            --vibrant-orange: #FF7F32;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+        }
+
+        .casos-page {
+            padding-top: calc(var(--nav-h) + 20px);
+            background: var(--gray-50);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Specialized 3-Column Layout */
+        .casos-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 340px;
+            gap: 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        @media (max-width: 1200px) {
+            .casos-layout { grid-template-columns: 250px 1fr; }
+            .casos-right-panel { display: none; }
+        }
+
+        @media (max-width: 900px) {
+            .casos-layout { grid-template-columns: 1fr; }
+            .casos-sidebar { display: none; }
+        }
+
+        /* Geo-Hero Zone */
+        .geo-hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), 
+                        url('https://images.unsplash.com/photo-1469571483357-598e044debb7?w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-bottom: 32px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .geo-hero h1 { font-size: 2.8rem; margin-bottom: 15px; font-weight: 800; }
+        .geo-hero p { font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); max-width: 650px; margin-bottom: 30px; line-height: 1.6; }
+
+        .geo-search-bar {
+            display: flex;
+            gap: 12px;
+            background: white;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            max-width: 800px;
+        }
+
+        .geo-search-bar input {
+            border: none;
+            padding: 12px 20px;
+            flex: 1;
+            outline: none;
+            font-size: 1rem;
+            color: var(--blue-deep);
+        }
+
+        /* Sidebar & Panels */
+        .c-sidebar-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .c-sidebar-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--blue-deep);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--gray-100);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .c-filter-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: #475569;
+            cursor: pointer;
+            padding: 8px 0;
+            transition: all 0.2s;
+        }
+
+        .c-filter-item:hover { color: var(--blue-mid); }
+        .c-filter-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+
+        /* Case Cards (Refined) */
+        .case-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            animation: cardAppear 0.5s ease-out;
+            height: 100%;
+        }
+
+        .case-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+
+        .case-img-container { height: 200px; position: relative; overflow: hidden; }
+        .case-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .case-card:hover .case-img-container img { transform: scale(1.05); }
+
+        .trust-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .trust-tag.gold { color: #b45309; border: 1px solid #fde68a; background: #fffbeb; }
+        
+        .urgency-badge {
+            position: absolute;
+            top: 48px;
+            left: 15px;
+            background: #EF4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse-red 2s infinite;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+            z-index: 5;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .case-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
+        .case-cat { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--blue-mid); margin-bottom: 10px; }
+        .case-title { font-size: 1.25rem; font-weight: 800; color: var(--blue-deep); margin-bottom: 12px; line-height: 1.3; }
+        .case-desc { font-size: 0.95rem; color: #64748b; line-height: 1.6; margin-bottom: 24px; flex-grow: 1; }
+
+        /* Progress Bar */
+        .progress-section { margin-top: auto; }
+        .progress-labels { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.85rem; font-weight: 700; color: var(--blue-deep); }
+        .progress-container { background: var(--gray-100); border-radius: 10px; height: 10px; overflow: hidden; margin-bottom: 20px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); transition: width 1s ease-out; position: relative; }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+
+        /* Tabs */
+        .c-tabs { display: flex; gap: 24px; margin-bottom: 32px; border-bottom: 2px solid var(--gray-200); }
+        .c-tab {
+            padding: 12px 16px;
+            font-weight: 700;
+            color: #94a3b8;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+        .c-tab.active { color: var(--blue-deep); border-color: var(--blue-mid); }
+
+        /* Impact Panel */
+        .impact-card {
+            background: linear-gradient(135deg, var(--blue-deep) 0%, #1e293b 100%);
+            color: white;
+            border: none;
+        }
+
+        /* coordination Chat Widget */
+        .chat-widget {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            height: 420px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-header { background: var(--blue-deep); color: white; padding: 20px; display: flex; align-items: center; gap: 12px; }
+        .chat-body { flex: 1; background: #f8fafc; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; max-width: 85%; }
+        .chat-msg.yours { background: white; align-self: flex-start; border: 1px solid var(--gray-200); }
+        .chat-msg.mine { background: var(--blue-light); color: var(--blue-deep); align-self: flex-end; font-weight: 500; }
+        .chat-input { padding: 15px; display: flex; border-top: 1px solid var(--gray-200); gap: 10px; }
+        .chat-input input { flex: 1; border: 1px solid var(--gray-200); border-radius: 20px; padding: 8px 16px; outline: none; }
+
+        /* Modal Redesign (keeping your recent update) */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            width: 95%;
+            max-width: 950px;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .ai-upload-zone {
+            border: 2px dashed #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 30px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanner-bar {
+            width: 100%;
+            height: 3px;
+            background: var(--vibrant-orange);
+            box-shadow: 0 0 15px var(--vibrant-orange);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            z-index: 10;
+        }
+
+        .map-selection-box {
+            height: 200px;
+            width: 100%;
+            border-radius: var(--radius-md);
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            z-index: 10;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        /* New Modal Design matching Donaciones */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 95%;
+            max-width: 950px;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .ai-upload-zone {
+            border: 2px dashed #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 30px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-upload-zone:hover {
+            border-color: var(--primary-blue);
+            background: rgba(0, 102, 255, 0.05);
+        }
+
+        .scanner-bar {
+            width: 100%;
+            height: 3px;
+            background: var(--vibrant-orange);
+            box-shadow: 0 0 15px var(--vibrant-orange);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            z-index: 10;
+        }
+
+        @keyframes scanAnim {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+
+        .scanning .scanner-bar {
+            display: block;
+            animation: scanAnim 2s ease-in-out infinite;
+        }
+
+        .map-selection-box {
+            height: 200px;
+            width: 100%;
+            border-radius: var(--radius-md);
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            z-index: 10;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html" class="active">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline btn-sm">Mi Cuenta</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <main class="casos-page">
+        <!-- Hero Geo Zone -->
+        <div style="max-width: 1440px; margin: 0 auto; padding: 0 24px;">
+            <div class="geo-hero">
+                <div style="position: relative; z-index: 2;">
+                    <h1>Red Solidaria de Casos Sociales</h1>
+                    <p>Conectamos historias de necesidad con una comunidad generosa. Nuestro sistema verifica cada solicitud
+                        para garantizar que tu ayuda llegue exactamente donde se necesita.</p>
+                    <div class="geo-search-bar">
+                        <i data-lucide="search" style="color: var(--blue-mid); margin-left: 10px; align-self: center;"></i>
+                        <input type="text" id="mainSearch" placeholder="Busca por título, ciudad o categoría...">
+                        <button class="btn btn-primary" style="padding: 0 30px;" onclick="toggleMapView()">
+                            <i data-lucide="map-pin"></i> Ver en Mapa
+                        </button>
+                        <button class="btn btn-vibrant" style="background: var(--vibrant-orange); color: white; padding: 0 30px;"
+                            onclick="document.getElementById('casoModal').classList.add('active'); checkInitSelectionMap();">
+                            + Publicar Caso
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="casos-layout">
+            <!-- Left Sidebar: Filters & Smart Radar -->
+            <aside class="casos-sidebar">
+                <div class="c-sidebar-box">
+                    <h3 class="c-sidebar-title">📍 Radio de Cercanía</h3>
+                    <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Distancia máxima: <strong id="kmVal">25 km</strong></div>
+                    <input type="range" id="kmSlider" class="km-slider" style="width: 100%; cursor: pointer;" min="1" max="100" value="25"
+                        oninput="document.getElementById('kmVal').innerText = this.value + ' km'; applyFilters();">
+                </div>
+
+                <div class="c-sidebar-box">
+                    <h3 class="c-sidebar-title">Categorías</h3>
+                    <div class="d-filter-list" style="display: flex; flex-direction: column; gap: 4px;">
+                        <label class="c-filter-item"><input type="checkbox" class="cat-filter" value="medico" checked> 🚑 Médicos</label>
+                        <label class="c-filter-item"><input type="checkbox" class="cat-filter" value="familiar" checked> 🏠 Familiares</label>
+                        <label class="c-filter-item"><input type="checkbox" class="cat-filter" value="educacion" checked> 🎓 Educación</label>
+                        <label class="c-filter-item"><input type="checkbox" class="cat-filter" value="pobreza" checked> 🍲 Alimentación</label>
+                    </div>
+                </div>
+
+                <div class="c-sidebar-box">
+                    <h3 class="c-sidebar-title">Nivel de Confianza</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label class="c-filter-item"><input type="checkbox" checked> 🏅 Casos VIP (Verificados)</label>
+                        <label class="c-filter-item"><input type="checkbox"> 📄 Documentación Adjunta</label>
+                        <label class="c-filter-item"><input type="checkbox"> 🤖 IA Anti-Fraude Activa</label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Feed -->
+            <main>
+                <div class="c-tabs">
+                    <div class="c-tab active" onclick="switchCaseTab('active', this)">Casos Urgentes</div>
+                    <div class="c-tab" onclick="switchCaseTab('success', this)">Logros Alcanzados</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 id="feedTitle" style="font-size: 1.4rem; font-weight: 800; color: var(--blue-deep);">Resultados Cercanos</h2>
+                    <select style="padding: 10px; border: 1px solid var(--gray-200); border-radius: 12px; font-weight: 600; outline: none; background: white;">
+                        <option>Más recientes</option>
+                        <option>Próximos a la meta</option>
+                        <option>Más urgentes</option>
+                    </select>
+                </div>
+
+                <!-- Live Map Mockup -->
+                <div id="mainMapView" style="height: 500px; width: 100%; border-radius: 24px; margin-bottom: 30px; display: none; overflow: hidden; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);">
+                    <div id="globalLiveMap" style="height: 100%; width: 100%;"></div>
+                </div>
+
+                <!-- Cases Grid -->
+                <div id="casosGrid" class="products-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+                    <!-- Los casos se cargan dinámicamente -->
+                </div>
+            </main>
+
+            <!-- Right Sidebar: Impact & Coordination -->
+            <aside class="casos-right-panel">
+                <!-- Achievement Card -->
+                <div class="c-sidebar-box impact-card">
+                    <h3 class="c-sidebar-title" style="color: white; border-color: rgba(255,255,255,0.1);">📢 Impacto de Hoy</h3>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">🙌</div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 2rem; font-weight: 800; line-height: 1;">12</div>
+                            <div style="font-size: 0.8rem; opacity: 0.8; font-weight: 600;">Casos Completados</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85rem; opacity: 0.9; margin: 0; line-height: 1.4;">
+                        Gracias a la comunidad, hoy 12 familias de Monte Plata han recibido la ayuda que necesitaban.
+                    </p>
+                </div>
+
+                <!-- Coordination Chat Widget -->
+                <div class="chat-widget">
+                    <div class="chat-header">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: white; color: var(--blue-deep); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem;">S</div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 0.9rem; font-weight: 700;">Coordinación Solidaria</div>
+                            <div style="font-size: 0.7rem; opacity: 0.7; display: flex; align-items: center; gap: 4px;">
+                                <span style="width: 6px; height: 6px; background: #10B981; border-radius: 50%;"></span> En línea ahora
+                            </div>
+                        </div>
+                        <i data-lucide="shield-check" size="18" style="opacity: 0.8;"></i>
+                    </div>
+                    <div class="chat-body" id="coordChatBody">
+                        <div class="chat-msg yours">Hola, he visto tu donación para el caso de Lucas. ¿Dónde podemos entregar los víveres?</div>
+                        <div class="chat-msg mine">¡Hola! Podemos coordinar en el Punto de Encuentro Seguro de la Estación Central. ¿Mañana a las 10:00?</div>
+                    </div>
+                    
+                    <!-- IA Quick Replies -->
+                    <div class="quick-replies" style="display: flex; gap: 8px; padding: 10px; overflow-x: auto; background: white; border-top: 1px solid var(--gray-100);">
+                        <button class="qr-btn" onclick="addQuickReply('¿Sigue disponible?')">¿Sigue disponible?</button>
+                        <button class="qr-btn" onclick="addQuickReply('¿Dónde entregamos?')">¿Dónde entregamos?</button>
+                        <button class="qr-btn" onclick="addQuickReply('¡Me interesa ayudar!')">¡Me interesa ayudar!</button>
+                    </div>
+
+                    <div class="chat-input">
+                        <input type="text" placeholder="Escribe un mensaje..." id="coordChatInput">
+                        <button style="border: none; background: none; color: var(--blue-mid); cursor: pointer;" onclick="sendCoordMsg()"><i data-lucide="send"></i></button>
+                    </div>
+                </div>
+
+                <style>
+                    .qr-btn {
+                        background: var(--blue-pale);
+                        color: var(--blue-deep);
+                        border: 1px solid var(--blue-light);
+                        padding: 6px 12px;
+                        border-radius: 20px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                    }
+                    .qr-btn:hover { background: var(--blue-light); }
+                </style>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Modal Registrar Caso (Rediseñado) -->
+    <div class="modal-overlay" id="casoModal">
+        <div class="modal-content">
+            <button class="modal-close" style="position: absolute; top: 25px; right: 25px; background: none; border: none; cursor: pointer;"
+                onclick="document.getElementById('casoModal').classList.remove('active')">
+                <i data-lucide="x" style="width: 28px; height: 28px; color: var(--text-muted);"></i>
+            </button>
+            <div style="margin-bottom: 32px;">
+                <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 8px;">Registrar un Caso Social</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">Nuestra IA y equipo humano validarán tu solicitud en tiempo real.</p>
+            </div>
+            <form id="formRegistrarCaso" class="form-grid">
+                <div style="display: flex; flex-direction: column; gap: 24px;">
+                    <div>
+                        <label class="form-label" style="font-weight: 700; color: var(--text-dark);">Título de la Situación</label>
+                        <input type="text" id="casoTitleInput" class="form-input" style="width: 100%; padding: 14px; border-radius: 12px;" placeholder="Ej. Operación urgente para Lucas" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;">
+                        <div>
+                            <label class="form-label" style="font-weight: 700;">Categoría del Caso</label>
+                            <select id="casoCatInput" class="form-input" style="width: 100%; padding: 14px; border-radius: 12px;" required>
+                                <option value="medico">🚑 Emergencia Médica</option>
+                                <option value="familiar">🏠 Ayuda Familiar</option>
+                                <option value="educacion">🎓 Educación / Becas</option>
+                                <option value="pobreza">🍲 Pobreza Extrema</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-weight: 700;">Meta ($ USD)</label>
+                            <input type="number" id="casoMetaInput" class="form-input" style="width: 100%; padding: 14px; border-radius: 12px;" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-weight: 700;">Relato de la Historia</label>
+                        <textarea id="casoStoryInput" class="form-input" rows="6" style="width: 100%; padding: 14px; border-radius: 12px; resize: none;" placeholder="Describe detalladamente por qué se necesita esta ayuda..." required></textarea>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 24px;">
+                    <div>
+                        <label class="form-label" style="font-weight: 700;">Evidencia Visual</label>
+                        <label class="ai-upload-zone" id="aiZone" style="display: block;">
+                            <input type="file" id="casoEvidenceInput" accept="image/*,.pdf" style="display: none;" onchange="handleEvidenceUpload(event)">
+                            <div class="scanner-bar" id="aiScannerBar"></div>
+                            <div id="aiIcon" style="font-size: 2.5rem; margin-bottom: 12px;">📄</div>
+                            <div id="aiText" style="font-weight: 700; color: var(--primary-blue);">Subir Evidencia Verificadora</div>
+                            <div id="aiSub" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">La IA verificará autenticidad.</div>
+                            <div id="evidencePreview" style="display: none; margin-top: 15px; border-radius: 8px; overflow: hidden; height: 120px; background: #eee;">
+                                <img id="imgPreview" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="form-label" style="font-weight: 700;">Ubicación</label>
+                        <div id="selectionMap" class="map-selection-box"></div>
+                        <input type="hidden" id="casoLat" value="18.7951">
+                        <input type="hidden" id="casoLng" value="-69.9547">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-top: auto;">
+                        <button type="button" class="btn btn-outline" style="justify-content: center;" onclick="document.getElementById('casoModal').classList.remove('active')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="justify-content: center; font-weight: 800;">Publicar Solicitud</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Detalle del Caso (VER HISTORIA) -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden;">
+            <button class="modal-close" style="position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.8); border: none; cursor: pointer; z-index: 10;"
+                onclick="document.getElementById('detailsModal').classList.remove('active')">
+                <i data-lucide="x" style="width: 24px; height: 24px; color: var(--text-dark);"></i>
+            </button>
+            
+            <div id="detailImage" style="width: 100%; height: 350px; background: #eee; background-size: cover; background-position: center;"></div>
+            
+            <div style="padding: 40px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                    <div>
+                        <span id="detailCat" class="badge badge-blue" style="margin-bottom: 12px; display: inline-block;"></span>
+                        <h2 id="detailTitle" style="font-size: 2.2rem; font-weight: 800; color: var(--primary-blue); margin: 0;"></h2>
+                    </div>
+                    <div id="detailTrust" class="trust-tag gold" style="position: static;"></div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 40px;">
+                    <div>
+                        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--blue-deep); margin-bottom: 16px;">La Historia</h3>
+                        <p id="detailStory" style="color: #1e293b; line-height: 1.8; font-size: 1.05rem; font-weight: 500;"></p>
+                    </div>
+                    <div style="background: var(--bg-light); padding: 24px; border-radius: 20px; height: fit-content;">
+                        <h4 style="font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: var(--blue-mid); margin-bottom: 20px;">Progreso de la Causa</h4>
+                        
+                        <div class="progress-section" style="margin-bottom: 24px;">
+                            <div class="progress-labels">
+                                <span id="detailRaised" style="font-size: 1.2rem; font-weight: 800; color: var(--green);"></span>
+                                <span id="detailGoal" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+                            </div>
+                            <div class="progress-container" style="height: 10px;">
+                                <div id="detailProgressFill" class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center; height: 50px; font-weight: 800;" onclick="closeDetailsAndDonate()">
+                            QUIERO COLABORAR
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Donación/Colaboración (COLABORAR) -->
+    <div class="modal-overlay" id="donationModal">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">💖</div>
+            <h2 id="donarTitle" style="color: var(--primary-blue); font-weight: 800; margin-bottom: 12px;">Colaborar con la causa</h2>
+            <p style="color: var(--text-muted); margin-bottom: 24px;">Tu aporte marcará la diferencia en la vida de quienes más lo necesitan.</p>
+            
+            <div style="text-align: left; margin-bottom: 24px;">
+                <label class="form-label">Método de Colaboración</label>
+                <select id="donarMethod" class="form-input" style="width: 100%; padding: 12px; border-radius: 12px; margin-bottom: 16px;" onchange="toggleBankDetails()">
+                    <option value="card">💳 Tarjeta de Crédito/Débito</option>
+                    <option value="transfer">🏦 Transferencia Bancaria</option>
+                </select>
+
+                <div id="bankDetails" style="display: none; background: #f0f7ff; border: 1px dashed var(--blue-mid); padding: 15px; border-radius: 12px; margin-bottom: 16px; font-size: 0.85rem; color: var(--blue-deep);">
+                    <p style="margin-bottom: 5px;"><strong>Banco Central - Monte Plata</strong></p>
+                    <p style="margin-bottom: 5px;">Cuenta: 12345-67890-55</p>
+                    <p style="margin-bottom: 5px;">Nombre: Ayuda a un Tercero ONG</p>
+                    <p>Referencia: <span id="bankRef" style="font-weight: 800;"></span></p>
+                    <p style="margin-top: 10px; font-size: 0.75rem; color: var(--text-muted);">* Una vez realizada la transferencia, sube el comprobante para validación.</p>
+                </div>
+
+                <label class="form-label">Monto de tu aporte ($ USD)</label>
+                <div style="position: relative;">
+                    <span style="position: absolute; left: 15px; top: 14px; font-weight: 800; color: var(--primary-blue);">$</span>
+                    <input type="number" id="donarAmountInput" class="form-input" style="padding-left: 35px; width: 100%; font-size: 1.2rem; font-weight: 800;" placeholder="0.00" oninput="updateImpactPreview()">
+                </div>
+                <div id="impactPreview" style="margin-top: 12px; font-size: 0.85rem; color: var(--green); font-weight: 600; display: none;">
+                    ✨ Con este aporte estarías cubriendo el <span id="impactPercent">0</span>% restante de la meta.
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                <button class="btn btn-accent" style="justify-content: center; height: 50px;" onclick="confirmarDonacion()">
+                    Confirmar Colaboración Segura
+                </button>
+                <button class="btn btn-outline" style="justify-content: center;" onclick="document.getElementById('donationModal').classList.remove('active')">
+                    Cancelar
+                </button>
+            </div>
+            
+            <div style="margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; opacity: 0.6;">
+                <i data-lucide="shield-check" size="16"></i>
+                <span style="font-size: 0.75rem; font-weight: 600;">Transacción Encriptada y Segura - SSL</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <!-- Interactive Scripts -->
+    <script>
+        // --- DATA & STATE ---
+        let currentTab = 'active'; // 'active' or 'success'
+        let mapViewActive = false;
+        let mainMap = null;
+
+        const INITIAL_CASES = [];
+
+        // --- UI RENDERING ---
+        function createCaseCard(c) {
+            const percent = Math.min((c.raised / c.goal) * 100, 100);
+            const isCompleted = c.status === 'Completado';
+            const isUrgent = c.daysLeft <= 5 && c.daysLeft > 0;
+            
+            return `
+                <div class="case-card" data-cat="${c.catKey}">
+                    <div class="case-img-container">
+                        <img src="${c.img}" alt="${c.title}">
+                        <div class="trust-tag ${c.trustLevel.toLowerCase()}">
+                            <i data-lucide="${c.trustLevel === 'Gold' ? 'award' : 'shield-check'}"></i>
+                            ${c.trustLevel === 'Gold' ? 'VERIFICADO ORO' : 'VERIFICADO PLATA'}
+                        </div>
+                        ${isUrgent ? `
+                        <div class="urgency-badge">
+                            <i data-lucide="zap" size="14"></i> URGENCIA MÁXIMA (${c.daysLeft}d restantes)
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="case-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span class="case-cat">${c.category}</span>
+                            <span style="font-size: 0.75rem; color: #64748b; font-weight: 600;">📍 ${c.dist} km</span>
+                        </div>
+                        <h3 class="case-title">${c.title}</h3>
+                        <p class="case-desc">${c.desc.substring(0, 100)}...</p>
+                        
+                        <div class="progress-section">
+                            <div class="progress-labels">
+                                <span>$${c.raised.toLocaleString()}</span>
+                                <span style="color: var(--primary-blue-mid); font-weight: 800;">Meta: $${c.goal.toLocaleString()}</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-fill" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <button class="btn btn-primary" onclick="donarCaso('${c.title}')" ${isCompleted ? 'disabled' : ''}>
+                                ${isCompleted ? 'Finalizado' : 'Colaborar'}
+                            </button>
+                            <button class="btn btn-outline" onclick="showCasosDetails('${c.id}')">
+                                Ver Historia
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCases() {
+            const grid = document.getElementById('casosGrid');
+            const dbCases = typeof DB !== 'undefined' ? DB.getCasos() : [];
+            const formattedDbCases = dbCases.map(c => ({
+                id: c.id,
+                title: c.titulo,
+                category: c.categoria,
+                catKey: c.catKey,
+                desc: c.story,
+                raised: parseFloat(c.raised) || 0,
+                goal: parseFloat(c.meta) || 1,
+                img: c.img,
+                status: c.status || 'Aprobado',
+                trustLevel: c.trustLevel || 'Silver',
+                dist: c.dist || 0,
+                daysLeft: c.daysLeft || 10
+            }));
+
+            const filtered = formattedDbCases.filter(c => {
+                const matchesTab = (currentTab === 'active' && c.status === 'Aprobado') || 
+                                 (currentTab === 'success' && (c.status === 'Completado' || (c.status === 'Aprobado' && c.raised >= c.goal)));
+                return matchesTab;
+            });
+
+            grid.innerHTML = filtered.map(c => createCaseCard(c)).join('');
+            lucide.createIcons();
+        }
+
+        // --- ACTIONS ---
+        function switchCaseTab(tab, el) {
+            currentTab = tab;
+            document.querySelectorAll('.c-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            
+            document.getElementById('feedTitle').innerText = tab === 'active' ? 'Resultados Cercanos' : 'Logros de la Comunidad';
+            renderCases();
+        }
+
+        function toggleMapView() {
+            mapViewActive = !mapViewActive;
+            const mapView = document.getElementById('mainMapView');
+            const gridView = document.getElementById('casosGrid');
+            
+            mapView.style.display = mapViewActive ? 'block' : 'none';
+            gridView.style.display = mapViewActive ? 'none' : 'grid';
+
+            if (mapViewActive && !mainMap) {
+                initMainMap();
+            }
+        }
+
+        function initMainMap() {
+            mainMap = L.map('globalLiveMap').setView([18.7951, -69.9547], 9);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mainMap);
+            
+            INITIAL_CASES.forEach(c => {
+                L.marker([18.7951 + (Math.random()-0.5)*0.5, -69.9547 + (Math.random()-0.5)*0.5])
+                    .addTo(mainMap)
+                    .bindPopup(`<b>${c.title}</b><br>${c.category}`);
+            });
+            setTimeout(() => mainMap.invalidateSize(), 150);
+        }
+
+        let selectedCasoForDonation = null;
+
+        function donarCaso(title) {
+            selectedCasoForDonation = title;
+            document.getElementById('donarTitle').innerText = `Colaborar con: ${title}`;
+            document.getElementById('donarAmountInput').value = '';
+            document.getElementById('impactPreview').style.display = 'none';
+            document.getElementById('donarMethod').value = 'card';
+            document.getElementById('bankDetails').style.display = 'none';
+            document.getElementById('bankRef').innerText = (title.substring(0, 5) + Math.floor(Math.random() * 999)).toUpperCase();
+            document.getElementById('donationModal').classList.add('active');
+        }
+
+        function toggleBankDetails() {
+            const method = document.getElementById('donarMethod').value;
+            document.getElementById('bankDetails').style.display = (method === 'transfer') ? 'block' : 'none';
+        }
+
+        function showCasosDetails(id) {
+            const dbCases = typeof DB !== 'undefined' ? DB.getCasos() : [];
+            const formattedDbCases = dbCases.map(c => ({
+                id: c.id,
+                title: c.titulo,
+                category: c.categoria,
+                catKey: c.catKey,
+                desc: c.story,
+                raised: parseFloat(c.raised) || 0,
+                goal: parseFloat(c.meta) || 1,
+                img: c.img,
+                status: c.status,
+                trustLevel: c.trustLevel || 'Silver',
+                dist: c.dist || 0,
+                daysLeft: c.daysLeft || 10
+            }));
+
+            // Usamos solo los casos de la base de datos para consistencia
+            const caso = formattedDbCases.find(c => c.id === id);
+            
+            if (!caso) return;
+            selectedCasoForDonation = caso.title;
+
+            document.getElementById('detailImage').style.backgroundImage = `url(${caso.img})`;
+            document.getElementById('detailCat').innerText = caso.category;
+            document.getElementById('detailTitle').innerText = caso.title;
+            document.getElementById('detailStory').innerText = caso.desc;
+            document.getElementById('detailRaised').innerText = `$${caso.raised.toLocaleString()}`;
+            document.getElementById('detailGoal').innerText = `de $${caso.goal.toLocaleString()} recaudados`;
+            
+            const percent = Math.min((caso.raised / caso.goal) * 100, 100);
+            document.getElementById('detailProgressFill').style.width = percent + '%';
+            
+            const trustEl = document.getElementById('detailTrust');
+            trustEl.className = `trust-tag ${caso.trustLevel.toLowerCase()}`;
+            trustEl.innerHTML = `<i data-lucide="${caso.trustLevel === 'Gold' ? 'award' : 'shield-check'}"></i> ${caso.trustLevel === 'Gold' ? 'VERIFICADO ORO' : 'VERIFICADO PLATA'}`;
+            
+            document.getElementById('detailsModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeDetailsAndDonate() {
+            document.getElementById('detailsModal').classList.remove('active');
+            setTimeout(() => {
+                donarCaso(selectedCasoForDonation);
+            }, 300);
+        }
+
+        function updateImpactPreview() {
+            const amount = parseFloat(document.getElementById('donarAmountInput').value) || 0;
+            const preview = document.getElementById('impactPreview');
+            const percentEl = document.getElementById('impactPercent');
+
+            if (amount <= 0) {
+                preview.style.display = 'none';
+                return;
+            }
+
+            const dbCases = typeof DB !== 'undefined' ? DB.getCasos() : [];
+            const formattedDbCases = dbCases.map(c => ({ title: c.titulo, goal: parseFloat(c.meta) }));
+            const allCases = [...INITIAL_CASES, ...formattedDbCases];
+            const caso = allCases.find(c => c.title === selectedCasoForDonation);
+
+            if (caso) {
+                const impact = ((amount / caso.goal) * 100).toFixed(1);
+                percentEl.innerText = impact;
+                preview.style.display = 'block';
+            }
+        }
+
+        function confirmarDonacion() {
+            const amount = parseFloat(document.getElementById('donarAmountInput').value);
+            if (!amount || amount <= 0) {
+                alert('Por favor, ingresa un monto válido.');
+                return;
+            }
+
+            const method = document.getElementById('donarMethod').value;
+            const methodText = method === 'transfer' ? 'Transferencia Bancaria' : 'Tarjeta';
+
+            if (typeof DB !== 'undefined') {
+                DB.updateStats('donaciones_totales', amount);
+                DB.addPoints(Math.floor(amount * 10)); // Reward points
+                DB.updateCasoAmount(selectedCasoForDonation, amount);
+            }
+
+            alert(`¡Gracias por tu nobleza! Tu colaboración de $${amount} USD vía ${methodText} ha sido registrada. El progreso de la causa se actualizará automáticamente en la plataforma.`);
+            document.getElementById('donationModal').classList.remove('active');
+            renderCases(); // Refrescar vista
+        }
+
+        // --- COORDINATION CHAT ---
+        function addQuickReply(text) {
+            const input = document.getElementById('coordChatInput');
+            input.value = text;
+            input.focus();
+        }
+
+        function sendCoordMsg() {
+            const input = document.getElementById('coordChatInput');
+            const body = document.getElementById('coordChatBody');
+            if (!input.value.trim()) return;
+
+            const msg = document.createElement('div');
+            msg.className = 'chat-msg mine';
+            msg.innerText = input.value;
+            body.appendChild(msg);
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+
+            // Simple auto-reply simulation
+            setTimeout(() => {
+                const reply = document.createElement('div');
+                reply.className = 'chat-msg yours';
+                reply.innerText = "¡Entendido! Te aviso en cuanto esté listo.";
+                body.appendChild(reply);
+                body.scrollTop = body.scrollHeight;
+            }, 1500);
+        }
+
+        // --- MODAL & AI LOGIC ---
+        let selectionMap = null;
+        let selectionMarker = null;
+
+        function checkInitSelectionMap() {
+            if (!selectionMap) {
+                selectionMap = L.map('selectionMap').setView([18.7951, -69.9547], 12);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(selectionMap);
+                selectionMarker = L.marker([18.7951, -69.9547], { draggable: true }).addTo(selectionMap);
+                
+                selectionMarker.on('dragend', function() {
+                    const pos = selectionMarker.getLatLng();
+                    document.getElementById('casoLat').value = pos.lat;
+                    document.getElementById('casoLng').value = pos.lng;
+                });
+                
+                selectionMap.on('click', function(e) {
+                    selectionMarker.setLatLng(e.latlng);
+                    document.getElementById('casoLat').value = e.latlng.lat;
+                    document.getElementById('casoLng').value = e.latlng.lng;
+                });
+                setTimeout(() => selectionMap.invalidateSize(), 300);
+            } else {
+                setTimeout(() => selectionMap.invalidateSize(), 150);
+            }
+        }
+
+        function handleEvidenceUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('evidencePreview').style.display = 'block';
+                document.getElementById('imgPreview').src = e.target.result;
+                document.getElementById('aiIcon').style.display = 'none';
+                document.getElementById('aiText').style.display = 'none';
+                simulateAIScan();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function simulateAIScan() {
+            const zone = document.getElementById('aiZone');
+            const scanner = document.getElementById('aiScannerBar');
+            const textSub = document.getElementById('aiSub');
+
+            zone.classList.add('scanning');
+            scanner.style.display = 'block';
+            textSub.innerText = "⏳ IA Analizando autenticidad...";
+
+            setTimeout(() => {
+                zone.classList.remove('scanning');
+                scanner.style.display = 'none';
+                textSub.innerText = "✅ Evidencia Verificada. No se detectan anomalías.";
+                textSub.style.color = "var(--vibrant-green)";
+            }, 2500);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCases();
+            lucide.createIcons();
+            
+            document.getElementById('formRegistrarCaso').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const newCaso = {
+                    titulo: document.getElementById('casoTitleInput').value,
+                    categoria: document.getElementById('casoCatInput').options[document.getElementById('casoCatInput').selectedIndex].text,
+                    catKey: document.getElementById('casoCatInput').value,
+                    meta: document.getElementById('casoMetaInput').value,
+                    story: document.getElementById('casoStoryInput').value,
+                    raised: 0,
+                    img: document.getElementById('imgPreview').src || "https://images.unsplash.com/photo-1593113563332-9cb48e833446?w=800",
+                    nombre: localStorage.getItem('userName') || "Usuario de la Red",
+                    dist: (Math.random() * 5).toFixed(1),
+                    trustLevel: 'Silver'
+                };
+
+                if (typeof DB !== 'undefined') {
+                    DB.saveCaso(newCaso);
+                }
+
+                alert('¡Solicitud enviada! Tu caso ha sido registrado con estado "En Revisión". Los administradores de la plataforma validarán la información pronto para hacerlo público.');
+                document.getElementById('casoModal').classList.remove('active');
+                e.target.reset();
+                renderCases();
+            });
+        });
+    </script>
+    <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
+

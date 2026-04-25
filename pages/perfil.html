@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --blue-deep: var(--primary-blue);
+            --blue-mid: var(--primary-blue-mid);
+            --blue-light: var(--primary-blue-light);
+            --green: #10B981;
+            --amber: var(--accent-orange);
+            --red: #EF4444;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-md: var(--shadow-premium);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--gray-800);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--blue-mid);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+        }
+
+        .avatar-edit-label {
+            display: block;
+            width: 72px;
+            height: 72px;
+            padding: 0;
+            margin-bottom: 14px;
+            position: relative;
+            border-radius: 50%;
+            cursor: pointer;
+            overflow: hidden;
+            border: 4px solid var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .avatar-edit-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--green), var(--blue-light));
+        }
+
+        .avatar-edit-icon {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+            font-size: 1.5rem;
+        }
+
+        .avatar-edit-label:hover .avatar-edit-icon {
+            opacity: 1;
+        }
+
+        .content-tab {
+            display: none;
+        }
+
+        .content-tab.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline btn-sm active"
+                    style="background: var(--primary-blue-light); color: var(--primary-blue);">Mi Perfil</a>
+                <a href="admin.html" id="navAdminBtn" class="btn btn-accent btn-sm"
+                    style="display:none; margin-left:10px;">🛡️ Panel Admin</a>
+                <a href="login.html" class="btn btn-ghost btn-sm"
+                    style="color: var(--red); background: #fee2e2; border:none; margin-left: 10px; border-radius: 8px;"
+                    onclick="logout()">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Section -->
+    <section class="profile-section" style="padding-top: calc(var(--nav-h) + 40px); min-height: 100vh;">
+        <div class="container">
+            <div class="profile-layout">
+                <!-- Sidebar -->
+                <aside class="profile-sidebar" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.4); box-shadow: var(--shadow-premium); padding: 0 0 30px; overflow: hidden;">
+                    <div class="profile-cover" style="height: 120px; background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));"></div>
+                        <div class="profile-avatar" id="sidebar-avatar" style="color: white; font-weight: 700; background: linear-gradient(135deg, var(--blue-mid), var(--green)); width: 100px; height: 100px; margin: -50px auto 15px; border: 5px solid var(--white); box-shadow: var(--shadow-md);"> MS
+                        </div>
+                        <div class="profile-name" id="sidebar-name" style="font-size: 1.6rem; font-weight: 800; color: var(--blue-deep);">María V.</div>
+                        <div class="profile-handle" id="sidebar-location" style="font-size: 0.9rem; color: var(--gray-500); font-weight: 600; margin-bottom: 15px;">📍 Monte Plata, R.D.</div>
+                        <div class="profile-rep" id="sidebar-type" style="background: var(--blue-pale); color: var(--blue-deep); padding: 8px 16px; border-radius: 20px; display: inline-block; font-size: 0.8rem; font-weight: 800; border: 1px solid var(--blue-light);">
+                            ❤️ Donador Verificado
+                        </div>
+                    </div>
+
+                    <div class="profile-stats-grid" style="grid-template-columns: 1fr 1fr; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.3); box-shadow: var(--shadow-sm);">
+                        <div class="profile-stat" style="border-right: 1px solid var(--gray-100);">
+                            <div class="profile-stat-n" id="stat-puntos" style="color: var(--blue-mid); font-weight: 800; font-size: 1.4rem;">0</div>
+                            <div class="profile-stat-l" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); font-weight: 700;">Puntos</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-n" id="stat-nivel" style="color: var(--green); font-weight: 800; font-size: 1.4rem;">Social</div>
+                            <div class="profile-stat-l" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); font-weight: 700;">Nivel</div>
+                        </div>
+                    </div>
+
+                    <!-- Sistema de Referidos -->
+                    <div
+                        style="margin-top: 24px; padding: 15px; background: rgba(37, 99, 235, 0.05); border-radius: var(--radius-md); border: 1px solid var(--blue-pale);">
+                        <p style="font-size: 0.75rem; color: var(--blue-deep); font-weight: 700; margin-bottom: 8px;">TU
+                            CÓDIGO DE INVITACIÓN</p>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="share-code" readonly value="MONTE-502-RD"
+                                style="flex-grow: 1; border: 1px dashed var(--blue-mid); background: white; padding: 5px; font-size: 0.8rem; text-align: center; font-weight: 800; border-radius: 4px;">
+                            <button onclick="copyShareCode()"
+                                style="background: var(--blue-mid); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Copiar</button>
+                        </div>
+                        <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">Gana 500 Puntos por
+                            cada amigo referido.</p>
+                    </div>
+
+                    <!-- Sistema de Insignias (Dinámico) -->
+                    <div
+                        style="margin-top: 32px; padding: 20px; background: var(--gray-50); border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
+                        <h4
+                            style="font-size: 0.85rem; color: var(--primary-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; font-weight: 800;">
+                            Logros y Reconocimientos</h4>
+                        <div id="badge-container" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <!-- Dinámico -->
+                        </div>
+                        
+                        <div id="next-goal-info">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 6px;">
+                                <span id="goal-name" style="font-weight: 700; color: var(--blue-deep);">Héroe de la Red</span>
+                                <span id="goal-percent" style="color: var(--blue-mid); font-weight: 800;">0%</span>
+                            </div>
+                            <div class="progress-bar-bg" style="height: 8px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
+                                <div class="progress-bar-fill" id="level-progress"
+                                    style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--blue-mid), var(--green)); transition: width 1s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="profile-main">
+                    <div class="profile-tabs" style="display: flex; gap: 10px; margin-bottom: 30px; background: #f1f5f9; padding: 6px; border-radius: 16px; width: fit-content; border: 1px solid var(--gray-200);">
+                        <button class="tab-btn active" onclick="switchProfileTab('info')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Mi Perfil</button>
+                        <button class="tab-btn" onclick="switchProfileTab('edit')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Configuración</button>
+                        <button class="tab-btn" onclick="switchProfileTab('wallet')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">💳 Billetera</button>
+                        <button class="tab-btn" onclick="switchProfileTab('history')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Actividad</button>
+                    </div>
+
+                    <style>
+                        .tab-btn { background: transparent; color: var(--gray-500); }
+                        .tab-btn.active { background: white; color: var(--blue-deep); box-shadow: var(--shadow-sm); }
+                    </style>
+
+                    <div class="card" style="border-radius: 30px; border: 1px solid var(--gray-200); box-shadow: var(--shadow-premium); overflow: hidden; background: white;">
+                        <div class="card-body" style="padding: 40px;">
+                            <!-- Ver Información -->
+                            <div id="tab-info" class="content-tab active">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 16px; color: var(--blue-deep);">Resumen de
+                                    tu cuenta</h3>
+                                <p style="color: var(--gray-500); line-height: 1.6; margin-bottom: 24px;">Esta es tu
+                                    información pública visible para otros miembros de la plataforma, fundamental para
+                                    mantener un ecosistema de confianza y transparencia.</p>
+
+                                <ul style="list-style: none; padding: 0;">
+                                    <li
+                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
+                                        <b style="width: 150px; color: var(--gray-700);">Nombre:</b> <span
+                                            id="display-name">María Sánchez</span>
+                                    </li>
+                                    <li
+                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
+                                        <b style="width: 150px; color: var(--gray-700);">Ubicación:</b> <span
+                                            style="font-size:0.9rem; color:var(--gray-600); font-weight:500;"
+                                            id="display-location">Monte Plata, R.D.</span>
+                                    </li>
+                                    <li
+                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
+                                        <b style="width: 150px; color: var(--gray-700);">Teléfono:</b> <span
+                                            id="display-phone">+34 000 000 000</span>
+                                    </li>
+                                    <li
+                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
+                                        <b style="width: 150px; color: var(--gray-700);">Rol principal:</b> <span
+                                            id="display-type">Donador</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Editar Formulario -->
+                            <div id="tab-edit" class="content-tab">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 24px; color: var(--blue-deep);">Actualizar
+                                    Mis Datos</h3>
+                                <form id="edit-profile-form" onsubmit="event.preventDefault(); saveProfile();">
+                                    <div class="form-group" style="text-align: center;">
+                                        <label class="form-label" style="text-align: left;">Foto de Perfil</label>
+                                        <label class="avatar-edit-label" title="Haz clic para cambiar tu foto"
+                                            style="margin: 0 auto 16px;">
+                                            <div class="avatar-edit-img"
+                                                style="display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white;">
+                                                MS</div>
+                                            <div class="avatar-edit-icon">📷</div>
+                                            <!-- The input file allows standard image selection -->
+                                            <input type="file" style="display: none;" accept="image/*">
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Nombre Completo</label>
+                                        <input type="text" id="input-name" class="form-control" value="María Sánchez"
+                                            required>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Teléfono</label>
+                                            <input type="tel" id="input-phone" class="form-control"
+                                                value="+34 000 000 000" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Ubicación</label>
+                                            <input type="text" id="edit-location" class="form-control"
+                                                value="Monte Plata, R.D." required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Tipo de Usuario (Rol)</label>
+                                        <select id="input-type" class="form-control" required>
+                                            <option value="donador" selected>❤️ Donador</option>
+                                            <option value="beneficiario">🙌 Beneficiario</option>
+                                            <option value="emprendedor">🚀 Emprendedor</option>
+                                            <option value="negocio">🏪 Negocio Solidario (Empresa)</option>
+                                            <option value="comprador">🛍️ Comprador Solidario</option>
+                                        </select>
+                                    </div>
+                                    <div id="business-field" class="form-group" style="display: none;">
+                                        <label class="form-label">Nombre del Negocio / Empresa</label>
+                                        <input type="text" id="input-business" class="form-control"
+                                            placeholder="Ej. Farmacia Monte Plata">
+                                        <p style="font-size: 0.75rem; color: var(--blue-mid); margin-top: 6px;">Al ser
+                                            Negocio Solidario, tus productos tendrán un sello distintivo en el
+                                            Marketplace.</p>
+                                    </div>
+                                    <div class="form-group"
+                                        style="background: var(--bg-light); padding: 16px; border-radius: 12px; border: 1px dashed var(--blue-mid);">
+                                        <label class="form-label">¿Tienes un Código de Referido?</label>
+                                        <div style="display: flex; gap: 8px;">
+                                            <input type="text" id="input-referral" class="form-control"
+                                                placeholder="EJ: AMIGO500">
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                onclick="applyReferral()">Aplicar</button>
+                                        </div>
+                                        <p id="ref-msg" style="font-size: 0.75rem; margin-top: 8px; display: none;"></p>
+                                    </div>
+                                    <div class="form-group" style="margin-top: 32px; display: flex; gap: 12px;">
+                                        <button type="submit" class="btn btn-green">Guardar Cambios</button>
+                                        <button type="button" class="btn btn-outline"
+                                            onclick="switchProfileTab('info')">Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Billetera Solidaria -->
+                            <div id="tab-wallet" class="content-tab">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                                    <div>
+                                        <h3 style="font-size: 1.5rem; color: var(--blue-deep); font-weight: 800;">Mi Billetera</h3>
+                                        <p style="color: var(--gray-500); font-size: 0.9rem;">Gestiona tus fondos y ahorros sociales.</p>
+                                    </div>
+                                    <button class="btn btn-primary" style="border-radius: 14px; padding: 12px 24px;" onclick="alert('Redirigiendo a pasarela de pago para recarga...')">
+                                        <i data-lucide="plus-circle" style="margin-right: 8px;"></i> Recargar Saldo
+                                    </button>
+                                </div>
+
+                                <!-- Tarjeta Virtual Premium -->
+                                <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 35px; border-radius: 24px; color: white; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                                    <div style="position: absolute; right: -30px; bottom: -30px; opacity: 0.1; transform: rotate(-15deg);">
+                                        <i data-lucide="wallet" size="200"></i>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
+                                        <div>
+                                            <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; opacity: 0.8; font-weight: 700; margin-bottom: 5px;">Saldo Disponible</p>
+                                            <h2 style="font-size: 3rem; font-weight: 900; letter-spacing: -1px;">$125.50 <span style="font-size: 1.2rem; opacity: 0.6; font-weight: 500;">DOP</span></h2>
+                                        </div>
+                                        <div style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3);">
+                                            <i data-lucide="contactless" size="24"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                        <div style="display: flex; gap: 30px;">
+                                            <div>
+                                                <p style="font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Puntos Impacto</p>
+                                                <p style="font-weight: 800; font-size: 1.1rem; color: #fbbf24;">1,200 pts</p>
+                                            </div>
+                                            <div>
+                                                <p style="font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Ahorro Social</p>
+                                                <p style="font-weight: 800; font-size: 1.1rem;">$15.00</p>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <p style="font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Miembro Premium</p>
+                                            <p style="font-weight: 700; font-size: 0.9rem;">MARÍA SÁNCHEZ</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 style="margin-bottom: 20px; font-size: 1.1rem; font-weight: 800; color: var(--gray-800); display: flex; align-items: center; gap: 10px;">
+                                    <i data-lucide="history" size="20" style="color: var(--blue-mid);"></i> Transacciones Recientes
+                                </h4>
+                                <div style="background: #f8fafc; border-radius: 20px; padding: 10px; border: 1px solid var(--gray-100);">
+                                    <ul style="list-style: none; padding: 0; margin: 0;">
+                                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--gray-200);">
+                                            <div style="display: flex; align-items: center; gap: 15px;">
+                                                <div style="width: 40px; height: 40px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center;"><i data-lucide="arrow-down-left"></i></div>
+                                                <div>
+                                                    <div style="font-weight: 700; color: var(--gray-800);">Recarga de Saldo</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">Ayer, 4:32 PM • Tarjeta **** 4421</div>
+                                                </div>
+                                            </div>
+                                            <div style="color: var(--green); font-weight: 800; font-size: 1.1rem;">+$50.00</div>
+                                        </li>
+                                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px;">
+                                            <div style="display: flex; align-items: center; gap: 15px;">
+                                                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fee2e2; color: #991b1b; display: flex; align-items: center; justify-content: center;"><i data-lucide="heart"></i></div>
+                                                <div>
+                                                    <div style="font-weight: 700; color: var(--gray-800);">Aporte Solidario</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">10 Mar 2026 • Caso "Sofía"</div>
+                                                </div>
+                                            </div>
+                                            <div style="color: var(--red); font-weight: 800; font-size: 1.1rem;">-$5.00</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="tab-history" class="content-tab">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 16px; color: var(--blue-deep);">Historial
+                                    de Actividad</h3>
+                                <table class="recent-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Acción</th>
+                                            <th>Destino / Caso</th>
+                                            <th>Monto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>12 Oct 2026</td>
+                                            <td><span class="badge badge-green">Donación</span></td>
+                                            <td>Operación Pediátrica para Lucas</td>
+                                            <td style="font-weight: 700;">$50.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>03 Sep 2026</td>
+                                            <td><span class="badge badge-blue">Compra</span></td>
+                                            <td>Café Orgánico de Especialidad</td>
+                                            <td style="font-weight: 700;">$18.50</td>
+                                        </tr>
+                                        <tr>
+                                            <td>15 Ago 2026</td>
+                                            <td><span class="badge badge-green">Donación</span></td>
+                                            <td>Comedor Comunitario Esperanza</td>
+                                            <td style="font-weight: 700;">$25.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Sistema de pestañas para el perfil
+        function switchProfileTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.content-tab').forEach(tab => tab.classList.remove('active'));
+
+            // Activar botón correspondiente
+            const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => {
+                if (tabId === 'info' && b.innerText.includes('Mi Perfil')) return true;
+                if (tabId === 'edit' && b.innerText.includes('Editar')) return true;
+                if (tabId === 'wallet' && b.innerText.includes('Billetera')) return true;
+                if (tabId === 'history' && b.innerText.includes('Historial')) return true;
+                return false;
+            });
+            if (targetBtn) targetBtn.classList.add('active');
+
+            // Mostrar el contenido
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // Recuperar y mostrar datos del usuario logueado en LocalStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedRole = localStorage.getItem('userRole');
+            const savedName = localStorage.getItem('userName');
+
+            // Si el nombre no existe, damos por sentado que no está logueado
+            if (!savedName) return;
+
+            // Mostrar el botón Admin en el Navbar si tiene permiso
+            if (savedRole && savedRole.toLowerCase().includes('admin')) {
+                const adminBtn = document.getElementById('navAdminBtn');
+                if (adminBtn) adminBtn.style.display = 'inline-flex';
+            }
+
+            // Actualizar interfaz con variables guardadas
+            document.getElementById('sidebar-name').innerText = savedName;
+            document.getElementById('display-name').innerText = savedName;
+            document.getElementById('input-name').value = savedName;
+
+            const savedBusiness = localStorage.getItem('userBusiness');
+            if (savedBusiness) {
+                document.getElementById('input-business').value = savedBusiness;
+            }
+
+            const cleanRole = savedRole ? savedRole.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').trim() : 'Usuario Generico';
+            document.getElementById('sidebar-type').innerText = cleanRole;
+            document.getElementById('display-type').innerText = cleanRole;
+
+            // Escuchar cambios en el rol para mostrar campo de negocio
+            document.getElementById('input-type').addEventListener('change', function () {
+                const businessField = document.getElementById('business-field');
+                if (this.value === 'negocio') {
+                    businessField.style.display = 'block';
+                } else {
+                    businessField.style.display = 'none';
+                }
+            });
+            // Trigger inicial
+            if (savedRole === 'negocio') {
+                document.getElementById('business-field').style.display = 'block';
+                document.getElementById('input-type').value = 'negocio';
+            }
+
+            // Generar iniciales dinámicas
+            const namesArr = savedName.trim().split(' ');
+            let initials = "U";
+            if (namesArr.length >= 2) {
+                initials = (namesArr[0][0] + namesArr[1][0]).toUpperCase();
+            } else if (namesArr.length === 1 && namesArr[0] !== '') {
+                initials = (namesArr[0][0]).toUpperCase() + (namesArr[0].length > 1 ? namesArr[0][1].toUpperCase() : '');
+            }
+            document.getElementById('sidebar-avatar').innerText = initials;
+            const avatarEdit = document.querySelector('.avatar-edit-img');
+            if (avatarEdit) avatarEdit.innerText = initials;
+
+            // Simulación de Gamificación
+            updateGamification(savedName);
+        });
+
+        function copyShareCode() {
+            const codeInput = document.getElementById('share-code');
+            codeInput.select();
+            document.execCommand('copy');
+            alert('¡Código copiado! Compártelo con tus amigos y gana puntos.');
+        }
+
+        function updateGamification() {
+            if (typeof DB === 'undefined') return;
+
+            const rep = DB.getReputation();
+            
+            document.getElementById('stat-puntos').innerText = rep.puntos.toLocaleString();
+            document.getElementById('stat-nivel').innerText = rep.nivel;
+            
+            const badgeContainer = document.getElementById('badge-container');
+            badgeContainer.innerHTML = '';
+            
+            rep.insignias.forEach(insignia => {
+                const icon = insignia.includes('Donador') ? '🏆' : (insignia.includes('IA') ? '🤖' : '🛡️');
+                badgeContainer.innerHTML += `
+                    <div class="badge-item" title="${insignia}" style="background: var(--white); border: 1px solid var(--gray-200); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; box-shadow: var(--shadow-sm);">
+                        ${icon}
+                    </div>
+                `;
+            });
+
+            if (rep.metas_proximas && rep.metas_proximas.length > 0) {
+                const next = rep.metas_proximas[0];
+                document.getElementById('goal-name').innerText = next.nombre;
+                document.getElementById('goal-percent').innerText = next.progreso + '%';
+                document.getElementById('level-progress').style.width = next.progreso + '%';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userName');
+            // La redirección a login.html ya la hace el hipervínculo <a> del navbar
+        }
+
+        // Simulación lógica de edición de datos de perfil
+        function saveProfile() {
+            // Recoger valores del formulario
+            const name = document.getElementById('input-name').value;
+            const phone = document.getElementById('input-phone').value;
+            const location = document.getElementById('edit-location').value;
+            const roleSelect = document.getElementById('input-type');
+            const roleValue = roleSelect.value;
+            const roleText = roleSelect.options[roleSelect.selectedIndex].text;
+            const businessName = document.getElementById('input-business').value;
+
+            // Guardar en Storage
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userRole', roleValue);
+            if (roleValue === 'negocio') {
+                localStorage.setItem('userBusiness', businessName);
+            }
+
+            // Actualizar vista "Resumen de tu cuenta"
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('display-phone').innerText = phone;
+            document.getElementById('display-location').innerText = location;
+            document.getElementById('display-type').innerText = roleText.replace(/[^a-zA-Z\s]/g, '').trim();
+
+            // Actualizar Barra lateral izquierda
+            document.getElementById('sidebar-name').innerText = name;
+            document.getElementById('sidebar-location').innerText = '📍 ' + location;
+            document.getElementById('sidebar-type').innerText = roleText + ' Verificado';
+
+            // Mostrar feedback al usuario y volver al resumen
+            alert('✅ Tu perfil ha sido actualizado exitosamente.');
+            switchProfileTab('info');
+        }
+
+        function applyReferral() {
+            const code = document.getElementById('input-referral').value.toUpperCase();
+            const msg = document.getElementById('ref-msg');
+            if (code) {
+                msg.style.display = 'block';
+                msg.style.color = 'var(--green)';
+                msg.innerText = '✅ ¡Código aplicado! Recibirás 500 Puntos de Impacto al completar tu primera acción.';
+                localStorage.setItem('referralCode', code);
+            }
+        }
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+    <script src="../assets/js/db.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+</body>
+
+</html>
+

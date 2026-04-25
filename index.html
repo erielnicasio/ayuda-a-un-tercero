@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidad Solidaria | Impacto Social y Marketplace</title>
+    <meta name="description"
+        content="Plataforma de ayuda comunitaria, marketplace solidario y préstamos con enfoque social.">
+    <link rel="stylesheet" href="assets/css/styles-new.css">
+    <!-- Lucide Icons for modern graphics -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="hero-active">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="pages/marketplace.html">Marketplace</a>
+                <a href="pages/donaciones.html">Donaciones</a>
+                <a href="pages/credifast.html">Préstamos</a>
+                <a href="pages/casos.html">Casos Sociales</a>
+                <a href="pages/impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="pages/login.html" class="btn btn-outline btn-sm">Iniciar Sesión</a>
+                <a href="pages/admin.html" class="btn btn-primary btn-sm" style="margin-left:10px">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <img src="assets/img/media-hero-2.jpg"
+            alt="Monte Plata - Ayuda a un Tercero" class="hero-bg">
+        <div class="hero-overlay"></div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Impulsando el Impacto Social en Nuestra Comunidad</h1>
+                <p class="hero-subtitle">Conectamos corazones dispuestos a ayudar con necesidades reales a través de
+                    tecnología, transparencia y solidaridad comunitaria.</p>
+                <div class="hero-actions">
+                    <a href="pages/donaciones.html" class="btn btn-primary">Empezar a Ayudar</a>
+                    <a href="pages/marketplace.html" class="btn btn-accent">Explorar Marketplace</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- IMPACT DASHBOARD (NEW) -->
+    <section class="impact-dashboard">
+        <div class="container">
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-icon"><i data-lucide="users"></i></div>
+                    <div class="impact-info">
+                        <h3 id="stat-vidas" class="impact-value">0</h3>
+                        <p class="impact-label">Vidas Impactadas</p>
+                    </div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-icon"><i data-lucide="package"></i></div>
+                    <div class="impact-info">
+                        <h3 id="stat-donaciones" class="impact-value">0</h3>
+                        <p class="impact-label">Donaciones Realizadas</p>
+                    </div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-icon" style="color: #10B981;"><i data-lucide="leaf"></i></div>
+                    <div class="impact-info">
+                        <h3 id="stat-co2" class="impact-value">0</h3>
+                        <p class="impact-label">CO2 Ahorrado (kg)</p>
+                    </div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-icon" style="color: var(--accent-orange);"><i data-lucide="award"></i></div>
+                    <div class="impact-info">
+                        <h3 id="stat-casos" class="impact-value">0</h3>
+                        <p class="impact-label">Casos Exitosos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .impact-dashboard {
+            background: var(--white);
+            padding: 40px 0;
+            border-bottom: 1px solid var(--gray-100);
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .impact-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 16px;
+            border-right: 1px solid var(--gray-100);
+        }
+
+        .impact-card:last-child {
+            border-right: none;
+        }
+
+        .impact-icon {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            opacity: 0.8;
+        }
+
+        .impact-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            line-height: 1;
+        }
+
+        .impact-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .impact-card {
+                border-right: none;
+                border-bottom: 1px solid var(--gray-100);
+                padding: 16px 0;
+            }
+
+            .impact-card:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+    <!-- HOW IT WORKS -->
+    <section id="como-funciona" class="how-it-works" style="padding: 100px 0; background: var(--white);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 16px;">¿Cómo Funciona?</h2>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Tres simples pasos para empezar a
+                    transformar nuestra comunidad.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px;">
+                <div style="text-align: center; padding: 32px; border-radius: 24px; background: var(--bg-light);">
+                    <div
+                        style="width: 80px; height: 80px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 1.5rem; font-weight: 800;">
+                        1</div>
+                    <h3 style="margin-bottom: 16px;">Regístrate</h3>
+                    <p style="color: var(--text-muted);">Crea tu perfil en segundos y únete a nuestra red de confianza
+                        en Monte Plata.</p>
+                </div>
+                <div style="text-align: center; padding: 32px; border-radius: 24px; background: var(--bg-light);">
+                    <div
+                        style="width: 80px; height: 80px; background: var(--accent-orange); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 1.5rem; font-weight: 800;">
+                        2</div>
+                    <h3 style="margin-bottom: 16px;">Elige tu Acción</h3>
+                    <p style="color: var(--text-muted);">Donar artículos, apoyar un caso social o comprar en el
+                        marketplace solidario.</p>
+                </div>
+                <div style="text-align: center; padding: 32px; border-radius: 24px; background: var(--bg-light);">
+                    <div
+                        style="width: 80px; height: 80px; background: #10B981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 1.5rem; font-weight: 800;">
+                        3</div>
+                    <h3 style="margin-bottom: 16px;">Genera Impacto</h3>
+                    <p style="color: var(--text-muted);">Mira cómo tu ayuda se traduce en resultados reales y
+                        transparentes para alguien que lo necesita.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUCCESS STORIES -->
+    <section id="historias-exito" class="success-stories" style="padding: 100px 0; background: var(--bg-light);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 16px;">Historias de Éxito</h2>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">El resultado real de una
+                    comunidad unida. Casos que hoy son un motivo de celebración.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+                <!-- Historia 1 -->
+                <div class="card"
+                    style="overflow: hidden; border-radius: 20px; box-shadow: var(--shadow-soft); background: white;">
+                    <div style="height: 200px; position: relative;">
+                        <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800" alt="Caso Éxito 1"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <div
+                            style="position: absolute; top: 15px; left: 15px; background: #10B981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800;">
+                            OBJETIVO LOGRADO</div>
+                    </div>
+                    <div style="padding: 24px;">
+                        <h3 style="margin-bottom: 12px; font-size: 1.25rem;">La Sonrisa de Sofía</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
+                            Gracias a los donantes, Sofía recibió sus audífonos y hoy puede escuchar la voz de su madre
+                            por primera vez.</p>
+                        <div class="progress-bar-bg" style="height: 8px;">
+                            <div class="progress-bar-fill" style="width: 100%; background: #10B981;"></div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8rem; font-weight: 700; color: #10B981;">
+                            <span>$4,500 RECAUDADOS</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historia 2 -->
+                <div class="card"
+                    style="overflow: hidden; border-radius: 20px; box-shadow: var(--shadow-soft); background: white;">
+                    <div style="height: 200px; position: relative;">
+                        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800" alt="Caso Éxito 2"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <div
+                            style="position: absolute; top: 15px; left: 15px; background: #10B981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800;">
+                            OBJETIVO LOGRADO</div>
+                    </div>
+                    <div style="padding: 24px;">
+                        <h3 style="margin-bottom: 12px; font-size: 1.25rem;">Educación para el Futuro</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
+                            Se logró la entrega de 50 tablets para la escuela rural de Monte Plata, eliminando la brecha
+                            digital.</p>
+                        <div class="progress-bar-bg" style="height: 8px;">
+                            <div class="progress-bar-fill" style="width: 100%; background: #10B981;"></div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8rem; font-weight: 700; color: #10B981;">
+                            <span>$8,200 RECAUDADOS</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px; display: flex; gap: 20px; justify-content: center;">
+                <a href="pages/casos.html" class="btn btn-outline">Ver todos los casos activos</a>
+                <a href="pages/impacto.html" class="btn btn-primary" style="background: var(--accent-orange); border-color: var(--accent-orange);">Ver Historias de Impacto</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMPACT & GAMIFICATION SECTION -->
+    <section id="recompensas"
+        style="padding: 100px 0; background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; overflow: hidden; position: relative;">
+        <!-- Elementos decorativos abstractos -->
+        <div
+            style="position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; bottom: -50px; right: -50px; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%;">
+        </div>
+
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; align-items: center;">
+                <div>
+                    <h2 style="font-size: 2.8rem; margin-bottom: 24px;">Ayudar tiene sus Recompensas</h2>
+                    <p style="font-size: 1.1rem; opacity: 0.9; line-height: 1.8; margin-bottom: 32px;">
+                        En <b>Ayuda a un Tercero</b>, cada acción cuenta. Al donar, comprar o registrar casos, acumulas
+                        puntos de impacto y desbloqueas insignias exclusivas que te posicionan como un líder solidario
+                        en Monte Plata.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div
+                            style="background: rgba(255,255,255,0.1); padding: 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);">
+                            <div style="font-size: 2rem; margin-bottom: 12px;">🏆</div>
+                            <h4 style="margin-bottom: 8px;">Insignias Elite</h4>
+                            <p style="font-size: 0.85rem; opacity: 0.8;">Reconocimiento público en tu perfil por tus
+                                metas logradas.</p>
+                        </div>
+                        <div
+                            style="background: rgba(255,255,255,0.1); padding: 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);">
+                            <div style="font-size: 2rem; margin-bottom: 12px;">🌟</div>
+                            <h4 style="margin-bottom: 8px;">Multiplicador de Impacto</h4>
+                            <p style="font-size: 0.85rem; opacity: 0.8;">Sube de nivel y obtén beneficios en el
+                                marketplace solidario.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="background: white; padding: 40px; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); color: #1e3a8a; position: relative;">
+                    <h3 style="margin-bottom: 30px; text-align: center; font-weight: 800;">Tus Próximos Logros</h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div
+                                style="width: 60px; height: 60px; background: #FFD700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                                🥇</div>
+                            <div style="flex-grow: 1;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                    <span style="font-weight: 700;">Héroe Solidario (Nivel 5)</span>
+                                    <span style="font-weight: 800; color: #10B981;">85%</span>
+                                </div>
+                                <div style="height: 10px; background: #eee; border-radius: 10px; overflow: hidden;">
+                                    <div style="width: 85%; height: 100%; background: #2563eb; border-radius: 10px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 20px; opacity: 0.5;">
+                            <div
+                                style="width: 60px; height: 60px; background: #C0C0C0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                                🥈</div>
+                            <div style="flex-grow: 1;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                    <span style="font-weight: 700;">Guardian de la Comunidad</span>
+                                    <span style="font-weight: 800;">Bloqueado</span>
+                                </div>
+                                <div style="height: 10px; background: #eee; border-radius: 10px; overflow: hidden;">
+                                    <div style="width: 0%; height: 100%; background: #2563eb; border-radius: 10px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="pages/logros.html" class="btn btn-primary"
+                                style="width: 100%; justify-content: center;">Ver Mi Progreso Real</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contacto" style="padding: 100px 0; background: var(--primary-blue); color: white;">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; align-items: center;">
+                <div>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 24px;">Contáctanos</h2>
+                    <p style="margin-bottom: 32px; opacity: 0.9; line-height: 1.8;">¿Tienes dudas o quieres proponer una
+                        alianza? Nuestro equipo está listo para escucharte y trabajar juntos por un futuro mejor.</p>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <div
+                                style="width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="mail"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Correo Electrónico</div>
+                                <div style="opacity: 0.8;">info@ayudatercero.com</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <div
+                                style="width: 48px; height: 48px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="map-pin"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Ubicación</div>
+                                <div style="opacity: 0.8;">Monte Plata, República Dominicana</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="background: white; padding: 40px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+                    <form style="display: flex; flex-direction: column; gap: 20px;">
+                        <div>
+                            <label
+                                style="display: block; color: var(--text-dark); margin-bottom: 8px; font-weight: 600;">Nombre</label>
+                            <input type="text" placeholder="Tu nombre"
+                                style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit;">
+                        </div>
+                        <div>
+                            <label
+                                style="display: block; color: var(--text-dark); margin-bottom: 8px; font-weight: 600;">Mensaje</label>
+                            <textarea placeholder="¿En qué podemos ayudarte?" rows="4"
+                                style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit;"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="width: 100%;"
+                            onclick="alert('Mensaje enviado. Nos pondremos en contacto pronto.')">Enviar
+                            Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <a href="#" class="logo" style="margin-bottom: 24px;">
+                        <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                        Ayuda<span>Tercero</span>
+                    </a>
+                    <p style="color: var(--text-muted);">Liderando la revolución de la ayuda comunitaria a través de un
+                        ecosistema solidario justo y transparente.</p>
+                </div>
+                <div>
+                    <h4>Recursos</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="#como-funciona">Cómo funciona</a></li>
+                        <li><a href="pages/casos.html">Casos sociales</a></li>
+                        <li><a href="pages/reportes.html">Transparencia</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Compañía</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href=".services">Sobre nosotros</a></li>
+                        <li><a href="pages/reportes.html">Impacto</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="pages/legal.html#privacidad">Privacidad</a></li>
+                        <li><a href="pages/legal.html#terminos">Términos</a></li>
+                        <li><a href="pages/legal.html#cookies">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="border-top: 1px solid var(--bg-light); margin-top: 60px; padding-top: 40px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                © 2026 Ayuda a un Tercero. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Dynamic Stats Animation
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const val = Math.floor(progress * (end - start) + start);
+                obj.innerText = val.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof DB !== 'undefined') {
+                const stats = DB.getStats();
+                animateValue("stat-vidas", 0, stats.vidas_impactadas, 2000);
+                animateValue("stat-donaciones", 0, stats.donaciones_totales, 2500);
+                animateValue("stat-co2", 0, stats.co2_ahorrado, 3000);
+                animateValue("stat-casos", 0, stats.casos_exitosos, 2200);
+            }
+        });
+    </script>
+    <script src="assets/js/db.js"></script>
+    <script src="assets/js/accessibility.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>
+

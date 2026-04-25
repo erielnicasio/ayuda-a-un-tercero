@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace Solidario - Ayuda a un Tercero</title>
+    <!-- Leaflet CSS & JS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .marketplace-page {
+            padding-top: calc(var(--nav-height) + 40px);
+            background: var(--bg-light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .marketplace-header-banner {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-mid));
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 60px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 32px;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .banner-text h1 {
+            font-size: 2.8rem;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        .banner-text p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .banner-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 250px;
+        }
+
+        /* Toolbar */
+        .marketplace-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 20px 16px 56px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: white;
+            font-family: inherit;
+            font-size: 1rem;
+            box-shadow: var(--shadow-soft);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 4px rgba(255, 127, 50, 0.1);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chip {
+            padding: 10px 24px;
+            border-radius: var(--radius-full);
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+
+        .chip.active {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Layout */
+        .marketplace-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+
+        .filters-sidebar {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: calc(var(--nav-height) + 20px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .filter-group {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--bg-light);
+            padding-bottom: 24px;
+        }
+
+        .filter-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .filter-title {
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--primary-blue);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-options label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-options label:hover {
+            color: var(--accent-orange);
+        }
+
+        .filter-options input[type="checkbox"],
+        .filter-options input[type="radio"] {
+            accent-color: var(--accent-orange);
+            width: 18px;
+            height: 18px;
+        }
+
+        .price-range-inputs {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .price-range-inputs input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+        }
+
+        /* Product Cards Override */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            display: flex;
+            flex-direction: column;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-premium);
+        }
+
+        .product-img {
+            height: 150px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .product-body {
+            padding: 16px;
+            flex: 1;
+        }
+
+        .product-seller {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .product-location {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .product-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-footer {
+            padding: 0 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--accent-orange);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            z-index: 2;
+            box-shadow: var(--shadow-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Plans Section */
+        .plans-section {
+            padding: 100px 0;
+            background: white;
+            border-radius: var(--radius-lg);
+            margin-top: 80px;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            padding: 40px;
+        }
+
+        .plan-card {
+            background: var(--bg-light);
+            padding: 48px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .plan-card.featured {
+            background: var(--primary-blue);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-premium);
+            border: none;
+        }
+
+        .plan-card.featured .plan-name,
+        .plan-card.featured .plan-desc,
+        .plan-card.featured .plan-feature {
+            color: white;
+        }
+
+        .plan-card.featured .plan-price {
+            color: var(--accent-orange);
+        }
+
+        .plan-popular-tag {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-orange);
+            color: white;
+            padding: 6px 20px;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--primary-blue);
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: var(--primary-blue);
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .plan-features {
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .plan-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .plan-feature-check {
+            color: #10B981;
+            font-weight: 800;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: var(--bg-light);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: #FEE2E2;
+            color: #EF4444;
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 992px) {
+            .marketplace-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-sidebar {
+                position: static;
+                width: 100%;
+            }
+
+            .plan-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        /* Floating Action Button */
+        .fab-publish {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            background: var(--accent-orange);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(255, 127, 50, 0.4);
+            cursor: pointer;
+            z-index: 1500;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .fab-publish:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: var(--accent-orange-hover);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+            color: var(--primary-blue);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-orange);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 127, 50, 0.1);
+        }
+
+        /* Map & Geo Styles from Donation Module */
+        .map-view-container {
+            width: 100%;
+            height: 500px;
+            background: #e5e7eb;
+            border-radius: var(--radius-lg);
+            position: relative;
+            display: none;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 32px;
+        }
+
+        .map-pin {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+
+        .map-pin:hover {
+            transform: scale(1.1) rotate(-45deg);
+            background: var(--accent-orange);
+        }
+
+        .map-pin span {
+            transform: rotate(45deg);
+            font-size: 1.2rem;
+        }
+
+        .km-slider {
+            width: 100%;
+            margin-top: 12px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+        }
+
+        .ai-upload-zone {
+            border: 2px dashed var(--gray-300);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            background: var(--bg-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-upload-zone:hover {
+            border-color: var(--primary-blue);
+            background: #f0f7ff;
+        }
+
+        .scanner-bar {
+            width: 100%;
+            height: 4px;
+            background: #EF4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            z-index: 10;
+        }
+
+        @keyframes scanAnim {
+            0% {
+                top: 0;
+            }
+
+            50% {
+                top: 100%;
+            }
+
+            100% {
+                top: 0;
+            }
+        }
+
+        .scanning .scanner-bar {
+            display: block;
+            animation: scanAnim 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+    <!-- Donación en Checkout Modal (NEW) -->
+    <div id="checkoutDonationModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🎁</div>
+            <h2 style="color: var(--primary-blue); font-weight: 800; margin-bottom: 12px;">¡Haz que tu compra cuente!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 24px;">Estás a punto de contactar al vendedor. ¿Te gustaría añadir una pequeña donación del <b>3%</b> para apoyar el caso de <b>"Operación de Lucas"</b>?</p>
+            
+            <div style="background: var(--bg-light); padding: 20px; border-radius: 16px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Tu Compra (aprox):</span>
+                    <strong id="buyPrice">$0.00</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; color: var(--accent-orange); font-weight: 700;">
+                    <span>Donación Solidaria:</span>
+                    <strong id="donationPrice">$0.00</strong>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                <button class="btn btn-accent" onclick="confirmPurchaseWithDonation(true)">
+                    Sí, quiero donar y contactar
+                </button>
+                <button class="btn btn-outline" onclick="confirmPurchaseWithDonation(false)">
+                    No por ahora, solo contactar
+                </button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 20px;">
+                * La donación se procesará de forma segura a través de nuestra pasarela social.
+            </p>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html" class="active">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div class="nav-btns">
+                <a href="perfil.html" class="btn btn-outline btn-sm btn-gestion-active">Mi Gestión</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Marketplace Page -->
+    <main class="marketplace-page">
+        <div class="container">
+            <!-- Header Banner -->
+            <header class="marketplace-header-banner">
+                <div class="banner-text">
+                    <h1>Marketplace Solidario</h1>
+                    <p>Compra y vende productos o servicios con propósito. Cada transacción ayuda a emprendedores
+                        locales y contribuye a causas sociales dentro de nuestra comunidad de confianza.</p>
+                </div>
+                <div class="banner-actions">
+                    <button class="btn btn-accent btn-lg"
+                        onclick="document.getElementById('publishModal').classList.add('active')">
+                        <i data-lucide="plus-circle"></i> Publicar Oferta
+                    </button>
+                    <a href="#suscripciones" class="btn btn-outline"
+                        style="border-color: rgba(255,255,255,0.3); color: white;">
+                        Impulsar mis ventas
+                    </a>
+                </div>
+            </header>
+
+            <div class="marketplace-toolbar">
+                <div class="search-box">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="mktSearch" placeholder="Busca productos, servicios o emprendedores...">
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-primary" onclick="toggleMapView()">
+                        <i data-lucide="map"></i> Ver en Mapa
+                    </button>
+                    <div class="filter-chips">
+                        <button class="chip active" data-value="todos">Todos</button>
+                        <button class="chip" data-value="producto">Productos</button>
+                        <button class="chip" data-value="servicio">Servicios</button>
+                        <button class="chip" data-value="promocion">Ofertas 🏷️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Container -->
+            <div class="map-view-container" id="mapaMarketplace">
+                <div id="leafletMap" style="width: 100%; height: 100%;"></div>
+                <div
+                    style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;">
+                    📍 Explorando ofertas en Monte Plata y alrededores
+                </div>
+            </div>
+
+            <!-- Content Layout -->
+            <div class="marketplace-layout">
+                <!-- Sidebar Filters -->
+                <aside class="filters-sidebar">
+                    <div class="filter-group">
+                        <div class="filter-title">📍 Geolocalización</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Radio de
+                            búsqueda:
+                            <strong id="kmVal">69 km</strong>
+                        </div>
+                        <input type="range" id="kmSlider" class="km-slider" min="1" max="100" value="69"
+                            oninput="document.getElementById('kmVal').innerText = this.value + ' km'; applyFilters();">
+                        <div
+                            style="margin-top: 16px; background: #E0F2FE; padding: 12px; border-radius: 12px; font-size: 0.8rem; color: #0369A1; display: flex; gap: 8px;">
+                            <span>💡</span> <span>Mostrando ofertas cerca de tu ubicación actual.</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">Categorías</div>
+                        <div class="filter-options">
+                            <label><input type="checkbox" class="mcat-filter" value="artesan" checked>
+                                Artesanías</label>
+                            <label><input type="checkbox" class="mcat-filter" value="ropa" checked> Ropa y Moda</label>
+                            <label><input type="checkbox" class="mcat-filter" value="alimento" checked>
+                                Gastronomía</label>
+                            <label><input type="checkbox" class="mcat-filter" value="asesor" checked> Servicios
+                                Prof.</label>
+                            <label><input type="checkbox" class="mcat-filter" value="tecnologia"> Tecnología</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">Ubicación</div>
+                        <div class="filter-options">
+                            <label><input type="radio" name="loc" class="loc-filter" value="nacional" checked>
+                                Nacional</label>
+                            <label><input type="radio" name="loc" class="loc-filter" value="monte-plata"> Monte
+                                Plata</label>
+                            <label><input type="radio" name="loc" class="loc-filter" value="remoto"> Remoto</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-title">Rango de Precio</div>
+                        <div class="price-range-inputs">
+                            <input type="number" id="priceMin" placeholder="Min">
+                            <input type="number" id="priceMax" placeholder="Max">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;" onclick="applyFilters()">Aplicar
+                        Filtros</button>
+                </aside>
+
+                <!-- Products Grid -->
+                <div class="products-grid">
+
+                    <!-- Product 1 -->
+                    <article class="product-card" data-category="asesor" data-type="servicio" data-location="remoto"
+                        data-price="150">
+                        <div class="featured-badge"><i data-lucide="star" size="14"></i> Destacado</div>
+                        <img src="https://images.unsplash.com/photo-1544681280-d2dc2753ceb1?auto=format&fit=crop&w=500&q=80"
+                            alt="Diseño Web" class="product-img">
+                        <div class="product-body">
+                            <div class="product-seller"><i data-lucide="user" size="14"></i> Agencia Digital Solidaria
+                            </div>
+                            <h3 class="product-title">Diseño Web Emprendedor</h3>
+                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Remoto</div>
+                            <p class="product-desc">Construyo la página web de tu negocio a un costo accesible. El 10%
+                                de mis ingresos se donan directamente a Casos Sociales.</p>
+                            <div class="product-price">$150.00 <span
+                                    style="text-decoration: line-through; color: #9CA3AF; font-size: 0.9rem; margin-left:8px;">$250.00</span>
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="badge badge-amber">Oferta</span>
+                            <button class="btn btn-green btn-sm" onclick="contactarWhatsapp(this)"
+                                style="background: #25D366; border: none;">
+                                <i data-lucide="message-circle"></i> Contactar
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Product 2 -->
+                    <article class="product-card" data-category="alimento" data-type="producto"
+                        data-location="monte-plata" data-price="18.50">
+                        <img src="https://images.unsplash.com/photo-1610414447385-2eab217eb747?auto=format&fit=crop&w=500&q=80"
+                            alt="Café" class="product-img">
+                        <div class="product-body">
+                            <div class="product-seller"><i data-lucide="user" size="14"></i> Cooperativa Tierra Verde
+                            </div>
+                            <h3 class="product-title">Café Tostado Monte Plata</h3>
+                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Monte Plata, RD</div>
+                            <p class="product-desc">Café 100% arábica cultivado por comunidades locales bajo prácticas
+                                de comercio justo.</p>
+                            <div class="product-price">$18.50</div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="badge badge-green">Orgánico</span>
+                            <button class="btn btn-green btn-sm" onclick="contactarWhatsapp(this)"
+                                style="background: #25D366; border: none;">
+                                <i data-lucide="message-circle"></i> Pedir
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Product 3 -->
+                    <article class="product-card" data-category="artesan" data-type="producto" data-location="nacional"
+                        data-price="45">
+                        <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=500&q=80"
+                            alt="Vasija" class="product-img">
+                        <div class="product-body">
+                            <div class="product-seller"><i data-lucide="user" size="14"></i> Comunidad de Artesanos
+                            </div>
+                            <h3 class="product-title">Vasija de Cerámica Tradicional</h3>
+                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Bayaguana, RD</div>
+                            <p class="product-desc">Pieza única hecha a mano utilizando técnicas ancestrales de moldeado
+                                de arcilla.</p>
+                            <div class="product-price">$45.00</div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="badge badge-blue">Artesanía</span>
+                            <button class="btn btn-green btn-sm" onclick="contactarWhatsapp(this)"
+                                style="background: #25D366; border: none;">
+                                <i data-lucide="message-circle"></i> Comprar
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Product 4 -->
+                    <article class="product-card" data-category="tecnologia" data-type="producto" data-location="remoto"
+                        data-price="350">
+                        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=500&q=80"
+                            alt="MacBook" class="product-img">
+                        <div class="product-body">
+                            <div class="product-seller"><i data-lucide="user" size="14"></i> Re-Tech Solidario</div>
+                            <h3 class="product-title">MacBook Pro (Reacondicionado)</h3>
+                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Envío Nacional</div>
+                            <p class="product-desc">Perfecto estado funcional. Parte de las ganancias financian becas de
+                                programación para jóvenes de Monte Plata.</p>
+                            <div class="product-price">$350.00</div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="badge badge-gray">Tecnología</span>
+                            <button class="btn btn-green btn-sm" onclick="contactarWhatsapp(this)"
+                                style="background: #25D366; border: none;">
+                                <i data-lucide="message-circle"></i> Comprar
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Product 5 -->
+                    <article class="product-card" data-category="ropa" data-type="producto" data-location="monte-plata"
+                        data-price="25">
+                        <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=500&q=80"
+                            alt="Camisa" class="product-img">
+                        <div class="product-body">
+                            <div class="product-seller"><i data-lucide="user" size="14"></i> Moda Ética MP</div>
+                            <h3 class="product-title">Camisa Algodón Orgánico</h3>
+                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Monte Plata, Centro
+                            </div>
+                            <p class="product-desc">Tintes naturales y algodón cultivado sin pesticidas. Moda que cuida
+                                el planeta y tu salud.</p>
+                            <div class="product-price">$25.00</div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="badge badge-green">Ecológico</span>
+                            <button class="btn btn-green btn-sm" onclick="contactarWhatsapp(this)"
+                                style="background: #25D366; border: none;">
+                                <i data-lucide="message-circle"></i> Comprar
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Suscripciones -->
+            <section id="suscripciones" class="plans-section">
+                <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+                    <h2 class="section-title">Planes para Vendedores</h2>
+                    <p class="section-subtitle">Aumenta tu impacto y visibilidad en la comunidad.</p>
+                </div>
+
+                <div class="plans-grid">
+                    <div class="plan-card">
+                        <h3 class="plan-name">Básico Solidario</h3>
+                        <div class="plan-price">$0<span>/mes</span></div>
+                        <p class="plan-desc">Empieza a ofrecer tus productos sin costo inicial.</p>
+                        <ul class="plan-features">
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> 5 Publicaciones activas
+                            </li>
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Perfil estándar</li>
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Mensajería básica</li>
+                        </ul>
+                        <button class="btn btn-outline" style="width: 100%;">Plan Actual</button>
+                    </div>
+
+                    <div class="plan-card featured">
+                        <div class="plan-popular-tag">RECOMENDADO</div>
+                        <h3 class="plan-name">Emprendedor Pro</h3>
+                        <div class="plan-price">$9.99<span>/mes</span></div>
+                        <p class="plan-desc">Alcanza a toda la comunidad y destaca tus ofertas.</p>
+                        <ul class="plan-features">
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Publicaciones ilimitadas
+                            </li>
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Insignia de Patrocinador
+                            </li>
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Mayor visibilidad en
+                                búsquedas</li>
+                        </ul>
+                        <button class="btn btn-accent" style="width: 100%;"
+                            onclick="openPaymentModal('Emprendedor Pro', 9.99)">Suscribirse</button>
+                    </div>
+
+                    <div class="plan-card">
+                        <h3 class="plan-name">Comunidad Plus</h3>
+                        <div class="plan-price">$24.99<span>/mes</span></div>
+                        <p class="plan-desc">Para organizaciones que buscan el máximo apoyo social.</p>
+                        <ul class="plan-features">
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Banner en página de
+                                inicio</li>
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Analíticas avanzadas</li>
+                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Soporte prioritario</li>
+                        </ul>
+                        <button class="btn btn-outline" style="width: 100%;"
+                            onclick="openPaymentModal('Comunidad Plus', 24.99)">Suscribirse</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab-publish" onclick="document.getElementById('publishModal').classList.add('active')"
+        title="Publicar Nuevo Artículo">
+        <i data-lucide="plus" size="32"></i>
+    </button>
+
+    <!-- Modal Publish -->
+    <div class="modal-overlay" id="publishModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('publishModal').classList.remove('active')"><i
+                    data-lucide="x"></i></button>
+            <h3 style="font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 8px; font-weight: 800;">Publicar
+                Artículo</h3>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Comparte tu producto o servicio con la comunidad.
+            </p>
+
+            <form id="formPublicarMkt" style="display: flex; flex-direction: column; gap: 10px;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Nombre del Vendedor / Tienda</label>
+                        <input id="mktVendedorInput" type="text" class="form-input" placeholder="Tu nombre o negocio"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp de Contacto</label>
+                        <input id="mktWhatsAppInput" type="tel" class="form-input" placeholder="Ej. 8091234567"
+                            required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Oferta</label>
+                        <select id="mktTipoInput" class="form-input" required>
+                            <option value="producto">Producto</option>
+                            <option value="servicio">Servicio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Precio (RD$)</label>
+                        <input id="mktPrecioInput" type="number" step="0.01" class="form-input" placeholder="0.00"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Título del Artículo</label>
+                    <input id="mktTituloInput" type="text" class="form-input" placeholder="Ej. Vasija Artesanal"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ubicación del Artículo / Recogida</label>
+                    <div id="selectionMap"
+                        style="height: 200px; width: 100%; border-radius: 12px; margin-bottom: 12px; border: 1px solid #E5E7EB;">
+                    </div>
+                    <input type="hidden" id="pubLat" value="">
+                    <input type="hidden" id="pubLng" value="">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                        📍 Haz clic o arrastra el marcador para indicar el punto exacto de venta/entrega.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Imagen del Artículo</label>
+                    <label class="ai-upload-zone" id="aiZone">
+                        <input id="mktImagenInput" type="file" accept="image/*" style="display: none;" required
+                            onchange="handleImagePreview(this)">
+                        <div class="scanner-bar" id="aiScannerBar"></div>
+                        <div id="aiIcon" style="font-size: 1.5rem; margin-bottom: 8px;">📸</div>
+                        <div id="aiText" style="font-weight: 600; color: var(--primary-blue);">Toca para subir una foto
+                        </div>
+                        <div id="aiSub" style="font-size: 0.75rem; color: var(--text-muted);">La IA verificará la
+                            autenticidad automáticamente.</div>
+                    </label>
+
+                    <!-- Controles de Ajuste de Imagen -->
+                    <div id="imageControls"
+                        style="display: none; margin-top: 15px; padding: 15px; background: var(--bg-light); border-radius: 12px; border: 1px solid var(--gray-200);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label class="form-label" style="font-size: 0.8rem;">Nivel de Zoom</label>
+                                <input type="range" id="imgZoom" min="100" max="250" value="100" style="width: 100%;"
+                                    oninput="updateImageStyle()">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 0.8rem;">Centralización</label>
+                                <select id="imgPos" class="form-input" style="padding: 8px; font-size: 0.85rem;"
+                                    onchange="updateImageStyle()">
+                                    <option value="center">Centro</option>
+                                    <option value="top">Arriba</option>
+                                    <option value="bottom">Abajo</option>
+                                    <option value="left">Izquierda</option>
+                                    <option value="right">Derecha</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="imagePreview"
+                        style="margin-top: 10px; display: none; overflow: hidden; border-radius: 12px; border: 2px dashed #E5E7EB; height: 200px; background: #eee;">
+                        <img id="previewImg" src=""
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease, object-position 0.3s ease;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
+                    <i data-lucide="send"></i> Publicar Ahora
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Pago (Simulado) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="closePaymentModal()"><i data-lucide="x"></i></button>
+            <h3 style="font-size: 1.5rem; color: var(--primary-blue); margin-bottom: 12px; font-weight: 800;">Pago
+                Seguro</h3>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Suscripción: <b id="payPlanName">Plan</b> por <b
+                    id="payPlanPrice">$0.00</b></p>
+
+            <form id="formPayment" style="display: flex; flex-direction: column; gap: 20px;">
+                <input type="text" placeholder="Nombre en la tarjeta"
+                    style="width: 100%; padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
+                <input type="text" placeholder="Número de tarjeta"
+                    style="width: 100%; padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <input type="text" placeholder="MM/AA"
+                        style="padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
+                    <input type="text" placeholder="CVC"
+                        style="padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
+                </div>
+                <button type="submit" class="btn btn-green btn-lg" style="width: 100%;">Finalizar Pago 🔒</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Detalles de Artículo -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden; border-radius: 20px;">
+            <button class="modal-close" onclick="document.getElementById('detailsModal').classList.remove('active')"
+                style="top: 20px; right: 20px; background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10;">
+                <i data-lucide="x"></i>
+            </button>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; min-height: 450px;">
+                <!-- Imagen -->
+                <div id="detImgCol" style="background: #f3f4f6; position: relative; overflow: hidden;">
+                    <img id="detailImg" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+
+                <!-- Info -->
+                <div style="padding: 40px; display: flex; flex-direction: column; justify-content: center;">
+                    <div id="detailBadge" class="badge badge-amber" style="width: fit-content; margin-bottom: 15px;">
+                        Producto</div>
+                    <h2 id="detailTitle"
+                        style="font-size: 2rem; color: var(--primary-blue); font-weight: 800; line-height: 1.2; margin-bottom: 15px;">
+                        Título del Artículo</h2>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <div id="detailSeller"
+                            style="font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 5px;">
+                            <i data-lucide="user" size="18"></i> <span>Vendedor</span>
+                        </div>
+                        <span style="color: #cbd5e1;">|</span>
+                        <div id="detailLoc"
+                            style="color: var(--text-muted); display: flex; align-items: center; gap: 5px;">
+                            <i data-lucide="map-pin" size="18"></i> <span>Ubicación</span>
+                        </div>
+                    </div>
+
+                    <p id="detailDesc" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 30px;">
+                        Descripción detallada del artículo...</p>
+
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                        <div id="detailPrice" style="font-size: 1.8rem; font-weight: 800; color: var(--accent-orange);">
+                            $0.00</div>
+                        <button class="btn btn-green btn-lg" onclick="contactarWhatsappFromDetail()"
+                            style="background: #25D366; border: none; padding: 12px 30px;">
+                            <i data-lucide="message-circle"></i> Contactar ahora
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- GLOBAL VARIABLES FOR MAPS ---
+        let mainMap = null;
+        let selectionMap = null;
+        let selectionMarker = null;
+        let mapActive = false;
+        let aiScanSuccess = false;
+
+        // --- INITIALIZE MAPS ---
+        function initMainMap() {
+            if (mainMap) return;
+            mainMap = L.map('leafletMap').setView([18.7951, -69.9547], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(mainMap);
+
+            // Add some dummy markers
+            const locations = [
+                { lat: 18.8051, lng: -69.9647, title: "Café Tostado Monte Plata", price: "$18.50" },
+                { lat: 18.7851, lng: -69.9447, title: "Diseño Web Emprendedor", price: "$150.00" },
+                { lat: 18.8151, lng: -69.9347, title: "Vasija de Cerámica", price: "$45.00" }
+            ];
+
+            locations.forEach(loc => {
+                L.marker([loc.lat, loc.lng]).addTo(mainMap)
+                    .bindPopup(`<b>${loc.title}</b><br>Precio: ${loc.price}`);
+            });
+        }
+
+        function initSelectionMap() {
+            if (selectionMap) {
+                setTimeout(() => selectionMap.invalidateSize(), 300);
+                return;
+            }
+            selectionMap = L.map('selectionMap').setView([18.7951, -69.9547], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(selectionMap);
+
+            selectionMarker = L.marker([18.7951, -69.9547], { draggable: true }).addTo(selectionMap);
+
+            selectionMarker.on('dragend', function (e) {
+                const pos = selectionMarker.getLatLng();
+                document.getElementById('pubLat').value = pos.lat;
+                document.getElementById('pubLng').value = pos.lng;
+            });
+
+            selectionMap.on('click', function (e) {
+                selectionMarker.setLatLng(e.latlng);
+                document.getElementById('pubLat').value = e.latlng.lat;
+                document.getElementById('pubLng').value = e.latlng.lng;
+            });
+
+            setTimeout(() => selectionMap.invalidateSize(), 300);
+        }
+
+        function toggleMapView() {
+            const mapContainer = document.getElementById('mapaMarketplace');
+            const grid = document.querySelector('.products-grid');
+            mapActive = !mapActive;
+
+            if (mapActive) {
+                mapContainer.style.display = 'block';
+                grid.style.display = 'none';
+                initMainMap();
+                setTimeout(() => mainMap.invalidateSize(), 300);
+            } else {
+                mapContainer.style.display = 'none';
+                grid.style.display = 'grid';
+            }
+        }
+
+        // --- IMAGE & AI LOGIC ---
+        function handleImagePreview(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                    document.getElementById('imageControls').style.display = 'block';
+                    document.getElementById('aiIcon').style.display = 'none';
+                    document.getElementById('aiText').style.display = 'none';
+                    updateImageStyle();
+                    simulateAIScan();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function simulateAIScan() {
+            const zone = document.getElementById('aiZone');
+            const scanner = document.getElementById('aiScannerBar');
+            const textSub = document.getElementById('aiSub');
+
+            zone.classList.add('scanning');
+            scanner.style.display = 'block';
+            textSub.innerText = "⏳ IA Analizando imagen...";
+
+            setTimeout(() => {
+                zone.classList.remove('scanning');
+                scanner.style.display = 'none';
+                textSub.innerText = "✅ Imagen Verificada: Real y Apta.";
+                textSub.style.color = "#10B981";
+                aiScanSuccess = true;
+            }, 2000);
+        }
+
+        function updateImageStyle() {
+            const zoom = document.getElementById('imgZoom').value;
+            const pos = document.getElementById('imgPos').value;
+            const img = document.getElementById('previewImg');
+            img.style.transform = `scale(${zoom / 100})`;
+            img.style.objectPosition = pos;
+        }
+
+        // --- FILTERS & SEARCH ---
+        const mktSearch = document.getElementById('mktSearch');
+        const mktChips = document.querySelectorAll('.chip');
+        const mktChecks = document.querySelectorAll('.mcat-filter');
+
+        function applyFilters() {
+            const query = mktSearch.value.toLowerCase();
+            const activeChip = Array.from(mktChips).find(c => c.classList.contains('active')).dataset.value;
+            const activeCats = Array.from(mktChecks).filter(c => c.checked).map(c => c.value);
+            const activeLoc = document.querySelector('input[name="loc"]:checked').value;
+            const maxKm = parseFloat(document.getElementById('kmSlider').value);
+            const minPrice = parseFloat(document.getElementById('priceMin').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('priceMax').value) || Infinity;
+
+            const cards = document.querySelectorAll('.product-card');
+
+            cards.forEach((card, index) => {
+                const title = card.querySelector('.product-title').innerText.toLowerCase();
+                const desc = card.querySelector('.product-desc').innerText.toLowerCase();
+                const cardCat = card.dataset.category;
+                const cardType = card.dataset.type;
+                const cardLoc = card.dataset.location;
+                const cardPrice = parseFloat(card.dataset.price) || 0;
+
+                // MOCK Distance check (Simulando distancias para el prototipo)
+                const mockDist = (index + 1) * 8;
+                const matchDist = mockDist <= maxKm;
+
+                const matchText = title.includes(query) || desc.includes(query);
+
+                let matchType = (activeChip === 'todos');
+                if (!matchType) {
+                    if (activeChip === 'producto' && cardType === 'producto') matchType = true;
+                    if (activeChip === 'servicio' && cardType === 'servicio') matchType = true;
+                    if (activeChip === 'promocion' && (title.includes('oferta') || desc.includes('oferta'))) matchType = true;
+                }
+
+                let matchCat = (activeCats.length === 0 || activeCats.includes(cardCat));
+                let matchLoc = (activeLoc === 'nacional' || activeLoc === cardLoc);
+                let matchPrice = (cardPrice >= minPrice && cardPrice <= maxPrice);
+
+                if (matchText && matchType && matchCat && matchLoc && matchDist && matchPrice) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        mktSearch.addEventListener('input', applyFilters);
+        mktChecks.forEach(c => c.addEventListener('change', applyFilters));
+        mktChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                mktChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                applyFilters();
+            });
+        });
+        document.querySelectorAll('.loc-filter').forEach(r => r.addEventListener('change', applyFilters));
+        document.getElementById('priceMin').addEventListener('input', applyFilters);
+        document.getElementById('priceMax').addEventListener('input', applyFilters);
+
+        // --- DETALLE DE ARTÍCULO ---
+        function verDetalle(card) {
+            const title = card.querySelector('.product-title').innerText;
+            const seller = card.querySelector('.product-seller').innerText;
+            const loc = card.querySelector('.product-location').innerText;
+            const desc = card.querySelector('.product-desc').innerText;
+            const price = card.querySelector('.product-price').innerText;
+            const img = card.querySelector('.product-img').src;
+            const typeValue = card.dataset.type || 'producto';
+
+            document.getElementById('detailTitle').innerText = title;
+            document.getElementById('detailSeller').querySelector('span').innerText = seller;
+            document.getElementById('detailLoc').querySelector('span').innerText = loc;
+            document.getElementById('detailDesc').innerText = desc;
+            document.getElementById('detailPrice').innerText = price;
+            document.getElementById('detailImg').src = img;
+
+            const badge = document.getElementById('detailBadge');
+            badge.innerText = typeValue.charAt(0).toUpperCase() + typeValue.slice(1);
+            badge.className = `badge badge-${typeValue === 'servicio' ? 'blue' : 'amber'}`;
+
+            document.getElementById('detailsModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function contactarWhatsappFromDetail() {
+            const title = document.getElementById('detailTitle').innerText;
+            window.open(`https://wa.me/18091234567?text=Me interesa el artículo: ${title}`, '_blank');
+        }
+
+        // Asignar click a todas las tarjetas existentes
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('button')) {
+                    verDetalle(card);
+                }
+            });
+        });
+
+        // --- CRUD & FORM HANDLING ---
+        document.getElementById('formPublicarMkt').addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!aiScanSuccess) {
+                alert("Espera a que la IA verifique la imagen.");
+                return;
+            }
+
+            const seller = document.getElementById('mktVendedorInput').value;
+            const title = document.getElementById('mktTituloInput').value;
+            const price = document.getElementById('mktPrecioInput').value;
+            const lat = document.getElementById('pubLat').value;
+            const lng = document.getElementById('pubLng').value;
+            const whatsapp = document.getElementById('mktWhatsAppInput').value;
+            const imageUrl = document.getElementById('previewImg').src;
+            const typeValue = document.getElementById('mktTipoInput').value || 'producto';
+
+            // --- SAVE TO DB ---
+            const newItem = DB.saveMarketplace({
+                nombre: seller,
+                titulo: title,
+                precio: `$${parseFloat(price).toFixed(2)}`,
+                status: 'En Revisión',
+                lat: lat,
+                lng: lng,
+                tipo: typeValue,
+                celular: whatsapp
+            });
+
+            const grid = document.querySelector('.products-grid');
+            const newCard = `
+                <article class="product-card" id="card-${newItem.id}" data-category="general" data-type="${typeValue}" data-location="monte-plata" data-price="${price}" style="opacity: 0.8; position: relative;">
+                    <div style="position: absolute; top: 10px; left: 10px; background: var(--accent-orange); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; z-index: 100;">
+                        ⏳ En Revisión
+                    </div>
+                    <div style="width: 100%; height: 200px; overflow: hidden; position: relative;">
+                        <img src="${imageUrl}" class="product-img" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; bottom: 10px; right: 10px; background: #10B981; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;">🤖 IA Verificada</div>
+                    </div>
+                    <div class="product-body">
+                        <div class="product-seller"><i data-lucide="user" size="14"></i> ${seller}</div>
+                        <h3 class="product-title">${title}</h3>
+                        <div class="product-location"><i data-lucide="map-pin" size="14"></i> Monte Plata (Punto Seleccionado)</div>
+                        <p class="product-desc">Tu publicación está siendo revisada por un administrador para garantizar la seguridad de la comunidad.</p>
+                        <div class="product-price">$${parseFloat(price).toFixed(2)}</div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="badge badge-gray">Pendiente</span>
+                        <button class="btn btn-green btn-sm" disabled style="background: var(--gray-400); border: none; cursor: not-allowed;">
+                            <i data-lucide="message-circle"></i> Contactar
+                        </button>
+                    </div>
+                </article>
+            `;
+            grid.insertAdjacentHTML('afterbegin', newCard);
+            lucide.createIcons();
+
+            // Asignar click a la nueva tarjeta
+            const cardElement = document.getElementById(`card-${newItem.id}`);
+            cardElement.style.cursor = 'pointer';
+            cardElement.addEventListener('click', (e) => {
+                if (!e.target.closest('button')) {
+                    verDetalle(cardElement);
+                }
+            });
+
+            // Add marker to main map
+            if (mainMap && lat && lng) {
+                L.marker([lat, lng]).addTo(mainMap).bindPopup(`<b>${title} (En Revisión)</b><br>$${price}`);
+            }
+
+            alert("¡Publicación enviada con éxito! 🚀 Estará visible una vez que el administrador la apruebe.");
+            document.getElementById('publishModal').classList.remove('active');
+            this.reset();
+            aiScanSuccess = false;
+        });
+
+        // Trigger map initialization when modal opens
+        document.querySelector('.fab-publish').addEventListener('click', initSelectionMap);
+        document.querySelector('.banner-actions .btn-accent').addEventListener('click', initSelectionMap);
+
+        // --- PAYMENT SIMULATION ---
+        function openPaymentModal(name, price) {
+            document.getElementById('payPlanName').innerText = name;
+            document.getElementById('payPlanPrice').innerText = "$" + price + "/mes";
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        function contactarWhatsapp(btn) {
+            const title = btn.closest('.product-card').querySelector('.product-title').innerText;
+            const priceText = btn.closest('.product-card').dataset.price || "0";
+            
+            pendingTitle = title;
+            pendingPrice = parseFloat(priceText);
+
+            document.getElementById('buyPrice').innerText = "$" + pendingPrice.toFixed(2);
+            document.getElementById('donationPrice').innerText = "$" + (pendingPrice * 0.03).toFixed(2);
+            document.getElementById('checkoutDonationModal').classList.add('active');
+        }
+
+        let pendingTitle = "";
+        let pendingPrice = 0;
+
+        function confirmPurchaseWithDonation(isDonating) {
+            if (isDonating) {
+                alert(`¡Gracias por tu generosidad! ❤️\n\nSe ha registrado una intención de donación de $${(pendingPrice * 0.03).toFixed(2)} que se sumará al impacto global.`);
+                if(typeof DB !== 'undefined') {
+                    DB.updateStats('donaciones_totales', 1);
+                    DB.addPoints(100);
+                }
+            }
+            window.open(`https://wa.me/18091234567?text=Hola, me interesa el artículo "${pendingTitle}" que vi en Ayuda a un Tercero.`, '_blank');
+            document.getElementById('checkoutDonationModal').classList.remove('active');
+        }
+
+        // --- RENDER FROM DB ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMarketplaceFromDB();
+
+            // --- ADMIN MODE ---
+            const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
+            if (isAdmin) {
+                const adminBar = document.createElement('div');
+                adminBar.style = "background: #1e2937; color: white; padding: 10px; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; display: flex; justify-content: center; gap: 20px; font-weight: 700; font-size: 0.85rem;";
+                adminBar.innerHTML = `<span>🛡️ MODO ADMIN</span> <a href="admin.html" style="color: var(--accent-orange);">Ir al Panel Completo</a>`;
+                document.body.prepend(adminBar);
+            }
+        });
+
+        function renderMarketplaceFromDB() {
+            const grid = document.querySelector('.products-grid');
+            const items = DB.getMarketplace().filter(m => m.status === 'Aprobado');
+
+            items.forEach(item => {
+                const isBusiness = item.isBusiness || (Math.random() > 0.7); // Simulación de negocios
+                const businessBadge = isBusiness ? `
+                    <div style="position: absolute; top: 10px; right: 10px; background: #FFD700; color: #000; padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 5; border: 1px solid #b8860b;">
+                        ⭐ NEGOCIO SOLIDARIO
+                    </div>` : '';
+
+                const newCard = `
+                    <article class="product-card" id="card-${item.id}" data-category="${item.categoria || 'general'}" data-type="${item.tipo}" data-location="monte-plata" data-price="${item.precio.replace('$', '')}" style="position: relative;">
+                        ${businessBadge}
+                        <img src="${item.img || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80'}" class="product-img">
+                        <div class="product-body">
+                            <div class="product-seller">
+                                <i data-lucide="user" size="14"></i> 
+                                ${isBusiness ? `<b>${item.nombre} (Empresa)</b>` : item.nombre}
+                            </div>
+                            <h3 class="product-title">${item.titulo}</h3>
+                            <div class="product-location"><i data-lucide="map-pin" size="14"></i> Monte Plata, RD</div>
+                            <p class="product-desc">${isBusiness ? 'Tienda local comprometida con el impacto social.' : 'Publicación verificada por la comunidad.'}</p>
+                            <div class="product-price">${item.precio}</div>
+                        </div>
+                        <div class="product-footer">
+                            <span class="badge ${isBusiness ? 'badge-accent' : 'badge-blue'}">${isBusiness ? 'Premium' : 'Verificado'}</span>
+                            <button class="btn btn-green btn-sm" onclick="contactarVendedorDirecto('${item.celular}', '${item.titulo}', '${item.precio.replace('$', '')}')" style="background: #25D366; border: none;">
+                                <i data-lucide="message-circle"></i> Contactar
+                            </button>
+                        </div>
+                    </article>
+                `;
+                grid.insertAdjacentHTML('afterbegin', newCard);
+
+                const cardElement = document.getElementById(`card-${item.id}`);
+                cardElement.style.cursor = 'pointer';
+                cardElement.addEventListener('click', (e) => {
+                    if (!e.target.closest('button')) {
+                        verDetalle(cardElement);
+                    }
+                });
+            });
+            lucide.createIcons();
+        }
+
+        function contactarVendedorDirecto(phone, title, price) {
+            pendingTitle = title;
+            pendingPrice = parseFloat(price) || 0;
+
+            document.getElementById('buyPrice').innerText = "$" + pendingPrice.toFixed(2);
+            document.getElementById('donationPrice').innerText = "$" + (pendingPrice * 0.03).toFixed(2);
+            document.getElementById('checkoutDonationModal').classList.add('active');
+        }
+    </script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script src="../assets/js/db.js"></script>
+</body>
+
+</html>
+</body>
+
+</html>
+
