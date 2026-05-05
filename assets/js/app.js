@@ -28,7 +28,7 @@ var App = {
             if (authBtn) {
                 authBtn.textContent = user.name || user.email.split('@')[0];
                 authBtn.href = this.pagePath('perfil.html');
-                authBtn.className = 'btn btn-primary btn-sm';
+                authBtn.className = 'btn btn-primary btn-sm loaded';
             }
             if (adminLink) adminLink.style.display = user.role === 'admin' ? '' : 'none';
             if (notifLink) notifLink.style.display = '';
@@ -36,7 +36,7 @@ var App = {
             if (authBtn) {
                 authBtn.textContent = 'Iniciar Sesión';
                 authBtn.href = this.pagePath('login.html');
-                authBtn.className = 'btn btn-outline btn-sm';
+                authBtn.className = 'btn btn-outline btn-sm loaded';
             }
             if (adminLink) adminLink.style.display = 'none';
             if (notifLink) notifLink.style.display = 'none';

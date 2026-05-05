@@ -8,101 +8,376 @@
     <link rel="stylesheet" href="../assets/css/styles-new.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root {
-            --blue-deep: var(--primary-blue);
-            --blue-mid: var(--primary-blue-mid);
-            --blue-light: var(--primary-blue-light);
-            --green: #10B981;
-            --amber: var(--accent-orange);
-            --red: #EF4444;
-            --white: #FFFFFF;
-            --gray-50: #F9FAFB;
-            --radius-lg: 24px;
-            --radius-md: 16px;
-            --shadow-md: var(--shadow-premium);
+        /* Minimalist and Professional Overrides */
+        body {
+            background-color: #F8FAFC;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
+        .profile-header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 40px 0 0 0;
+            margin-top: var(--nav-height);
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+        .profile-header-content {
+            display: flex;
+            align-items: flex-end;
+            gap: 30px;
+            padding-bottom: 40px;
         }
 
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--gray-700);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid var(--gray-200);
-            border-radius: var(--radius-md);
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            color: var(--gray-800);
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--blue-mid);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-        }
-
-        .avatar-edit-label {
-            display: block;
-            width: 72px;
-            height: 72px;
-            padding: 0;
-            margin-bottom: 14px;
-            position: relative;
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue-mid), var(--primary-blue));
+            border: 4px solid var(--bg-white);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
             cursor: pointer;
             overflow: hidden;
-            border: 4px solid var(--white);
-            box-shadow: var(--shadow-md);
-        }
-
-        .avatar-edit-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: linear-gradient(135deg, var(--green), var(--blue-light));
         }
 
         .avatar-edit-icon {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
+            background: rgba(10, 25, 47, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: var(--transition);
-            font-size: 1.5rem;
+        }
+        
+        .profile-avatar-large:hover .avatar-edit-icon {
+            opacity: 1;
         }
 
-        .avatar-edit-label:hover .avatar-edit-icon {
-            opacity: 1;
+        .profile-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            color: var(--primary-blue);
+        }
+
+        .profile-info p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .role-badge {
+            background: var(--bg-light);
+            color: var(--primary-blue);
+            padding: 8px 20px;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 16px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+            padding: 40px 0 100px 0;
+        }
+
+        .minimal-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--gray-200);
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            margin-bottom: 24px;
+        }
+
+        .minimal-card h3 {
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-box {
+            background: var(--bg-light);
+            padding: 24px 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .stat-box:hover {
+            border-color: var(--primary-blue-mid);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .modern-tabs {
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 40px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .modern-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .modern-tab {
+            background: none;
+            border: none;
+            padding: 0 0 16px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .modern-tab:hover {
+            color: var(--primary-blue);
+        }
+
+        .modern-tab.active {
+            color: var(--primary-blue);
+        }
+
+        .modern-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .modern-tab.active::after {
+            transform: scaleX(1);
         }
 
         .content-tab {
             display: none;
+            animation: fadeIn 0.4s ease;
         }
 
         .content-tab.active {
             display: block;
-            animation: fadeIn 0.4s ease;
+        }
+
+        .data-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .data-item {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--gray-100);
+            align-items: center;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .data-value {
+            font-weight: 500;
+            color: var(--primary-blue);
+            font-size: 1.05rem;
+        }
+
+        .modern-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .modern-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background: var(--bg-white);
+            box-shadow: 0 0 0 4px rgba(10, 25, 47, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 0.95rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .wallet-card {
+            background: var(--bg-white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            margin-bottom: 32px;
+        }
+
+        .wallet-balance .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .wallet-balance .amount {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .wallet-balance .currency {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        .transaction-list {
+            list-style: none;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tx-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .tx-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tx-icon.in { background: #DCFCE7; color: #166534; }
+        .tx-icon.out { background: #FEE2E2; color: #991B1B; }
+        
+        .tx-details h4 {
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+        
+        .tx-details p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .tx-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .tx-amount.in { color: #166534; }
+        .tx-amount.out { color: #991B1B; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+            .profile-header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .wallet-card {
+                flex-direction: column;
+                gap: 32px;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -124,370 +399,315 @@
                 <a href="impacto.html">Impacto</a>
             </div>
             <div class="nav-btns">
-                <a href="notificaciones.html" id="nav-notif-link" style="display:none;position:relative;margin-right:12px;color:var(--primary-blue);font-size:1.3rem;cursor:pointer;">
-                    &#128276;
-                    <span id="notif-badge" style="display:none;position:absolute;top:-6px;right:-8px;background:#EF4444;color:#fff;border-radius:50%;font-size:0.65rem;font-weight:800;width:18px;height:18px;align-items:center;justify-content:center;">0</span>
-                </a>
-                <a href="perfil.html" id="auth-btn" class="btn btn-outline btn-sm active"
-                    style="background: var(--primary-blue-light); color: var(--primary-blue);">Mi Perfil</a>
-                <a href="admin.html" id="nav-admin-link" class="btn btn-accent btn-sm"
-                    style="display:none; margin-left:10px;">Panel Admin</a>
+                <a href="perfil.html" id="auth-btn" class="btn btn-outline btn-sm active">Mi Perfil</a>
                 <a href="login.html" class="btn btn-ghost btn-sm"
-                    style="color: var(--red); background: #fee2e2; border:none; margin-left: 10px; border-radius: 8px;"
+                    style="color: var(--text-muted); margin-left: 10px;"
                     onclick="App.logout(); return false;">Salir</a>
             </div>
         </div>
     </nav>
 
-    <!-- Profile Section -->
-    <section class="profile-section" style="padding-top: calc(var(--nav-h) + 40px); min-height: 100vh;">
+    <!-- Header Section -->
+    <header class="profile-header">
         <div class="container">
-            <div class="profile-layout">
-                <!-- Sidebar -->
-                <aside class="profile-sidebar" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.4); box-shadow: var(--shadow-premium); padding: 0 0 30px; overflow: hidden;">
-                    <div class="profile-cover" style="height: 120px; background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));"></div>
-                        <div class="profile-avatar" id="sidebar-avatar" style="color: white; font-weight: 700; background: linear-gradient(135deg, var(--blue-mid), var(--green)); width: 100px; height: 100px; margin: -50px auto 15px; border: 5px solid var(--white); box-shadow: var(--shadow-md);"> MS
-                        </div>
-                        <div class="profile-name" id="sidebar-name" style="font-size: 1.6rem; font-weight: 800; color: var(--blue-deep);">María V.</div>
-                        <div class="profile-handle" id="sidebar-location" style="font-size: 0.9rem; color: var(--gray-500); font-weight: 600; margin-bottom: 15px;">📍 Monte Plata, R.D.</div>
-                        <div class="profile-rep" id="sidebar-type" style="background: var(--blue-pale); color: var(--blue-deep); padding: 8px 16px; border-radius: 20px; display: inline-block; font-size: 0.8rem; font-weight: 800; border: 1px solid var(--blue-light);">
-                            ❤️ Donador Verificado
-                        </div>
-                    </div>
-
-                    <div class="profile-stats-grid" style="grid-template-columns: 1fr 1fr; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.3); box-shadow: var(--shadow-sm);">
-                        <div class="profile-stat" style="border-right: 1px solid var(--gray-100);">
-                            <div class="profile-stat-n" id="stat-puntos" style="color: var(--blue-mid); font-weight: 800; font-size: 1.4rem;">0</div>
-                            <div class="profile-stat-l" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); font-weight: 700;">Puntos</div>
-                        </div>
-                        <div class="profile-stat">
-                            <div class="profile-stat-n" id="stat-nivel" style="color: var(--green); font-weight: 800; font-size: 1.4rem;">Social</div>
-                            <div class="profile-stat-l" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); font-weight: 700;">Nivel</div>
-                        </div>
-                    </div>
-
-                    <!-- Sistema de Referidos -->
-                    <div
-                        style="margin-top: 24px; padding: 15px; background: rgba(37, 99, 235, 0.05); border-radius: var(--radius-md); border: 1px solid var(--blue-pale);">
-                        <p style="font-size: 0.75rem; color: var(--blue-deep); font-weight: 700; margin-bottom: 8px;">TU
-                            CÓDIGO DE INVITACIÓN</p>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="text" id="share-code" readonly value="MONTE-502-RD"
-                                style="flex-grow: 1; border: 1px dashed var(--blue-mid); background: white; padding: 5px; font-size: 0.8rem; text-align: center; font-weight: 800; border-radius: 4px;">
-                            <button onclick="copyShareCode()"
-                                style="background: var(--blue-mid); color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Copiar</button>
-                        </div>
-                        <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">Gana 500 Puntos por
-                            cada amigo referido.</p>
-                    </div>
-
-                    <!-- Sistema de Insignias (Dinámico) -->
-                    <div
-                        style="margin-top: 32px; padding: 20px; background: var(--gray-50); border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
-                        <h4
-                            style="font-size: 0.85rem; color: var(--primary-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; font-weight: 800;">
-                            Logros y Reconocimientos</h4>
-                        <div id="badge-container" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
-                            <!-- Dinámico -->
-                        </div>
-                        
-                        <div id="next-goal-info">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 6px;">
-                                <span id="goal-name" style="font-weight: 700; color: var(--blue-deep);">Héroe de la Red</span>
-                                <span id="goal-percent" style="color: var(--blue-mid); font-weight: 800;">0%</span>
-                            </div>
-                            <div class="progress-bar-bg" style="height: 8px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
-                                <div class="progress-bar-fill" id="level-progress"
-                                    style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--blue-mid), var(--green)); transition: width 1s ease;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-
-                <!-- Main Content -->
-                <main class="profile-main">
-                    <div class="profile-tabs" style="display: flex; gap: 10px; margin-bottom: 30px; background: #f1f5f9; padding: 6px; border-radius: 16px; width: fit-content; border: 1px solid var(--gray-200);">
-                        <button class="tab-btn active" onclick="switchProfileTab('info')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Mi Perfil</button>
-                        <button class="tab-btn" onclick="switchProfileTab('edit')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Configuración</button>
-                        <button class="tab-btn" onclick="switchProfileTab('wallet')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">💳 Billetera</button>
-                        <button class="tab-btn" onclick="switchProfileTab('history')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Actividad</button>
-                        <button class="tab-btn" id="tab-btn-vendor" onclick="switchProfileTab('vendor')" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Vendedor</button>
-                        <button class="tab-btn" id="tab-btn-products" onclick="switchProfileTab('products')" style="display:none;padding: 10px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer;">Mis Productos</button>
-                    </div>
-
-                    <style>
-                        .tab-btn { background: transparent; color: var(--gray-500); }
-                        .tab-btn.active { background: white; color: var(--blue-deep); box-shadow: var(--shadow-sm); }
-                    </style>
-
-                    <div class="card" style="border-radius: 30px; border: 1px solid var(--gray-200); box-shadow: var(--shadow-premium); overflow: hidden; background: white;">
-                        <div class="card-body" style="padding: 40px;">
-                            <!-- Ver Información -->
-                            <div id="tab-info" class="content-tab active">
-                                <h3 style="font-size: 1.2rem; margin-bottom: 16px; color: var(--blue-deep);">Resumen de
-                                    tu cuenta</h3>
-                                <p style="color: var(--gray-500); line-height: 1.6; margin-bottom: 24px;">Esta es tu
-                                    información pública visible para otros miembros de la plataforma, fundamental para
-                                    mantener un ecosistema de confianza y transparencia.</p>
-
-                                <ul style="list-style: none; padding: 0;">
-                                    <li
-                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
-                                        <b style="width: 150px; color: var(--gray-700);">Nombre:</b> <span
-                                            id="display-name">María Sánchez</span>
-                                    </li>
-                                    <li
-                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
-                                        <b style="width: 150px; color: var(--gray-700);">Ubicación:</b> <span
-                                            style="font-size:0.9rem; color:var(--gray-600); font-weight:500;"
-                                            id="display-location">Monte Plata, R.D.</span>
-                                    </li>
-                                    <li
-                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
-                                        <b style="width: 150px; color: var(--gray-700);">Teléfono:</b> <span
-                                            id="display-phone">+34 000 000 000</span>
-                                    </li>
-                                    <li
-                                        style="padding: 12px 0; border-bottom: 1px solid var(--gray-100); display: flex;">
-                                        <b style="width: 150px; color: var(--gray-700);">Rol principal:</b> <span
-                                            id="display-type">Donador</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <!-- Editar Formulario -->
-                            <div id="tab-edit" class="content-tab">
-                                <h3 style="font-size: 1.2rem; margin-bottom: 24px; color: var(--blue-deep);">Actualizar
-                                    Mis Datos</h3>
-                                <form id="edit-profile-form" onsubmit="event.preventDefault(); saveProfile();">
-                                    <div class="form-group" style="text-align: center;">
-                                        <label class="form-label" style="text-align: left;">Foto de Perfil</label>
-                                        <label class="avatar-edit-label" title="Haz clic para cambiar tu foto"
-                                            style="margin: 0 auto 16px;">
-                                            <div class="avatar-edit-img"
-                                                style="display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white;">
-                                                MS</div>
-                                            <div class="avatar-edit-icon">📷</div>
-                                            <!-- The input file allows standard image selection -->
-                                            <input type="file" style="display: none;" accept="image/*">
-                                        </label>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Nombre Completo</label>
-                                        <input type="text" id="input-name" class="form-control" value="María Sánchez"
-                                            required>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label">Teléfono</label>
-                                            <input type="tel" id="input-phone" class="form-control"
-                                                value="+34 000 000 000" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Ubicación</label>
-                                            <input type="text" id="edit-location" class="form-control"
-                                                value="Monte Plata, R.D." required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Tipo de Usuario (Rol)</label>
-                                        <select id="input-type" class="form-control" required>
-                                            <option value="donador" selected>❤️ Donador</option>
-                                            <option value="beneficiario">🙌 Beneficiario</option>
-                                            <option value="emprendedor">🚀 Emprendedor</option>
-                                            <option value="negocio">🏪 Negocio Solidario (Empresa)</option>
-                                            <option value="comprador">🛍️ Comprador Solidario</option>
-                                        </select>
-                                    </div>
-                                    <div id="business-field" class="form-group" style="display: none;">
-                                        <label class="form-label">Nombre del Negocio / Empresa</label>
-                                        <input type="text" id="input-business" class="form-control"
-                                            placeholder="Ej. Farmacia Monte Plata">
-                                        <p style="font-size: 0.75rem; color: var(--blue-mid); margin-top: 6px;">Al ser
-                                            Negocio Solidario, tus productos tendrán un sello distintivo en el
-                                            Marketplace.</p>
-                                    </div>
-                                    <div class="form-group"
-                                        style="background: var(--bg-light); padding: 16px; border-radius: 12px; border: 1px dashed var(--blue-mid);">
-                                        <label class="form-label">¿Tienes un Código de Referido?</label>
-                                        <div style="display: flex; gap: 8px;">
-                                            <input type="text" id="input-referral" class="form-control"
-                                                placeholder="EJ: AMIGO500">
-                                            <button type="button" class="btn btn-primary btn-sm"
-                                                onclick="applyReferral()">Aplicar</button>
-                                        </div>
-                                        <p id="ref-msg" style="font-size: 0.75rem; margin-top: 8px; display: none;"></p>
-                                    </div>
-                                    <div class="form-group" style="margin-top: 32px; display: flex; gap: 12px;">
-                                        <button type="submit" class="btn btn-green">Guardar Cambios</button>
-                                        <button type="button" class="btn btn-outline"
-                                            onclick="switchProfileTab('info')">Cancelar</button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Billetera Solidaria -->
-                            <div id="tab-wallet" class="content-tab">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                                    <div>
-                                        <h3 style="font-size: 1.5rem; color: var(--blue-deep); font-weight: 800;">Mi Billetera</h3>
-                                        <p style="color: var(--gray-500); font-size: 0.9rem;">Gestiona tus fondos y ahorros sociales.</p>
-                                    </div>
-                                    <button class="btn btn-primary" style="border-radius: 14px; padding: 12px 24px;" onclick="alert('Redirigiendo a pasarela de pago para recarga...')">
-                                        <i data-lucide="plus-circle" style="margin-right: 8px;"></i> Recargar Saldo
-                                    </button>
-                                </div>
-
-                                <!-- Tarjeta Virtual Premium -->
-                                <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 35px; border-radius: 24px; color: white; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                    <div style="position: absolute; right: -30px; bottom: -30px; opacity: 0.1; transform: rotate(-15deg);">
-                                        <i data-lucide="wallet" size="200"></i>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px;">
-                                        <div>
-                                            <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; opacity: 0.8; font-weight: 700; margin-bottom: 5px;">Saldo Disponible</p>
-                                            <h2 style="font-size: 3rem; font-weight: 900; letter-spacing: -1px;">$125.50 <span style="font-size: 1.2rem; opacity: 0.6; font-weight: 500;">DOP</span></h2>
-                                        </div>
-                                        <div style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3);">
-                                            <i data-lucide="contactless" size="24"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                        <div style="display: flex; gap: 30px;">
-                                            <div>
-                                                <p style="font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Puntos Impacto</p>
-                                                <p style="font-weight: 800; font-size: 1.1rem; color: #fbbf24;">1,200 pts</p>
-                                            </div>
-                                            <div>
-                                                <p style="font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Ahorro Social</p>
-                                                <p style="font-weight: 800; font-size: 1.1rem;">$15.00</p>
-                                            </div>
-                                        </div>
-                                        <div style="text-align: right;">
-                                            <p style="font-size: 0.65rem; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px;">Miembro Premium</p>
-                                            <p style="font-weight: 700; font-size: 0.9rem;">MARÍA SÁNCHEZ</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h4 style="margin-bottom: 20px; font-size: 1.1rem; font-weight: 800; color: var(--gray-800); display: flex; align-items: center; gap: 10px;">
-                                    <i data-lucide="history" size="20" style="color: var(--blue-mid);"></i> Transacciones Recientes
-                                </h4>
-                                <div style="background: #f8fafc; border-radius: 20px; padding: 10px; border: 1px solid var(--gray-100);">
-                                    <ul style="list-style: none; padding: 0; margin: 0;">
-                                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--gray-200);">
-                                            <div style="display: flex; align-items: center; gap: 15px;">
-                                                <div style="width: 40px; height: 40px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center;"><i data-lucide="arrow-down-left"></i></div>
-                                                <div>
-                                                    <div style="font-weight: 700; color: var(--gray-800);">Recarga de Saldo</div>
-                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">Ayer, 4:32 PM • Tarjeta **** 4421</div>
-                                                </div>
-                                            </div>
-                                            <div style="color: var(--green); font-weight: 800; font-size: 1.1rem;">+$50.00</div>
-                                        </li>
-                                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px;">
-                                            <div style="display: flex; align-items: center; gap: 15px;">
-                                                <div style="width: 40px; height: 40px; border-radius: 12px; background: #fee2e2; color: #991b1b; display: flex; align-items: center; justify-content: center;"><i data-lucide="heart"></i></div>
-                                                <div>
-                                                    <div style="font-weight: 700; color: var(--gray-800);">Aporte Solidario</div>
-                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">10 Mar 2026 • Caso "Sofía"</div>
-                                                </div>
-                                            </div>
-                                            <div style="color: var(--red); font-weight: 800; font-size: 1.1rem;">-$5.00</div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!-- Vendor Request Tab -->
-                            <div id="tab-vendor" class="content-tab">
-                                <div id="vendor-content"></div>
-                            </div>
-
-                            <!-- My Products Tab -->
-                            <div id="tab-products" class="content-tab">
-                                <div id="products-content"></div>
-                            </div>
-
-                            <div id="tab-history" class="content-tab">
-                                <h3 style="font-size: 1.2rem; margin-bottom: 16px; color: var(--blue-deep);">Historial
-                                    de Actividad</h3>
-                                <table class="recent-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Acción</th>
-                                            <th>Destino / Caso</th>
-                                            <th>Monto</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>12 Oct 2026</td>
-                                            <td><span class="badge badge-green">Donación</span></td>
-                                            <td>Operación Pediátrica para Lucas</td>
-                                            <td style="font-weight: 700;">$50.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>03 Sep 2026</td>
-                                            <td><span class="badge badge-blue">Compra</span></td>
-                                            <td>Café Orgánico de Especialidad</td>
-                                            <td style="font-weight: 700;">$18.50</td>
-                                        </tr>
-                                        <tr>
-                                            <td>15 Ago 2026</td>
-                                            <td><span class="badge badge-green">Donación</span></td>
-                                            <td>Comedor Comunitario Esperanza</td>
-                                            <td style="font-weight: 700;">$25.00</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                </main>
+            <div class="profile-header-content">
+                <label class="profile-avatar-large" title="Cambiar foto">
+                    <span id="header-avatar">MS</span>
+                    <div class="avatar-edit-icon"><i data-lucide="camera"></i></div>
+                    <input type="file" style="display: none;" accept="image/*">
+                </label>
+                <div class="profile-info">
+                    <h1 id="header-name">María Sánchez</h1>
+                    <p><i data-lucide="map-pin" size="18"></i> <span id="header-location">Monte Plata, R.D.</span></p>
+                    <div class="role-badge" id="header-type">❤️ Donador Verificado</div>
+                </div>
             </div>
         </div>
+    </header>
+
+    <!-- Main Section -->
+    <section class="container profile-layout">
+        <!-- Sidebar -->
+        <aside>
+            <div class="minimal-card">
+                <h3><i data-lucide="bar-chart-2"></i> Tu Impacto</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-puntos">0</div>
+                        <div class="stat-label">Puntos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-nivel" style="color: #10B981;">Social</div>
+                        <div class="stat-label">Nivel</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="minimal-card">
+                <h3><i data-lucide="award"></i> Logros</h3>
+                <div id="badge-container" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+                    <!-- Dinámico -->
+                </div>
+                
+                <div id="next-goal-info">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px;">
+                        <span id="goal-name" style="font-weight: 600; color: var(--primary-blue);">Siguiente Meta</span>
+                        <span id="goal-percent" style="color: var(--text-muted); font-weight: 600;">0%</span>
+                    </div>
+                    <div style="height: 6px; background: var(--gray-200); border-radius: 99px; overflow: hidden;">
+                        <div id="level-progress" style="width: 0%; height: 100%; background: var(--primary-blue); transition: width 1s ease;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="minimal-card" style="background: var(--bg-light); border-style: dashed;">
+                <h3 style="font-size: 1rem;"><i data-lucide="share-2"></i> Invita y Gana</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Gana 500 Puntos por cada amigo referido.</p>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="share-code" readonly value="MONTE-502-RD" class="modern-input" style="padding: 10px; font-weight: 600; text-align: center; font-size: 0.9rem;">
+                    <button onclick="copyShareCode()" class="btn btn-primary btn-sm" style="padding: 0 16px;">Copiar</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main>
+            <div class="minimal-card" style="padding: 40px;">
+                <div class="modern-tabs">
+                    <button class="modern-tab active" onclick="switchProfileTab('info')">Información</button>
+                    <button class="modern-tab" onclick="switchProfileTab('edit')">Configuración</button>
+                    <button class="modern-tab" onclick="switchProfileTab('wallet')">Billetera</button>
+                    <button class="modern-tab" onclick="switchProfileTab('history')">Historial</button>
+                    <button class="modern-tab" id="tab-btn-vendor" onclick="switchProfileTab('vendor')">Vendedor</button>
+                    <button class="modern-tab" id="tab-btn-products" onclick="switchProfileTab('products')" style="display:none;">Mis Productos</button>
+                </div>
+
+                <!-- Ver Información -->
+                <div id="tab-info" class="content-tab active">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 16px; color: var(--primary-blue);">Resumen de cuenta</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 32px;">Tu información pública visible para la comunidad. La transparencia es fundamental en nuestro ecosistema.</p>
+
+                    <ul class="data-list">
+                        <li class="data-item">
+                            <span class="data-label">Nombre Completo</span>
+                            <span class="data-value" id="display-name">María Sánchez</span>
+                        </li>
+                        <li class="data-item">
+                            <span class="data-label">Ubicación Principal</span>
+                            <span class="data-value" id="display-location">Monte Plata, R.D.</span>
+                        </li>
+                        <li class="data-item">
+                            <span class="data-label">Teléfono de Contacto</span>
+                            <span class="data-value" id="display-phone">+34 000 000 000</span>
+                        </li>
+                        <li class="data-item">
+                            <span class="data-label">Rol en Plataforma</span>
+                            <span class="data-value" id="display-type">Donador</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Editar Formulario -->
+                <div id="tab-edit" class="content-tab">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 32px; color: var(--primary-blue);">Ajustes de Perfil</h3>
+                    <form id="edit-profile-form" onsubmit="event.preventDefault(); saveProfile();">
+                        <div class="form-group">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" id="input-name" class="modern-input" value="María Sánchez" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" id="input-phone" class="modern-input" value="+34 000 000 000" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ubicación</label>
+                                <input type="text" id="edit-location" class="modern-input" value="Monte Plata, R.D." required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rol Principal</label>
+                            <select id="input-type" class="modern-input" required>
+                                <option value="donador" selected>Donador</option>
+                                <option value="beneficiario">Beneficiario</option>
+                                <option value="emprendedor">Emprendedor</option>
+                                <option value="negocio">Negocio Solidario</option>
+                                <option value="comprador">Comprador Solidario</option>
+                            </select>
+                        </div>
+                        <div id="business-field" class="form-group" style="display: none;">
+                            <label class="form-label">Nombre del Negocio</label>
+                            <input type="text" id="input-business" class="modern-input" placeholder="Ej. Farmacia Monte Plata">
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--gray-200);">
+                            <label class="form-label">Código de Referido (Opcional)</label>
+                            <div style="display: flex; gap: 16px;">
+                                <input type="text" id="input-referral" class="modern-input" placeholder="EJ: AMIGO500">
+                                <button type="button" class="btn btn-outline" onclick="applyReferral()">Aplicar</button>
+                            </div>
+                            <p id="ref-msg" style="font-size: 0.85rem; margin-top: 12px; display: none;"></p>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; margin-top: 40px;">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            <button type="button" class="btn btn-ghost" onclick="switchProfileTab('info')">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Billetera -->
+                <div id="tab-wallet" class="content-tab">
+                    <div class="wallet-card">
+                        <div class="wallet-balance">
+                            <div class="label">Saldo Disponible</div>
+                            <div class="amount">125.50 <span class="currency">DOP</span></div>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" onclick="alert('Redirigiendo...')">Recargar Saldo</button>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 1.25rem; margin-bottom: 24px; color: var(--primary-blue);">Actividad Reciente</h3>
+                    <ul class="transaction-list">
+                        <li class="transaction-item">
+                            <div class="tx-info">
+                                <div class="tx-icon in"><i data-lucide="arrow-down-left"></i></div>
+                                <div class="tx-details">
+                                    <h4>Recarga de Saldo</h4>
+                                    <p>Ayer, 4:32 PM • Tarjeta **** 4421</p>
+                                </div>
+                            </div>
+                            <div class="tx-amount in">+$50.00</div>
+                        </li>
+                        <li class="transaction-item">
+                            <div class="tx-info">
+                                <div class="tx-icon out"><i data-lucide="heart"></i></div>
+                                <div class="tx-details">
+                                    <h4>Aporte Solidario</h4>
+                                    <p>10 Mar 2026 • Caso "Sofía"</p>
+                                </div>
+                            </div>
+                            <div class="tx-amount out">-$5.00</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Historial -->
+                <div id="tab-history" class="content-tab">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 24px; color: var(--primary-blue);">Historial de Impacto</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--gray-200); color: var(--text-muted);">
+                                    <th style="padding: 16px 0; font-weight: 600;">Fecha</th>
+                                    <th style="padding: 16px 0; font-weight: 600;">Acción</th>
+                                    <th style="padding: 16px 0; font-weight: 600;">Destino</th>
+                                    <th style="padding: 16px 0; font-weight: 600;">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--gray-100);">
+                                    <td style="padding: 20px 0; color: var(--text-muted);">12 Oct 2026</td>
+                                    <td style="padding: 20px 0;"><span class="badge badge-green">Donación</span></td>
+                                    <td style="padding: 20px 0; font-weight: 500;">Operación Pediátrica</td>
+                                    <td style="padding: 20px 0; font-weight: 600;">$50.00</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--gray-100);">
+                                    <td style="padding: 20px 0; color: var(--text-muted);">03 Sep 2026</td>
+                                    <td style="padding: 20px 0;"><span class="badge badge-blue">Compra</span></td>
+                                    <td style="padding: 20px 0; font-weight: 500;">Café Orgánico</td>
+                                    <td style="padding: 20px 0; font-weight: 600;">$18.50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Vendor Request Tab -->
+                <div id="tab-vendor" class="content-tab">
+                    <div id="vendor-content"></div>
+                </div>
+
+                <!-- My Products Tab -->
+                <div id="tab-products" class="content-tab">
+                    <div id="products-content"></div>
+                </div>
+
+            </div>
+        </main>
     </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <a href="../index.html" class="logo" style="margin-bottom: 24px;">
+                        <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                        Ayuda<span>Tercero</span>
+                    </a>
+                    <p style="color: var(--text-muted);">Liderando la revolución de la ayuda comunitaria a través de un ecosistema solidario justo y transparente.</p>
+                </div>
+                <div>
+                    <h4>Recursos</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="../index.html#como-funciona">Cómo funciona</a></li>
+                        <li><a href="casos.html">Casos sociales</a></li>
+                        <li><a href="reportes.html">Transparencia</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Compañía</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="sobre-nosotros.html">Sobre nosotros</a></li>
+                        <li><a href="impacto.html">Impacto</a></li>
+                        <li><a href="../index.html#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="privacidad.html">Privacidad</a></li>
+                        <li><a href="terminos.html">Términos</a></li>
+                        <li><a href="cookies.html">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--bg-light); margin-top: 60px; padding-top: 40px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                © 2026 Ayuda a un Tercero. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
 
     <!-- Interactive Scripts -->
     <script>
-        // Sistema de pestañas para el perfil
         function switchProfileTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.modern-tab').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.content-tab').forEach(tab => tab.classList.remove('active'));
 
-            // Activar botón correspondiente
-            const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => {
-                if (tabId === 'info' && b.innerText.includes('Mi Perfil')) return true;
-                if (tabId === 'edit' && b.innerText.includes('Editar')) return true;
+            const targetBtn = Array.from(document.querySelectorAll('.modern-tab')).find(b => {
+                if (tabId === 'info' && b.innerText.includes('Información')) return true;
+                if (tabId === 'edit' && b.innerText.includes('Configuración')) return true;
                 if (tabId === 'wallet' && b.innerText.includes('Billetera')) return true;
                 if (tabId === 'history' && b.innerText.includes('Historial')) return true;
+                if (tabId === 'vendor' && b.innerText.includes('Vendedor')) return true;
+                if (tabId === 'products' && b.innerText.includes('Productos')) return true;
                 return false;
             });
             if (targetBtn) targetBtn.classList.add('active');
-
-            // Mostrar el contenido
             document.getElementById('tab-' + tabId).classList.add('active');
         }
 
-        // Recuperar y mostrar datos del usuario logueado en LocalStorage
         document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            
             const savedRole = localStorage.getItem('userRole');
             const savedName = localStorage.getItem('userName');
 
-            // Si el nombre no existe, damos por sentado que no está logueado
             if (!savedName) return;
 
-            // Mostrar el botón Admin en el Navbar si tiene permiso
-            if (savedRole && savedRole.toLowerCase().includes('admin')) {
-                const adminBtn = document.getElementById('navAdminBtn');
-                if (adminBtn) adminBtn.style.display = 'inline-flex';
-            }
-
-            // Actualizar interfaz con variables guardadas
-            document.getElementById('sidebar-name').innerText = savedName;
+            document.getElementById('header-name').innerText = savedName;
             document.getElementById('display-name').innerText = savedName;
             document.getElementById('input-name').value = savedName;
 
@@ -497,10 +717,9 @@
             }
 
             const cleanRole = savedRole ? savedRole.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').trim() : 'Usuario Generico';
-            document.getElementById('sidebar-type').innerText = cleanRole;
+            document.getElementById('header-type').innerText = cleanRole;
             document.getElementById('display-type').innerText = cleanRole;
 
-            // Escuchar cambios en el rol para mostrar campo de negocio
             document.getElementById('input-type').addEventListener('change', function () {
                 const businessField = document.getElementById('business-field');
                 if (this.value === 'negocio') {
@@ -509,13 +728,11 @@
                     businessField.style.display = 'none';
                 }
             });
-            // Trigger inicial
             if (savedRole === 'negocio') {
                 document.getElementById('business-field').style.display = 'block';
                 document.getElementById('input-type').value = 'negocio';
             }
 
-            // Generar iniciales dinámicas
             const namesArr = savedName.trim().split(' ');
             let initials = "U";
             if (namesArr.length >= 2) {
@@ -523,11 +740,8 @@
             } else if (namesArr.length === 1 && namesArr[0] !== '') {
                 initials = (namesArr[0][0]).toUpperCase() + (namesArr[0].length > 1 ? namesArr[0][1].toUpperCase() : '');
             }
-            document.getElementById('sidebar-avatar').innerText = initials;
-            const avatarEdit = document.querySelector('.avatar-edit-img');
-            if (avatarEdit) avatarEdit.innerText = initials;
+            document.getElementById('header-avatar').innerText = initials;
 
-            // Simulación de Gamificación
             updateGamification(savedName);
         });
 
@@ -535,27 +749,20 @@
             const codeInput = document.getElementById('share-code');
             codeInput.select();
             document.execCommand('copy');
-            alert('¡Código copiado! Compártelo con tus amigos y gana puntos.');
+            alert('¡Código copiado!');
         }
 
         function updateGamification() {
             if (typeof DB === 'undefined') return;
-
             const rep = DB.getReputation();
-            
             document.getElementById('stat-puntos').innerText = rep.puntos.toLocaleString();
             document.getElementById('stat-nivel').innerText = rep.nivel;
             
             const badgeContainer = document.getElementById('badge-container');
             badgeContainer.innerHTML = '';
-            
             rep.insignias.forEach(insignia => {
                 const icon = insignia.includes('Donador') ? '🏆' : (insignia.includes('IA') ? '🤖' : '🛡️');
-                badgeContainer.innerHTML += `
-                    <div class="badge-item" title="${insignia}" style="background: var(--white); border: 1px solid var(--gray-200); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; box-shadow: var(--shadow-sm);">
-                        ${icon}
-                    </div>
-                `;
+                badgeContainer.innerHTML += `<div title="${insignia}" style="background: var(--bg-light); border: 1px solid var(--gray-200); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--primary-blue);">${icon}</div>`;
             });
 
             if (rep.metas_proximas && rep.metas_proximas.length > 0) {
@@ -566,14 +773,7 @@
             }
         }
 
-        function logout() {
-            DB.logout();
-            window.location.href = 'login.html';
-        }
-
-        // Simulación lógica de edición de datos de perfil
         function saveProfile() {
-            // Recoger valores del formulario
             const name = document.getElementById('input-name').value;
             const phone = document.getElementById('input-phone').value;
             const location = document.getElementById('edit-location').value;
@@ -582,25 +782,19 @@
             const roleText = roleSelect.options[roleSelect.selectedIndex].text;
             const businessName = document.getElementById('input-business').value;
 
-            // Guardar en Storage
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', roleValue);
-            if (roleValue === 'negocio') {
-                localStorage.setItem('userBusiness', businessName);
-            }
+            if (roleValue === 'negocio') localStorage.setItem('userBusiness', businessName);
 
-            // Actualizar vista "Resumen de tu cuenta"
             document.getElementById('display-name').innerText = name;
             document.getElementById('display-phone').innerText = phone;
             document.getElementById('display-location').innerText = location;
             document.getElementById('display-type').innerText = roleText.replace(/[^a-zA-Z\s]/g, '').trim();
 
-            // Actualizar Barra lateral izquierda
-            document.getElementById('sidebar-name').innerText = name;
-            document.getElementById('sidebar-location').innerText = '📍 ' + location;
-            document.getElementById('sidebar-type').innerText = roleText + ' Verificado';
+            document.getElementById('header-name').innerText = name;
+            document.getElementById('header-location').innerText = location;
+            document.getElementById('header-type').innerText = roleText;
 
-            // Mostrar feedback al usuario y volver al resumen
             alert('✅ Tu perfil ha sido actualizado exitosamente.');
             switchProfileTab('info');
         }
@@ -610,38 +804,31 @@
             const msg = document.getElementById('ref-msg');
             if (code) {
                 msg.style.display = 'block';
-                msg.style.color = 'var(--green)';
-                msg.innerText = '✅ ¡Código aplicado! Recibirás 500 Puntos de Impacto al completar tu primera acción.';
+                msg.style.color = '#10B981';
+                msg.innerText = '✅ ¡Código aplicado exitosamente!';
                 localStorage.setItem('referralCode', code);
             }
         }
-        // Initialize Lucide Icons
-        lucide.createIcons();
 
-        // ─── VENDOR & PRODUCT SYSTEM ────────────────────
+        // VENDOR & PRODUCT SYSTEM
         document.addEventListener('DOMContentLoaded', function() {
+            if (typeof DB === 'undefined') return;
             var user = DB.getCurrentUser();
-            if (!user) { window.location.href = 'login.html'; return; }
+            if (!user) return;
 
-            // Update sidebar with DB user data
-            document.getElementById('sidebar-name').innerText = user.name;
+            document.getElementById('header-name').innerText = user.name;
             document.getElementById('display-name').innerText = user.name;
-
-            // Update sidebar role
-            var roleLabels = { usuario: 'Usuario', vendedor: 'Vendedor Aprobado', admin: 'Administrador' };
-            document.getElementById('sidebar-type').innerText = roleLabels[user.role] || user.role;
+            var roleLabels = { usuario: 'Usuario', vendedor: 'Vendedor', admin: 'Administrador' };
+            document.getElementById('header-type').innerText = roleLabels[user.role] || user.role;
             document.getElementById('display-type').innerText = roleLabels[user.role] || user.role;
 
-            // Hide vendor tab for admin
             if (user.role === 'admin') {
                 var vendorBtn = document.getElementById('tab-btn-vendor');
                 if (vendorBtn) vendorBtn.style.display = 'none';
             }
-
-            // Show products tab for vendors
             if (user.role === 'vendedor') {
                 var prodBtn = document.getElementById('tab-btn-products');
-                if (prodBtn) prodBtn.style.display = '';
+                if (prodBtn) prodBtn.style.display = 'block';
             }
 
             renderVendorTab();
@@ -655,26 +842,23 @@
             if (!container) return;
 
             if (user.role === 'vendedor') {
-                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">&#9989;</div><h3 style="color:var(--green);margin-bottom:8px;">Eres Vendedor Aprobado</h3><p style="color:var(--gray-500);">Ya puedes publicar productos en el marketplace. Ve a la pestaña "Mis Productos" para empezar.</p></div>';
+                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">✓</div><h3 style="color:#10B981;margin-bottom:8px;">Eres Vendedor Aprobado</h3><p style="color:var(--text-muted);">Ya puedes publicar productos en el marketplace.</p></div>';
                 return;
             }
-
             if (user.vendorStatus === 'pendiente') {
-                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">&#9203;</div><h3 style="color:var(--amber);margin-bottom:8px;">Solicitud Pendiente</h3><p style="color:var(--gray-500);">Tu solicitud está siendo revisada por el administrador. Te notificaremos cuando sea aprobada.</p></div>';
+                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">⏳</div><h3 style="color:var(--accent-orange);margin-bottom:8px;">Solicitud Pendiente</h3><p style="color:var(--text-muted);">Tu solicitud está siendo revisada.</p></div>';
                 return;
             }
-
             if (user.vendorStatus === 'rechazado') {
-                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">&#10060;</div><h3 style="color:var(--red);margin-bottom:8px;">Solicitud Rechazada</h3><p style="color:var(--gray-500);margin-bottom:16px;">Tu solicitud fue rechazada. Puedes intentar nuevamente.</p><button class="btn btn-primary" onclick="showVendorForm()">Solicitar de Nuevo</button></div>';
+                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">❌</div><h3 style="color:#EF4444;margin-bottom:8px;">Solicitud Rechazada</h3><button class="btn btn-primary" onclick="showVendorForm()">Solicitar de Nuevo</button></div>';
                 return;
             }
-
             showVendorForm();
         }
 
         function showVendorForm() {
             var container = document.getElementById('vendor-content');
-            container.innerHTML = '<h3 style="font-size:1.2rem;margin-bottom:8px;color:var(--blue-deep);">Solicitar ser Vendedor</h3><p style="color:var(--gray-500);margin-bottom:24px;">Conviértete en vendedor para publicar productos en el marketplace.</p><form onsubmit="submitVendorRequest(event)"><div class="form-group"><label class="form-label">Número de WhatsApp *</label><input type="tel" id="vendor-whatsapp" class="form-control" placeholder="Ej: 8091234567" required></div><button type="submit" class="btn btn-primary">Enviar Solicitud</button></form>';
+            container.innerHTML = '<h3 style="font-size:1.5rem;margin-bottom:16px;color:var(--primary-blue);">Solicitar ser Vendedor</h3><p style="color:var(--text-muted);margin-bottom:32px;">Completa este formulario para vender en el marketplace.</p><form onsubmit="submitVendorRequest(event)"><div class="form-group"><label class="form-label">Número de WhatsApp</label><input type="tel" id="vendor-whatsapp" class="modern-input" required></div><button type="submit" class="btn btn-primary">Enviar Solicitud</button></form>';
         }
 
         function submitVendorRequest(e) {
@@ -682,9 +866,8 @@
             var user = DB.getCurrentUser();
             if (!user) return;
             var whatsapp = document.getElementById('vendor-whatsapp').value.trim();
-            if (!whatsapp) { App.showToast('El número de WhatsApp es obligatorio', 'error'); return; }
             DB.addVendorRequest({ userId: user.id, userName: user.name, userEmail: user.email, whatsapp: whatsapp });
-            App.showToast('Solicitud enviada exitosamente', 'success');
+            alert('Solicitud enviada exitosamente');
             DB.refreshCurrentUser();
             renderVendorTab();
         }
@@ -695,105 +878,49 @@
             var container = document.getElementById('products-content');
             if (!container) return;
 
-            var html = '<h3 style="font-size:1.2rem;margin-bottom:24px;color:var(--blue-deep);">Publicar Producto</h3>';
-            html += '<form onsubmit="submitProduct(event)" style="margin-bottom:40px;">';
-            html += '<div class="form-row"><div class="form-group"><label class="form-label">Nombre *</label><input type="text" id="prod-name" class="form-control" required></div>';
-            html += '<div class="form-group"><label class="form-label">Precio (DOP) *</label><input type="number" id="prod-price" class="form-control" min="0" step="0.01" required></div></div>';
-            html += '<div class="form-group"><label class="form-label">Descripción *</label><textarea id="prod-desc" class="form-control" required></textarea></div>';
-            html += '<div class="form-row"><div class="form-group"><label class="form-label">Categoría *</label><select id="prod-cat" class="form-control" required><option value="">Seleccionar</option><option value="Electrónica">Electrónica</option><option value="Hogar">Hogar</option><option value="Ropa">Ropa</option><option value="Deportes">Deportes</option><option value="Vehículos">Vehículos</option><option value="Salud">Salud</option><option value="Educación">Educación</option><option value="Alimentos">Alimentos</option></select></div>';
-            html += '<div class="form-group"><label class="form-label">Ubicación *</label><input type="text" id="prod-location" class="form-control" required></div></div>';
-            html += '<div class="form-group"><label class="form-label">Estado *</label><select id="prod-condition" class="form-control" required><option value="">Seleccionar</option><option value="nuevo">Nuevo</option><option value="usado">Usado</option></select></div>';
-            html += '<div class="form-group"><label class="form-label">Imágenes (hasta 4)</label><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">';
-            for (var i = 1; i <= 4; i++) {
-                html += '<label style="border:2px dashed var(--gray-200);border-radius:12px;padding:20px;text-align:center;cursor:pointer;"><span style="font-size:0.8rem;color:var(--gray-500);">+ Img ' + i + '</span><input type="file" accept="image/*" class="prod-img-input" style="display:none;"></label>';
-            }
-            html += '</div></div>';
-            html += '<button type="submit" class="btn btn-accent btn-lg" style="width:100%;">Publicar Producto</button></form>';
+            var html = '<h3 style="font-size:1.5rem;margin-bottom:32px;color:var(--primary-blue);">Publicar Producto</h3>';
+            html += '<form onsubmit="submitProduct(event)" style="margin-bottom:60px;">';
+            html += '<div class="form-row"><div class="form-group"><label class="form-label">Nombre</label><input type="text" id="prod-name" class="modern-input" required></div>';
+            html += '<div class="form-group"><label class="form-label">Precio (DOP)</label><input type="number" id="prod-price" class="modern-input" min="0" required></div></div>';
+            html += '<div class="form-group"><label class="form-label">Descripción</label><textarea id="prod-desc" class="modern-input" style="min-height:100px" required></textarea></div>';
+            html += '<div class="form-row"><div class="form-group"><label class="form-label">Categoría</label><select id="prod-cat" class="modern-input" required><option value="">Seleccionar</option><option value="Electrónica">Electrónica</option><option value="Hogar">Hogar</option></select></div>';
+            html += '<div class="form-group"><label class="form-label">Ubicación</label><input type="text" id="prod-location" class="modern-input" required></div></div>';
+            html += '<div class="form-group"><label class="form-label">Imágenes</label><input type="file" class="modern-input" accept="image/*"></div>';
+            html += '<button type="submit" class="btn btn-primary">Publicar</button></form>';
 
-            // My products list
             var products = DB.getProductos().filter(function(p) { return p.vendorId === user.id; });
             if (products.length > 0) {
-                html += '<h3 style="font-size:1.2rem;margin-bottom:16px;color:var(--blue-deep);">Mis Productos (' + products.length + ')</h3>';
+                html += '<h3 style="font-size:1.5rem;margin-bottom:24px;color:var(--primary-blue);">Mis Productos</h3><div style="display:grid;gap:16px;">';
                 products.forEach(function(p) {
-                    var statusColor = p.status === 'aprobado' ? 'var(--green)' : (p.status === 'rechazado' ? 'var(--red)' : 'var(--amber)');
-                    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--gray-50);border-radius:12px;border:1px solid var(--gray-200);margin-bottom:8px;">';
-                    html += '<div><strong>' + p.name + '</strong><br><span style="font-size:0.85rem;color:var(--gray-500);">RD$' + Number(p.price).toLocaleString() + ' · ' + p.category + '</span></div>';
-                    html += '<span style="background:' + statusColor + ';color:#fff;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase;">' + p.status + '</span>';
-                    html += '</div>';
+                    html += '<div style="padding:24px;border:1px solid var(--gray-200);border-radius:12px;display:flex;justify-content:space-between;align-items:center;">';
+                    html += '<div><h4 style="margin-bottom:4px;font-size:1.1rem;">' + p.name + '</h4><p style="color:var(--text-muted);font-size:0.9rem;">RD$' + Number(p.price).toLocaleString() + '</p></div>';
+                    html += '<div><span class="badge badge-gray">' + p.status + '</span></div></div>';
                 });
+                html += '</div>';
             }
-
             container.innerHTML = html;
-
-            // Image preview handlers
-            document.querySelectorAll('.prod-img-input').forEach(function(input) {
-                input.addEventListener('change', function() {
-                    var slot = input.parentElement;
-                    if (input.files && input.files[0]) {
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                            slot.querySelector('span').textContent = 'Listo';
-                            slot.style.borderColor = 'var(--green)';
-                        };
-                        reader.readAsDataURL(input.files[0]);
-                    }
-                });
-            });
         }
 
         function submitProduct(e) {
             e.preventDefault();
             var user = DB.getCurrentUser();
-            if (!user) return;
-            var images = [];
-            var inputs = document.querySelectorAll('.prod-img-input');
-            var pending = 0;
-            var hasFiles = false;
-
-            inputs.forEach(function(input) { if (input.files && input.files[0]) { hasFiles = true; pending++; } });
-
-            function finishSubmit() {
-                if (images.length === 0) {
-                    var colors = ['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4'];
-                    var name = document.getElementById('prod-name').value;
-                    for (var i = 0; i < 4; i++) images.push(DB._placeholderImg(name, colors[i], i + 1));
-                }
-                var product = {
-                    name: document.getElementById('prod-name').value,
-                    price: parseFloat(document.getElementById('prod-price').value),
-                    description: document.getElementById('prod-desc').value,
-                    category: document.getElementById('prod-cat').value,
-                    location: document.getElementById('prod-location').value,
-                    condition: document.getElementById('prod-condition').value,
-                    images: images,
-                    vendorId: user.id, vendorName: user.name, vendorWhatsapp: user.whatsapp || ''
-                };
-                DB.addProduct(product);
-                App.showToast('Producto enviado para revisión', 'success');
-                renderProductsTab();
-            }
-
-            if (!hasFiles) { finishSubmit(); return; }
-
-            inputs.forEach(function(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(ev) {
-                        images.push(ev.target.result);
-                        pending--;
-                        if (pending === 0) finishSubmit();
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            });
+            var product = {
+                name: document.getElementById('prod-name').value,
+                price: parseFloat(document.getElementById('prod-price').value),
+                description: document.getElementById('prod-desc').value,
+                category: document.getElementById('prod-cat').value,
+                location: document.getElementById('prod-location').value,
+                condition: 'nuevo',
+                images: [DB._placeholderImg(document.getElementById('prod-name').value, '#3B82F6', 1)],
+                vendorId: user.id, vendorName: user.name
+            };
+            DB.addProduct(product);
+            alert('Producto enviado para revisión');
+            renderProductsTab();
         }
     </script>
     <script src="../assets/js/db.js"></script>
     <script src="../assets/js/app.js"></script>
     <script src="../assets/js/accessibility.js"></script>
-
-
 </body>
-
 </html>
-

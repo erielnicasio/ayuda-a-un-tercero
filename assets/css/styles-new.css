@@ -1093,6 +1093,15 @@ img {
 /* ── Notification Badge ── */
 #notif-badge {
     font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Prevent FOUC for Auth Button ── */
+#auth-btn:not(.loaded) {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* ── Dark Mode body/card overrides ── */
