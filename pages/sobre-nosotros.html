@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros | Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .about-page {
+            padding-top: calc(var(--nav-height) + 80px);
+            padding-bottom: 100px;
+            background: white;
+        }
+        .hero-about {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 80px;
+        }
+        .hero-about h1 {
+            font-size: 3.5rem;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-about p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        .vision-mission {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+        .about-card {
+            background: var(--bg-light);
+            padding: 48px;
+            border-radius: 32px;
+            transition: var(--transition);
+        }
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-premium);
+        }
+        .about-card i {
+            color: var(--accent-orange);
+            margin-bottom: 24px;
+        }
+        .about-card h2 {
+            margin-bottom: 16px;
+        }
+        .team-section {
+            text-align: center;
+        }
+        .team-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 48px;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+        }
+        .team-member {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+        }
+        .member-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            object-fit: cover;
+            border: 4px solid var(--primary-blue-light);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="about-page">
+        <div class="container">
+            <section class="hero-about">
+                <h1>Nuestra Misión es Ayudar</h1>
+                <p>Nacimos con la convicción de que la tecnología puede ser el puente más fuerte entre la necesidad y la solidaridad. En Ayuda a un Tercero, trabajamos cada día para fortalecer nuestra comunidad.</p>
+            </section>
+
+            <section class="vision-mission">
+                <div class="about-card">
+                    <i data-lucide="target" size="48"></i>
+                    <h2>Nuestra Visión</h2>
+                    <p>Ser la plataforma líder en República Dominicana para la gestión de ayuda comunitaria, reconocida por su transparencia, eficiencia y el impacto real en la vida de las personas.</p>
+                </div>
+                <div class="about-card">
+                    <i data-lucide="heart-handshake" size="48"></i>
+                    <h2>Nuestro Propósito</h2>
+                    <p>Conectar corazones dispuestos a dar con manos que necesitan recibir, eliminando barreras y creando un ecosistema de confianza mutua.</p>
+                </div>
+            </section>
+
+            <section class="team-section">
+                <h2>El Equipo Detrás del Cambio</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80" alt="Líder" class="member-img">
+                        <h3>Carlos Rodríguez</h3>
+                        <p style="color: var(--accent-orange); font-weight: 700;">Fundador & CEO</p>
+                        <p style="font-size: 0.9rem; margin-top: 12px;">Visionario comprometido con el desarrollo social de Monte Plata.</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Líder" class="member-img">
+                        <h3>Elena Martínez</h3>
+                        <p style="color: var(--accent-orange); font-weight: 700;">Directora de Impacto</p>
+                        <p style="font-size: 0.9rem; margin-top: 12px;">Experta en gestión social y transparencia de fondos.</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80" alt="Líder" class="member-img">
+                        <h3>Samuel Peña</h3>
+                        <p style="color: var(--accent-orange); font-weight: 700;">CTO</p>
+                        <p style="font-size: 0.9rem; margin-top: 12px;">Arquitecto de soluciones tecnológicas para el bien común.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid var(--gray-200);">
+            <p>&copy; 2026 Ayuda a un Tercero. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

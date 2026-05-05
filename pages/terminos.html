@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones | Ayuda a un Tercero</title>
+    <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .legal-page {
+            padding-top: calc(var(--nav-height) + 60px);
+            padding-bottom: 100px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+        .legal-card {
+            background: white;
+            border-radius: 32px;
+            padding: 60px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .legal-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 32px;
+            color: var(--primary-blue);
+            border-bottom: 4px solid var(--accent-orange);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+        .legal-card h2 {
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            color: var(--primary-blue-mid);
+        }
+        .legal-card p, .legal-card li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+        .legal-card ul {
+            padding-left: 24px;
+            list-style: disc;
+            margin-bottom: 24px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 32px;
+            transition: var(--transition);
+        }
+        .back-link:hover {
+            color: var(--accent-orange);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <i data-lucide="heart" style="color: var(--accent-orange);"></i>
+                Ayuda<span>Tercero</span>
+            </a>
+            <div class="nav-links">
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="credifast.html">Préstamos</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="legal-page">
+        <div class="container">
+            <a href="../index.html" class="back-link"><i data-lucide="arrow-left"></i> Volver al inicio</a>
+            <article class="legal-card">
+                <h1>Términos y Condiciones</h1>
+                <p>Bienvenido a <strong>Ayuda a un Tercero</strong>. Al acceder y utilizar esta plataforma, usted acepta cumplir con los siguientes términos y condiciones.</p>
+
+                <h2>1. Objeto de la Plataforma</h2>
+                <p>Ayuda a un Tercero es una plataforma digital solidaria que facilita la conexión entre personas que necesitan ayuda y personas dispuestas a contribuir a través de marketplace, donaciones y microcréditos.</p>
+
+                <h2>2. Registro y Cuentas</h2>
+                <ul>
+                    <li>Deberá proporcionar información veraz al crear su cuenta.</li>
+                    <li>Usted es responsable de la seguridad de sus credenciales.</li>
+                    <li>Solo se permite una cuenta por persona.</li>
+                </ul>
+
+                <h2>3. Marketplace y Vendedores</h2>
+                <p>Los vendedores deben ser aprobados por la administración. No se permiten productos ilegales o que violen nuestras políticas comunitarias.</p>
+
+                <h2>4. Donaciones y Casos Sociales</h2>
+                <p>Todas las solicitudes de ayuda son validadas por nuestro equipo para garantizar la transparencia y veracidad de los casos publicados.</p>
+
+                <h2>5. Responsabilidad</h2>
+                <p>La plataforma actúa como intermediario. Los usuarios son responsables de sus interacciones y transacciones directas.</p>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid var(--gray-200);">
+            <p>&copy; 2026 Ayuda a un Tercero. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
