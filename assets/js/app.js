@@ -91,7 +91,7 @@ var App = {
 function showToast(msg, type) { App.showToast(msg, type); }
 
 App.injectFooter = function() {
-    if (document.getElementById('global-footer')) return;
+    if (document.getElementById('global-footer') || document.querySelector('footer')) return;
     var isSubpage = this.isSubpage;
     var bp = isSubpage ? '../' : '';
     var pp = isSubpage ? '' : 'pages/';

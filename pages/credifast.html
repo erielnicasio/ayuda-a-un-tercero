@@ -96,7 +96,7 @@
             appearance: none;
             height: 6px;
             border-radius: var(--radius-full);
-            background: linear-gradient(90deg, var(--blue-mid) var(--p, 50%), var(--gray-200) var(--p, 50%));
+            background: linear-gradient(90deg, var(--accent-orange) var(--p, 50%), var(--gray-200) var(--p, 50%));
             outline: none;
             margin-bottom: 24px;
             cursor: pointer;
@@ -107,8 +107,8 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: var(--blue-mid);
-            box-shadow: 0 2px 8px rgba(37, 99, 235, .4);
+            background: var(--accent-orange);
+            box-shadow: 0 2px 8px rgba(249, 115, 22, .4);
             border: 3px solid var(--white);
         }
 
@@ -228,7 +228,7 @@
                 <a href="../index.html">Inicio</a>
                 <a href="marketplace.html">Marketplace</a>
                 <a href="donaciones.html">Donaciones</a>
-                <a href="credifast.html" class="active">Préstamos</a>
+                <a href="credifast.html">Préstamos</a>
                 <a href="casos.html">Casos Sociales</a>
                 <a href="impacto.html">Impacto</a>
             </div>
@@ -251,9 +251,9 @@
                     <button class="btn btn-green btn-lg"
                         onclick="document.getElementById('loanModal').classList.add('active')">Solicitar
                         Préstamo</button>
-                    <button class="btn btn-ghost btn-lg"
+                    <button class="btn btn-lg"
                         onclick="document.getElementById('gestionPanel').scrollIntoView({behavior:'smooth'});"
-                        style="margin-top:12px;">Gestionar mis pagos</button>
+                        style="margin-top:12px;background:white;color:var(--primary-blue);border:none;font-weight:700;">Gestionar mis pagos</button>
                 </div>
 
                 <div class="simulator-card">
@@ -294,162 +294,97 @@
                 </div>
             </div>
 
-            <div class="loan-types" style="margin-bottom: 60px;">
-                <div class="loan-type-card">
-                    <div class="loan-type-icon">🚀</div>
-                    <div class="loan-type-name">Microcrédito para Emprendimiento</div>
-                    <div class="loan-type-rate">5.0% <span>TEA anual</span></div>
-                    <p class="loan-type-desc">Dirigidos a personas que desean iniciar un negocio o no califican para
-                        préstamos bancarios tradicionales. Obtienes un <strong>interés bajo</strong> y <strong>plazos
-                            flexibles</strong>.</p>
+            <div style="text-align:center;margin-bottom:24px;">
+                <h2 style="font-size:1.5rem;font-weight:800;color:var(--gray-800);">Tipos de Préstamo</h2>
+                <p style="color:var(--gray-400);font-size:0.9rem;">Selecciona el que mejor se adapte a tus necesidades.</p>
+            </div>
+            <div class="loan-types" style="margin-bottom: 60px; gap: 24px;">
+                <div class="loan-type-card" style="background:linear-gradient(135deg, #f0f7ff, #ffffff); border:1px solid #d0e2ff; position:relative; overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--primary-blue);"></div>
+                    <div style="background:rgba(37,99,235,0.1);width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;">🚀</div>
+                    <div class="loan-type-name" style="font-size:1.15rem;">Microcrédito Emprendedor</div>
+                    <div class="loan-type-rate" style="color:var(--primary-blue);">5.0% <span>TEA anual</span></div>
+                    <p class="loan-type-desc">Para quienes desean iniciar un negocio. <strong>Interés bajo</strong> y <strong>plazos flexibles</strong>.</p>
+                    <ul style="list-style:none;padding:0;margin:12px 0 0;text-align:left;font-size:0.82rem;color:var(--gray-500);">
+                        <li style="margin-bottom:6px;">&#10003; Monto: RD$500 - RD$5,000</li>
+                        <li style="margin-bottom:6px;">&#10003; Plazo: 3 a 24 meses</li>
+                        <li>&#10003; Sin garantía requerida</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width:100%;margin-top:20px;justify-content:center;" onclick="document.getElementById('loanModal').classList.add('active')">Solicitar Ahora</button>
                 </div>
-                <div class="loan-type-card">
-                    <div class="loan-type-icon">🛡️</div>
-                    <div class="loan-type-name">Préstamos Personales</div>
-                    <div class="loan-type-rate">8.0% <span>TEA anual</span></div>
-                    <p class="loan-type-desc">Exclusivo para usuarios con buen historial dentro de la plataforma
-                        (donadores o compradores). Aprobación rápida con <strong>interés moderado</strong> para
-                        proyectos o emergencias.</p>
+                <div class="loan-type-card" style="background:linear-gradient(135deg, #fff7ed, #ffffff); border:1px solid #fed7aa; position:relative; overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent-orange);"></div>
+                    <div style="background:rgba(249,115,22,0.1);width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;">🛡️</div>
+                    <div class="loan-type-name" style="font-size:1.15rem;">Préstamo Personal</div>
+                    <div class="loan-type-rate" style="color:var(--accent-orange);">8.0% <span>TEA anual</span></div>
+                    <p class="loan-type-desc">Para usuarios con buen historial. Aprobación rápida con <strong>interés moderado</strong>.</p>
+                    <ul style="list-style:none;padding:0;margin:12px 0 0;text-align:left;font-size:0.82rem;color:var(--gray-500);">
+                        <li style="margin-bottom:6px;">&#10003; Monto: RD$500 - RD$5,000</li>
+                        <li style="margin-bottom:6px;">&#10003; Plazo: 3 a 18 meses</li>
+                        <li>&#10003; Requiere historial en plataforma</li>
+                    </ul>
+                    <button class="btn btn-accent" style="width:100%;margin-top:20px;justify-content:center;" onclick="document.getElementById('loanModal').classList.add('active')">Solicitar Ahora</button>
                 </div>
             </div>
 
             <!-- Dashboard de Pagos / Historial -->
-            <div id="gestionPanel" class="dashboard-panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">Mi Estado Crediticio</h2>
-                    <span class="badge badge-green" style="font-size: 0.85rem;">Historial Excelente ⭐</span>
-                </div>
-
-                <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 32px;">
-                    <div class="kpi-card">
-                        <div class="kpi-icon blue">💳</div>
-                        <div class="kpi-label">Préstamo Activo</div>
-                        <div class="kpi-value">$1,500<span style="font-size: 1rem;">.00</span></div>
-                        <div class="kpi-change">Emprendimiento (5.0% TEA)</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon amber">⏳</div>
-                        <div class="kpi-label">Próxima Cuota</div>
-                        <div class="kpi-value">$128<span style="font-size: 1rem;">.41</span></div>
-                        <div class="kpi-change" style="color: var(--gray-500);">Vence en: 10 días</div>
-                    </div>
-                    <div class="kpi-card"
-                        style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
-                        <button class="btn btn-primary btn-lg" id="btnPagarDashboard"
-                            style="width: 100%; justify-content: center;" onclick="openCredifastPayment()">Pagar Cuota
-                            Ahora</button>
-                    </div>
-                </div>
-
-                <h3 style="font-size: 1.1rem; color: var(--gray-800); margin-bottom: 16px;">Historial de Solicitudes y
-                    Pagos</h3>
-                <div style="overflow-x: auto;">
-                    <table class="recent-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Tipo de Solicitud / Transacción</th>
-                                <th>Monto</th>
-                                <th>Estado</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="credifastTablaBody">
-                            <tr>
-                                <td>15 Mar 2026</td>
-                                <td><strong style="color: var(--gray-800);">Pago de Cuota (1/12)</strong></td>
-                                <td style="font-weight: 700;">$128.41</td>
-                                <td><span class="badge badge-gray">Pendiente</span></td>
-                                <td><button class="btn btn-outline btn-sm"
-                                        onclick="openCredifastPayment()">Pagar</button></td>
-                            </tr>
-                            <tr>
-                                <td>15 Feb 2026</td>
-                                <td>Solicitud Microcrédito Emprendedor</td>
-                                <td>$1,500.00</td>
-                                <td><span class="badge badge-green">Aprobado</span></td>
-                                <td><span style="color:var(--gray-400); font-size:0.85rem;">Desembolsado</span></td>
-                            </tr>
-                            <tr>
-                                <td>10 Nov 2025</td>
-                                <td style="color: var(--gray-500);">Solicitud Préstamo Personal</td>
-                                <td style="color: var(--gray-500);">$800.00</td>
-                                <td><span class="badge badge-red">Rechazado</span></td>
-                                <td><span style="color:var(--gray-400); font-size:0.85rem;">Falta historial</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div id="gestionPanel" class="dashboard-panel" style="border-radius:20px;border:1px solid var(--gray-200);">
+                <div id="gestionContent"></div>
             </div>
         </div>
 
-        <!-- Recomendaciones Futuras -->
-        <div
-            style="background: linear-gradient(135deg, var(--blue-deep), #1e3a8a); border-radius: var(--radius-lg); padding: 40px; color: var(--white); margin-top: 40px; box-shadow: var(--shadow-xl); position: relative; overflow: hidden;">
-            <div
-                style="position: absolute; right: -20px; top: -20px; font-size: 10rem; opacity: 0.05; pointer-events: none;">
-                🔒</div>
-            <h3
-                style="font-size: 1.5rem; margin-bottom: 12px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                Roadmap Tecnológico <span>🚀</span>
-            </h3>
-            <p style="color: rgba(255,255,255,0.8); margin-bottom: 24px; font-size: 0.95rem; max-width: 800px;">Nuestro
-                compromiso es llevar Credifast a estándares de nivel Fintech. Actualmente en fase de diseño, aquí se
-                proponen las implementaciones imperativas para la salida a producción:</p>
+        <!-- Roadmap Tecnológico -->
+        <div class="container" style="margin-top: 48px; margin-bottom: 48px;">
+            <div style="text-align:center;margin-bottom:32px;">
+                <h2 style="font-size:1.5rem;font-weight:800;color:var(--gray-800);">Roadmap Tecnológico</h2>
+                <p style="color:var(--gray-400);font-size:0.9rem;max-width:600px;margin:8px auto 0;">Nuestro compromiso es llevar Credifast a estándares Fintech de nivel mundial.</p>
+            </div>
 
-            <div
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; position: relative; z-index: 2;">
-
-                <div
-                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
-                    <div style="font-size: 1.5rem; margin-bottom: 12px;">🧮</div>
-                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Doble Verificación de
-                        Amortización</h4>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">La
-                        lógica de cálculo de intereses será respaldada por validaciones en el Backend para garantizar la
-                        no manipulación.</p>
-                    <button class="btn btn-outline btn-sm"
-                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
-                        onclick="openDemo('backend')">Simular Servidor</button>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+                <div style="background:white;border-radius:20px;padding:28px;border:1px solid var(--gray-200);position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary-blue),#60a5fa);"></div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                        <div style="background:rgba(37,99,235,0.08);width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🧮</div>
+                        <div>
+                            <h4 style="font-size:0.95rem;font-weight:700;color:var(--gray-800);margin:0;">Doble Verificación</h4>
+                            <span style="font-size:0.72rem;color:var(--primary-blue);font-weight:600;">FASE 1 - SEGURIDAD</span>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:var(--gray-500);line-height:1.6;margin:0;">Validaciones Backend con criptografía para garantizar la integridad de cálculos de amortización.</p>
                 </div>
-
-                <div
-                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
-                    <div style="font-size: 1.5rem; margin-bottom: 12px;">🛡️</div>
-                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Cobros Tokenizados (PCI-DSS)
-                    </h4>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">
-                        Integrar pasarelas de pago certificadas para que nadie toque los datos de tarjeta originales,
-                        usando "bóveda tokenizada".</p>
-                    <button class="btn btn-outline btn-sm"
-                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
-                        onclick="openDemo('vault')">Simular Bóveda</button>
+                <div style="background:white;border-radius:20px;padding:28px;border:1px solid var(--gray-200);position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent-orange),#fbbf24);"></div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                        <div style="background:rgba(249,115,22,0.08);width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🛡️</div>
+                        <div>
+                            <h4 style="font-size:0.95rem;font-weight:700;color:var(--gray-800);margin:0;">Cobros Tokenizados</h4>
+                            <span style="font-size:0.72rem;color:var(--accent-orange);font-weight:600;">FASE 2 - PAGOS</span>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:var(--gray-500);line-height:1.6;margin:0;">Pasarelas de pago PCI-DSS certificadas con bóveda tokenizada para protección total de datos.</p>
                 </div>
-
-                <div
-                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
-                    <div style="font-size: 1.5rem; margin-bottom: 12px;">🆔</div>
-                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Regulación KYC Completa</h4>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">Módulo
-                        de escaneo de Cédula/Pasaporte y prueba de vida facial con Inteligencia Artificial como
-                        requisito fundamental.</p>
-                    <button class="btn btn-outline btn-sm"
-                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
-                        onclick="openDemo('kyc')">Prueba Biometría</button>
+                <div style="background:white;border-radius:20px;padding:28px;border:1px solid var(--gray-200);position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#10b981,#34d399);"></div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                        <div style="background:rgba(16,185,129,0.08);width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🆔</div>
+                        <div>
+                            <h4 style="font-size:0.95rem;font-weight:700;color:var(--gray-800);margin:0;">Regulación KYC</h4>
+                            <span style="font-size:0.72rem;color:#10b981;font-weight:600;">FASE 3 - IDENTIDAD</span>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:var(--gray-500);line-height:1.6;margin:0;">Escaneo de Cédula/Pasaporte y prueba de vida facial con Inteligencia Artificial como requisito.</p>
                 </div>
-
-                <div
-                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column;">
-                    <div style="font-size: 1.5rem; margin-bottom: 12px;">📊</div>
-                    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Integración API Buró</h4>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5; flex-grow: 1;">Generar
-                        Scores Financieros y algoritmos de riesgo crediticio conectados directamente al Buró de forma
-                        automática.</p>
-                    <button class="btn btn-outline btn-sm"
-                        style="margin-top: 16px; border-color: rgba(255,255,255,0.4); color: white; justify-content: center;"
-                        onclick="openDemo('buro')">Consultar API</button>
+                <div style="background:white;border-radius:20px;padding:28px;border:1px solid var(--gray-200);position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#8b5cf6,#a78bfa);"></div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                        <div style="background:rgba(139,92,246,0.08);width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;">📊</div>
+                        <div>
+                            <h4 style="font-size:0.95rem;font-weight:700;color:var(--gray-800);margin:0;">API Buró de Crédito</h4>
+                            <span style="font-size:0.72rem;color:#8b5cf6;font-weight:600;">FASE 4 - SCORING</span>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:var(--gray-500);line-height:1.6;margin:0;">Scores financieros y algoritmos de riesgo crediticio conectados directamente al Buró Nacional.</p>
                 </div>
-
             </div>
         </div>
 
@@ -1234,40 +1169,54 @@
         }
 
         function renderHistorialCredifast() {
-            const userName = localStorage.getItem('userName');
-            const tablaBody = document.getElementById('credifastTablaBody');
-
-            if (userName && tablaBody) {
-                const misTramos = DB.getPrestamos().filter(p => p.nombre === userName);
-
-                // Limpiar filas dinámicas previas (marcadas con data-db-id)
-                const realRows = Array.from(tablaBody.querySelectorAll('tr')).filter(tr => tr.dataset.dbId);
-                realRows.forEach(row => row.remove());
-
-                misTramos.forEach(item => {
-                    const statusClass = item.status === 'Pendiente' ? 'badge-amber' :
-                        (item.status === 'Aprobado' ? 'badge-green' : 'badge-red');
-
-                    const actions = item.status === 'Pendiente' ? `
-                        <div style="display: flex; gap: 4px;">
-                            <button class="btn btn-outline btn-sm" style="padding: 4px;">✎ Editar</button>
-                            <button class="btn btn-outline btn-sm" style="padding: 4px; color:var(--red); border-color:var(--red);">🗑️ Borrar</button>
-                        </div>` : `<i style="color:var(--gray-500); font-size:0.85rem">Gestión Cerrada</i>`;
-
-                    const dateString = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
-
-                    const newRowHTML = `
-                        <tr style="background: rgba(37,99,235,0.01);" data-db-id="${item.id}">
-                            <td>${dateString}</td>
-                            <td><strong>${item.tipo}</strong></td>
-                            <td style="font-weight: 700;">${item.monto}</td>
-                            <td><span class="badge ${statusClass}">${item.status === 'Pendiente' ? 'En Revisión' : item.status}</span></td>
-                            <td>${actions}</td>
-                        </tr>
-                    `;
-                    tablaBody.insertAdjacentHTML('afterbegin', newRowHTML);
-                });
+            var container = document.getElementById('gestionContent');
+            if (!container) return;
+            var userName = localStorage.getItem('userName');
+            var userLoans = [];
+            if (userName && typeof DB !== 'undefined' && DB.getPrestamos) {
+                userLoans = DB.getPrestamos().filter(function(p) { return p.nombre === userName && p.status === 'Aprobado'; });
             }
+            if (userLoans.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:60px 20px;">' +
+                    '<div style="font-size:3rem;margin-bottom:16px;opacity:0.3;">📋</div>' +
+                    '<h3 style="font-size:1.2rem;color:var(--gray-500);margin-bottom:8px;">Sin préstamos registrados</h3>' +
+                    '<p style="color:var(--gray-400);font-size:0.9rem;max-width:400px;margin:0 auto;">Aún no tienes préstamos activos. Solicita uno desde la sección de arriba para comenzar.</p>' +
+                '</div>';
+                return;
+            }
+            var loan = userLoans[0];
+            var allLoans = DB.getPrestamos().filter(function(p) { return p.nombre === userName; });
+            var html = '<div style="padding:32px;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:8px;">' +
+                    '<h2 style="font-size:1.3rem;font-weight:800;color:var(--gray-800);display:flex;align-items:center;gap:10px;margin:0;"><i data-lucide="bar-chart-2" style="color:var(--accent-orange);"></i> Mi Estado Crediticio</h2>' +
+                    '<span class="badge badge-green" style="font-size:0.85rem;">Activo</span>' +
+                '</div>' +
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px;">' +
+                    '<div style="background:var(--gray-50);padding:20px;border-radius:12px;">' +
+                        '<div style="font-size:0.8rem;color:var(--gray-400);margin-bottom:4px;">Préstamo Activo</div>' +
+                        '<div style="font-size:1.5rem;font-weight:800;color:var(--primary-blue);">' + loan.monto + '</div>' +
+                        '<div style="font-size:0.8rem;color:var(--gray-400);">' + loan.tipo + '</div>' +
+                    '</div>' +
+                    '<div style="background:var(--gray-50);padding:20px;border-radius:12px;">' +
+                        '<div style="font-size:0.8rem;color:var(--gray-400);margin-bottom:4px;">Cuota Estimada</div>' +
+                        '<div style="font-size:1.5rem;font-weight:800;color:var(--accent-orange);">$' + (parseFloat(loan.monto.replace(/[^0-9.]/g,'')) / 12).toFixed(2) + '</div>' +
+                        '<div style="font-size:0.8rem;color:var(--gray-400);">Mensual</div>' +
+                    '</div>' +
+                    '<div style="background:var(--gray-50);padding:20px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;">' +
+                        '<button class="btn btn-accent" style="width:100%;justify-content:center;" onclick="openCredifastPayment()">Pagar Cuota</button>' +
+                    '</div>' +
+                '</div>' +
+                '<h3 style="font-size:1rem;color:var(--gray-800);margin-bottom:12px;">Historial</h3>' +
+                '<div style="overflow-x:auto;">' +
+                    '<table class="recent-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Monto</th><th>Estado</th></tr></thead><tbody>';
+            allLoans.forEach(function(item) {
+                var sc = item.status === 'Pendiente' ? 'badge-amber' : (item.status === 'Aprobado' ? 'badge-green' : 'badge-red');
+                var dt = new Date().toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
+                html += '<tr><td>' + dt + '</td><td><strong>' + item.tipo + '</strong></td><td style="font-weight:700;">' + item.monto + '</td><td><span class="badge ' + sc + '">' + item.status + '</span></td></tr>';
+            });
+            html += '</tbody></table></div></div>';
+            container.innerHTML = html;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         document.addEventListener('keydown', function(e) {
@@ -1277,6 +1226,8 @@
         });
     </script>
     <script src="../assets/js/app.js"></script>
+
+
 </body>
 
 </html>

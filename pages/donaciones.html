@@ -69,25 +69,31 @@
 
         /* Search & Map Hero Zone */
         .geo-hero {
-            background: linear-gradient(rgba(30, 58, 138, 0.8), rgba(30, 58, 138, 0.9)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80') center/cover;
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-mid));
             color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-lg);
+            padding: 60px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 32px;
+            box-shadow: var(--shadow-premium);
         }
 
         .geo-hero h1 {
-            font-size: 2rem;
-            margin-bottom: 12px;
+            font-size: 2.4rem;
+            margin-bottom: 16px;
+            color: white;
+            font-weight: 800;
         }
 
         .geo-hero p {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
+            line-height: 1.7;
             margin-bottom: 24px;
         }
 
@@ -379,9 +385,10 @@
         }
 
         .modal-content {
-            background: var(--white);
+            background: #FFFFFF;
             width: 100%;
             max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             border-radius: var(--radius-lg);
             padding: 32px;
             position: relative;
@@ -511,7 +518,7 @@
             <div class="nav-links">
                 <a href="../index.html">Inicio</a>
                 <a href="marketplace.html">Marketplace</a>
-                <a href="donaciones.html" class="active">Donaciones</a>
+                <a href="donaciones.html">Donaciones</a>
                 <a href="credifast.html">Préstamos</a>
                 <a href="casos.html">Casos Sociales</a>
                 <a href="impacto.html">Impacto</a>
@@ -568,6 +575,7 @@
 
                 <div class="d-sidebar-box">
                     <h3 class="d-sidebar-title">Categorías</h3>
+                    <button class="btn btn-sm" onclick="toggleAllDonCats(this)" style="margin-bottom:8px;width:100%;background:var(--accent-orange);color:white;border:none;font-weight:600;">Todos</button>
                     <div class="d-filter-list">
                         <label class="d-filter-item"><input type="checkbox" class="cat-filter" value="ropa" checked> 🧥
                             Ropa y Calzado</label>
@@ -615,32 +623,14 @@
 
                 <!-- Contenedor del Mapa -->
                 <div class="map-view-container" id="mapaSimulado">
-                    <iframe id="mapIframe"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243160.71804245998!2d-69.95475171720815!3d18.79510706691129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eafc5007dc47671%3A0x6ce83ff790f117c!2sMonte%20Plata%20Province%2C%20Dominican%20Republic!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus"
-                        width="100%" height="100%"
-                        style="border:0; position: absolute; inset: 0; filter: opacity(0.9) sepia(0.1);"
-                        allowfullscreen="" loading="lazy"></iframe>
-
-                    <div class="map-pin" style="top: 30%; left: 45%; pointer-events: none;"
-                        title="Lote de Ropa Invierno"><span>🧥</span>
-                    </div>
-                    <div class="map-pin" style="top: 50%; left: 55%; background: var(--amber); pointer-events: none;"
-                        title="Escritorio (Reservado)"><span>🪑</span></div>
-                    <div class="map-pin" style="top: 65%; left: 35%; pointer-events: none;" title="Laptop Estudiantil">
-                        <span>💻</span>
-                    </div>
-                    <div class="map-pin" style="top: 25%; left: 60%; pointer-events: none;" title="Libros Escolares">
-                        <span>📚</span>
-                    </div>
-
-                    <div
-                        style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 20;">
+                    <div id="donLeafletMap" style="width:100%;height:100%;position:absolute;inset:0;z-index:1;"></div>
+                    <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 20;">
                         📍 Mostrando donaciones en Monte Plata, R.D.
                     </div>
                 </div>
 
                 <div class="products-grid" id="productosGrilla"
-                    style="grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px;">
+                    style="grid-template-columns: repeat(auto-fill, minmax(210px, 300px)); gap: 16px; justify-content: center;">
 
                     <!-- Item 1 -->
                     <div class="d-item-card">
@@ -680,12 +670,12 @@
                         </div>
                     </div>
 
-                    <!-- Item 2 (Reserved) -->
-                    <div class="d-item-card" style="opacity: 0.85;">
+                    <!-- Item 2 - Escritorio de Madera -->
+                    <div class="d-item-card">
                         <div class="d-item-img"
-                            style="background-image: url('https://images.unsplash.com/photo-1519710168116-566d80c0587f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'); filter: grayscale(0.5);">
-                            <div class="d-item-status" style="background: var(--amber); color: white;">Reservado (48h)
-                            </div>
+                            style="background-image: url('https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
                         </div>
                         <div class="d-item-body">
                             <h3 class="d-item-title">Escritorio de Madera</h3>
@@ -693,16 +683,19 @@
                                     onclick="showLocationMap('Sabana Grande de Boya, Monte Plata', event)"
                                     style="color:var(--blue-mid); text-decoration:underline; font-weight:600; margin-left: 4px;">(Ver
                                     Mapa)</a> • <span>🪑 Muebles</span></div>
-                            <p class="d-item-desc">Escritorio amplio ideal para estudiantes. Actualmente reservado para
-                                un caso de educación activo.</p>
+                            <p class="d-item-desc">Escritorio de madera sólida, amplio y resistente. Ideal para estudiantes
+                                o trabajo desde casa. En excelente estado, listo para ser recogido.</p>
                             <div class="d-item-footer">
                                 <div class="d-item-donor">
                                     <div class="d-avatar" style="background:var(--gray-300); color:white;">JP</div>
                                     <span>Juan P.</span>
                                 </div>
-                                <button class="btn btn-sm" disabled
-                                    style="background: var(--gray-200); color: var(--gray-500); cursor: not-allowed; border:none;">En
-                                    proceso</button>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this, '18295554321')" style="background:#25D366; border-color:#25D366; padding: 0 12px;" title="Contactar por WhatsApp">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"></path></svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -745,6 +738,407 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Item 4 - Ropa -->
+                    <div class="d-item-card" data-cat="ropa">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Zapatos Deportivos Talla 40</h3>
+                            <div class="d-item-meta"><span>📍 A 2.1 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🧥 Ropa</span></div>
+                            <p class="d-item-desc">Zapatos deportivos en buen estado, ideales para actividades al aire libre.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">LC</div><span>Laura C.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095551111')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 5 - Muebles -->
+                    <div class="d-item-card" data-cat="muebles">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Sofá de 2 Plazas Gris</h3>
+                            <div class="d-item-meta"><span>📍 A 6.3 km</span> <a href="#" onclick="showLocationMap('Bayaguana, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🪑 Muebles</span></div>
+                            <p class="d-item-desc">Sofá de dos plazas en tela gris, cómodo y en buen estado. Ideal para sala pequeña.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#dbeafe;color:#1e40af;">RM</div><span>Roberto M.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095552222')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 6 - Tecnología -->
+                    <div class="d-item-card" data-cat="tecnologia">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Tablet Samsung Galaxy Tab A</h3>
+                            <div class="d-item-meta"><span>📍 A 8.5 km</span> <a href="#" onclick="showLocationMap('Yamasa, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>💻 Tecnología</span></div>
+                            <p class="d-item-desc">Tablet Samsung en buen estado, pantalla 10 pulgadas. Ideal para clases virtuales.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fef3c7;color:#b45309;">AT</div><span>Ana T. 🏅</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095553333')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 7 - Electrodomésticos -->
+                    <div class="d-item-card" data-cat="electrodomesticos">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Microondas Samsung</h3>
+                            <div class="d-item-meta"><span>📍 A 3.8 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🔌 Electrodomésticos</span></div>
+                            <p class="d-item-desc">Microondas funcional, solo necesita limpieza. Capacidad 1.1 pies cúbicos.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">PG</div><span>Pedro G.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095554444')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 8 - Útiles y Libros -->
+                    <div class="d-item-card" data-cat="utiles">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Set de Útiles Escolares Completo</h3>
+                            <div class="d-item-meta"><span>📍 A 1.5 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>📚 Útiles y Libros</span></div>
+                            <p class="d-item-desc">Cuadernos, lápices, colores y mochila para un estudiante de primaria.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#d1fae5;color:#065f46;">MS</div><span>Martha S. 🏅</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095555555')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 9 - Juguetes -->
+                    <div class="d-item-card" data-cat="juguetes">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Muñecas y Peluches (Lote 8 piezas)</h3>
+                            <div class="d-item-meta"><span>📍 A 4.2 km</span> <a href="#" onclick="showLocationMap('Sabana Grande de Boya', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🧸 Juguetes</span></div>
+                            <p class="d-item-desc">Lote de 8 peluches y muñecas en buen estado, lavados y listos para regalar.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fce7f3;color:#9d174d;">CP</div><span>Carmen P.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095556666')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 10 - Alimentos -->
+                    <div class="d-item-card" data-cat="alimentos">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Canasta de Arroz y Habichuelas</h3>
+                            <div class="d-item-meta"><span>📍 A 2.0 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🍲 Alimentos</span></div>
+                            <p class="d-item-desc">Canasta con 10 libras de arroz, 5 libras de habichuelas y aceite. Para familia necesitada.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fef3c7;color:#b45309;">FH</div><span>Fundación Hogar 🛡️</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095557777')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 11 - Ropa -->
+                    <div class="d-item-card" data-cat="ropa">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Camisetas Infantiles (Lote 10)</h3>
+                            <div class="d-item-meta"><span>📍 A 7.1 km</span> <a href="#" onclick="showLocationMap('Peralvillo, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🧥 Ropa</span></div>
+                            <p class="d-item-desc">10 camisetas de diferentes colores y tallas infantiles. Estado como nuevas.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">SV</div><span>Sandra V.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095558888')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 12 - Electrodomésticos -->
+                    <div class="d-item-card" data-cat="electrodomesticos">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Ventilador de Pie Oscilante</h3>
+                            <div class="d-item-meta"><span>📍 A 5.5 km</span> <a href="#" onclick="showLocationMap('Bayaguana, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🔌 Electrodomésticos</span></div>
+                            <p class="d-item-desc">Ventilador de pie con 3 velocidades, funciona perfectamente. Color blanco.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#dbeafe;color:#1e40af;">JR</div><span>Jorge R.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095559999')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 13 - Muebles -->
+                    <div class="d-item-card" data-cat="muebles">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Silla de Comedor (Juego de 4)</h3>
+                            <div class="d-item-meta"><span>📍 A 9.0 km</span> <a href="#" onclick="showLocationMap('Yamasa, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🪑 Muebles</span></div>
+                            <p class="d-item-desc">Juego de 4 sillas de comedor en madera, resistentes y en buen estado.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">LF</div><span>Luis F.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550001')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 14 - Tecnología -->
+                    <div class="d-item-card" data-cat="tecnologia">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Impresora HP Multifuncional</h3>
+                            <div class="d-item-meta"><span>📍 A 3.0 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>💻 Tecnología</span></div>
+                            <p class="d-item-desc">Impresora HP que imprime, escanea y copia. Incluye cartuchos de tinta.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fef3c7;color:#b45309;">OC</div><span>Oficina Central 🛡️</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550002')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 15 - Útiles y Libros -->
+                    <div class="d-item-card" data-cat="utiles">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Enciclopedia Estudiantil (6 tomos)</h3>
+                            <div class="d-item-meta"><span>📍 A 6.0 km</span> <a href="#" onclick="showLocationMap('Bayaguana, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>📚 Útiles y Libros</span></div>
+                            <p class="d-item-desc">Colección de 6 tomos de enciclopedia infantil ilustrada. Temas variados.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#d1fae5;color:#065f46;">BN</div><span>Biblioteca Nacional</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550003')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 16 - Juguetes -->
+                    <div class="d-item-card" data-cat="juguetes">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Bicicleta Infantil Aro 16</h3>
+                            <div class="d-item-meta"><span>📍 A 4.8 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🧸 Juguetes</span></div>
+                            <p class="d-item-desc">Bicicleta infantil con rueditas de apoyo, color rosa. Buen estado general.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fce7f3;color:#9d174d;">IG</div><span>Isabel G.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550004')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 17 - Alimentos -->
+                    <div class="d-item-card" data-cat="alimentos">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1560749003-f4b1e17e2dff?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Leche en Polvo (Caja 12 sobres)</h3>
+                            <div class="d-item-meta"><span>📍 A 1.8 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🍲 Alimentos</span></div>
+                            <p class="d-item-desc">Caja de leche en polvo sin abrir, fecha vigente. Ideal para familias con niños.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fef3c7;color:#b45309;">CB</div><span>Cruz Blanca 🛡️</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550005')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 18 - Electrodomésticos -->
+                    <div class="d-item-card" data-cat="electrodomesticos">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Estufa de Gas 2 Hornillas</h3>
+                            <div class="d-item-meta"><span>📍 A 10.2 km</span> <a href="#" onclick="showLocationMap('Peralvillo, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🔌 Electrodomésticos</span></div>
+                            <p class="d-item-desc">Estufa de gas de 2 hornillas en buen estado. Funciona perfectamente.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">MH</div><span>Miguel H.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550006')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 19 - Ropa -->
+                    <div class="d-item-card" data-cat="ropa">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1515488764276-beab7607c1e6?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Uniforme Escolar Completo</h3>
+                            <div class="d-item-meta"><span>📍 A 2.5 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🧥 Ropa</span></div>
+                            <p class="d-item-desc">Uniforme escolar completo talla 10, incluye camisa, pantalón y zapatos.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#dbeafe;color:#1e40af;">ER</div><span>Elena R. 🏅</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550007')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 20 - Muebles -->
+                    <div class="d-item-card" data-cat="muebles">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1617096200347-cb04ae810b1d?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Cama Individual con Colchón</h3>
+                            <div class="d-item-meta"><span>📍 A 8.0 km</span> <a href="#" onclick="showLocationMap('Sabana Grande de Boya', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🪑 Muebles</span></div>
+                            <p class="d-item-desc">Cama individual de metal con colchón semi-ortopédico en buen estado.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">DM</div><span>Diana M.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550008')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 21 - Tecnología -->
+                    <div class="d-item-card" data-cat="tecnologia">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1504148455328-c376907d081c?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Teclado y Mouse Inalámbrico</h3>
+                            <div class="d-item-meta"><span>📍 A 3.5 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>💻 Tecnología</span></div>
+                            <p class="d-item-desc">Combo de teclado y mouse inalámbrico Logitech, funcional con receptor USB.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fef3c7;color:#b45309;">TC</div><span>TechCare RD 🛡️</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550009')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 22 - Alimentos -->
+                    <div class="d-item-card" data-cat="alimentos">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1555412654-72a95a495858?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Pack de Enlatados Variados</h3>
+                            <div class="d-item-meta"><span>📍 A 5.0 km</span> <a href="#" onclick="showLocationMap('Bayaguana, Monte Plata', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🍲 Alimentos</span></div>
+                            <p class="d-item-desc">12 latas de atún, salchichas y vegetales enlatados. Fecha vigente hasta 2027.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar">RA</div><span>Rosa A.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550010')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 23 - Juguetes -->
+                    <div class="d-item-card" data-cat="juguetes">
+                        <div class="d-item-img" style="background-image: url('https://images.unsplash.com/photo-1584735175097-719d848f8449?w=500&q=80');">
+                            <div class="d-ai-badge">🤖 Imagen Real Verificada</div>
+                            <div class="d-item-status">Disponible</div>
+                        </div>
+                        <div class="d-item-body">
+                            <h3 class="d-item-title">Juegos de Mesa (Lote 5)</h3>
+                            <div class="d-item-meta"><span>📍 A 4.0 km</span> <a href="#" onclick="showLocationMap('Monte Plata Centro', event)" style="color:var(--blue-mid);text-decoration:underline;font-weight:600;margin-left:4px;">(Ver Mapa)</a> • <span>🧸 Juguetes</span></div>
+                            <p class="d-item-desc">5 juegos de mesa: Monopoly, UNO, Dominó, Ajedrez y Damas. Completos.</p>
+                            <div class="d-item-footer">
+                                <div class="d-item-donor"><div class="d-avatar" style="background:#fce7f3;color:#9d174d;">NL</div><span>Nancy L.</span></div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                                    <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this,'18095550011')" style="background:#25D366;border-color:#25D366;padding:0 12px;" title="Contactar por WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="products-grid" id="necesidadesGrilla"
                     style="grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); display: none; gap: 16px;">
@@ -820,14 +1214,7 @@
                         </div>
                     </div>
                     <div class="d-chat-body">
-                        <div
-                            style="text-align: center; font-size: 0.75rem; color: var(--gray-400); margin-bottom: 8px;">
-                            Chat Encriptado Institucional. Los números telefónicos están ocultos por seguridad.</div>
-                        <div class="d-chat-msg yours">¡Hola! He visto tu solicitud. Me parece genial que la ropa pueda
-                            servirle a tu organización. ¿Podemos coordinar la entrega?</div>
-                        <div class="d-chat-msg mine">¡Hola María! Mil gracias. Sí, nos vendría excelente para las
-                            familias. ¿Te parece bien el Punto de Encuentro Seguro de la Estación Central?</div>
-                        <div class="d-chat-msg yours">Sí, es perfecto e iluminado. ¿Mañana a las 15:00 hrs?</div>
+                        <div style="text-align: center; font-size: 0.8rem; color: var(--gray-400); padding: 40px 20px;">Escribe un mensaje para iniciar la conversación.</div>
                     </div>
                     <div class="d-chat-input">
                         <input type="text" id="chatInputObj" placeholder="Escribe un mensaje seguro..."
@@ -1091,11 +1478,11 @@
                         <div class="d-avatar" style="background:var(--blue-deep); color:white;">YO</div>
                         <span>Tu Cuenta <span title="Donador Frecuente">🏅</span></span>
                     </div>
-                    <div style="display: flex; gap: 6px;">
-                        <button class="btn btn-outline btn-sm" onclick="editarTarjeta(this)" style="padding: 4px 8px;">✎
-                            Editar</button>
-                        <button class="btn btn-outline btn-sm" onclick="eliminarTarjeta(this)"
-                            style="padding: 4px 8px; color: var(--red); border-color: var(--red);">🗑️ Borrar</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline btn-sm" onclick="solicitarItem(this)">Solicitar</button>
+                        <button class="btn btn-green btn-sm" onclick="contactarWhatsappDonacion(this, '18295554321')" style="background:#25D366; border-color:#25D366; padding: 0 12px;" title="Contactar por WhatsApp">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a5.8 5.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.81 11.81 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"></path></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1168,18 +1555,54 @@
             cb.addEventListener('change', applyFilters);
         });
 
+        function toggleAllDonCats(btn) {
+            var checks = document.querySelectorAll('.cat-filter');
+            var allChecked = true;
+            checks.forEach(function(c) { if (!c.checked) allChecked = false; });
+            checks.forEach(function(c) { c.checked = !allChecked; });
+        }
+
         // --- 2. SOLICITUD DE ARTÍCULOS E INTEGRACIÓN WHATSAPP ---
+        function getSolicitudes() {
+            try { return JSON.parse(localStorage.getItem('db_solicitudes_donacion')) || []; } catch(e) { return []; }
+        }
+        function saveSolicitud(title) {
+            var list = getSolicitudes();
+            if (list.indexOf(title) === -1) list.push(title);
+            localStorage.setItem('db_solicitudes_donacion', JSON.stringify(list));
+        }
+        function restoreSolicitudes() {
+            var list = getSolicitudes();
+            document.querySelectorAll('.d-item-card').forEach(function(card) {
+                var titleEl = card.querySelector('.d-item-title');
+                if (!titleEl) return;
+                if (list.indexOf(titleEl.innerText) !== -1) {
+                    var btn = card.querySelector('.btn-outline');
+                    if (btn && btn.textContent.trim() === 'Solicitar') {
+                        btn.innerText = "Solicitado";
+                        btn.style.background = "var(--green)";
+                        btn.style.color = "white";
+                        btn.style.borderColor = "var(--green)";
+                        btn.disabled = true;
+                    }
+                }
+            });
+        }
+
         function solicitarItem(btn) {
             const card = btn.closest('.d-item-card');
             const title = card.querySelector('.d-item-title').innerText;
-            const donor = card.querySelector('.d-item-donor span').innerText.replace(' 🏅', '').trim(); // Remove the medal emoji if present
+            const donor = card.querySelector('.d-item-donor span').innerText.replace(' 🏅', '').trim();
 
             if (confirm(`Estás a punto de solicitar formalmente vía WhatsApp el artículo: "${title}". El sistema te redirigirá para contactar a ${donor}. ¿Continuar?`)) {
-                btn.innerText = "Solicitado ✅";
+                btn.innerText = "Solicitado";
                 btn.style.background = "var(--green)";
                 btn.style.color = "white";
                 btn.style.borderColor = "var(--green)";
                 btn.disabled = true;
+
+                // Persist
+                saveSolicitud(title);
 
                 // Increment Solicitudes Panel Personal
                 const solNode = document.getElementById('counterSolicitudes');
@@ -1187,16 +1610,11 @@
                     solNode.innerText = parseInt(solNode.innerText) + 1;
                 }
 
-                // Generar mensaje de Whatsapp
-                // Nota: 1234567890 es un número falso de simulación
                 const numeroTelefono = "1234567890";
                 const mensaje = `¡Hola ${donor}! He visto tu donación de "${title}" en la plataforma "Ayuda a un Tercero" y me gustaría solicitarlo si aún está disponible. Mi nombre de usuario es XYZ. ¡Muchas gracias por tu generosidad!`;
                 const urlWhatsapp = `https://wa.me/${numeroTelefono}?text=${encodeURIComponent(mensaje)}`;
 
-                // Show QR Modal for app logic
                 document.getElementById('qrModal').classList.add('active');
-
-                // Abrir Whatsapp en nueva pestaña para contactar con donador
                 setTimeout(() => {
                     window.open(urlWhatsapp, '_blank');
                 }, 1000);
@@ -1417,10 +1835,48 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
         }
 
         let mapActive = false;
-        function toggleMapView(forceActive = false) {
-            const grillaDisp = document.getElementById('productosGrilla');
-            const grillaNec = document.getElementById('necesidadesGrilla');
-            const mapa = document.getElementById('mapaSimulado');
+        let donMap = null;
+        let donMapMarkers = [];
+        
+        function initDonLeafletMap() {
+            if (donMap) return;
+            donMap = L.map('donLeafletMap').setView([18.81, -69.78], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(donMap);
+            refreshDonMapMarkers();
+        }
+        
+        function refreshDonMapMarkers() {
+            if (!donMap) return;
+            donMapMarkers.forEach(function(m) { donMap.removeLayer(m); });
+            donMapMarkers = [];
+            var cards = document.querySelectorAll('#productosGrilla .d-item-card');
+            var catIcons = { 'ropa': '🧥', 'mueble': '🪑', 'tecnolog': '💻', 'electrodom': '🔌', 'útil': '📚', 'juguete': '🧸', 'alimento': '🍲' };
+            var locations = [
+                [18.81, -69.78], [18.82, -69.77], [18.80, -69.79], [18.83, -69.76],
+                [18.79, -69.80], [18.84, -69.75], [18.78, -69.81], [18.85, -69.74],
+                [18.77, -69.82], [18.86, -69.73], [18.76, -69.83], [18.87, -69.72],
+                [18.75, -69.84], [18.88, -69.71], [18.80, -69.76], [18.82, -69.80],
+                [18.79, -69.77], [18.83, -69.79], [18.81, -69.75], [18.84, -69.78],
+                [18.78, -69.76], [18.85, -69.77], [18.80, -69.82]
+            ];
+            var idx = 0;
+            cards.forEach(function(card) {
+                if (card.style.display === 'none') return;
+                var title = card.querySelector('h3') ? card.querySelector('h3').textContent : '';
+                var cat = card.dataset.category || '';
+                var icon = catIcons[cat] || '📦';
+                var pos = locations[idx % locations.length];
+                idx++;
+                var marker = L.marker([pos[0] + (Math.random() - 0.5) * 0.01, pos[1] + (Math.random() - 0.5) * 0.01]).addTo(donMap).bindPopup('<div style="text-align:center;min-width:120px;"><b>' + icon + ' ' + title + '</b></div>');
+                donMapMarkers.push(marker);
+            });
+        }
+        
+        function toggleMapView(forceActive) {
+            if (forceActive === undefined) forceActive = false;
+            var grillaDisp = document.getElementById('productosGrilla');
+            var grillaNec = document.getElementById('necesidadesGrilla');
+            var mapa = document.getElementById('mapaSimulado');
 
             if (forceActive === true) {
                 mapActive = true;
@@ -1433,14 +1889,10 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
                 grillaNec.style.display = 'none';
                 mapa.style.display = 'block';
                 document.getElementById('feedTitle').innerText = "Mapa de Donaciones (Monte Plata)";
-
-                // If toggled directly from the big button, reset to overview map
-                if (!forceActive) {
-                    document.getElementById('mapIframe').src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243160.71804245998!2d-69.95475171720815!3d18.79510706691129!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eafc5007dc47671%3A0x6ce83ff790f117c!2sMonte%20Plata%20Province%2C%20Dominican%20Republic!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus";
-                }
+                setTimeout(function() { initDonLeafletMap(); if (donMap) { donMap.invalidateSize(); refreshDonMapMarkers(); } }, 200);
             } else {
                 mapa.style.display = 'none';
-                switchTab('disponibles', document.querySelector('.d-tab')); // reset a disponibles
+                switchTab('disponibles', document.querySelector('.d-tab'));
             }
         }
 
@@ -1449,17 +1901,8 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
                 event.preventDefault();
                 event.stopPropagation();
             }
-
             toggleMapView(true);
-
-            // Build google maps embed URL for the specific town and zoom in (15)
-            const url = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-            document.getElementById('mapIframe').src = url;
-
-            // Update Title
-            document.getElementById('feedTitle').innerText = `📍 Artículo En: ${query.split(',')[0]}`;
-
-            // Smooth scroll gently up a bit so user sees the map perfectly
+            document.getElementById('feedTitle').innerText = '📍 Artículo En: ' + query.split(',')[0];
             window.scrollTo({ top: 300, behavior: 'smooth' });
         }
         // --- 6. GESTIÓN: EDITAR Y ELIMINAR ---
@@ -1741,6 +2184,7 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
         document.addEventListener('DOMContentLoaded', () => {
             renderDonacionesPublicas();
             renderDonacionesPropias();
+            restoreSolicitudes();
         });
 
         function renderDonacionesPublicas() {

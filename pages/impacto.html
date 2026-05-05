@@ -57,22 +57,22 @@
 
         /* Geo-Hero Zone */
         .geo-hero {
-            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.85)), 
-                        url('impact_hero_bg_1774293874945.png');
-            background-size: cover;
-            background-position: center;
-            border-radius: var(--radius-lg);
-            padding: 64px 48px;
-            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-mid));
             color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-lg);
+            padding: 60px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 32px;
+            box-shadow: var(--shadow-premium);
             text-align: center;
         }
 
-        .geo-hero h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1px; }
-        .geo-hero p { font-size: 1.25rem; color: rgba(255, 255, 255, 0.9); max-width: 800px; margin: 0 auto 40px; line-height: 1.6; }
+        .geo-hero h1 { font-size: 2.4rem; margin-bottom: 16px; font-weight: 800; color: white; }
+        .geo-hero p { font-size: 1.1rem; color: rgba(255, 255, 255, 0.9); max-width: 800px; margin: 0 auto 24px; line-height: 1.7; }
 
         .search-impacto {
             display: flex;
@@ -223,7 +223,7 @@
                 <a href="donaciones.html">Donaciones</a>
                 <a href="credifast.html">Préstamos</a>
                 <a href="casos.html">Casos Sociales</a>
-                <a href="impacto.html" class="active">Impacto</a>
+                <a href="impacto.html">Impacto</a>
             </div>
             <div class="nav-btns">
                 <a href="perfil.html" class="btn btn-outline btn-sm">Mi Cuenta</a>
@@ -251,6 +251,7 @@
             <aside class="impacto-sidebar">
                 <div class="c-sidebar-box">
                     <h3 class="c-sidebar-title">Filtrar por Tipo</h3>
+                    <button class="btn btn-sm" onclick="var cks=this.parentElement.querySelectorAll('input[type=checkbox]');var all=true;cks.forEach(function(c){if(!c.checked)all=false;});cks.forEach(function(c){c.checked=!all;});" style="margin-bottom:8px;width:100%;background:var(--accent-orange);color:white;border:none;font-weight:600;">Todos</button>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="display: flex; gap: 10px; align-items: center; cursor: pointer;">
                             <input type="checkbox" checked> 🎥 Video Testimonios

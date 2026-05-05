@@ -199,8 +199,12 @@
         /* Product Cards Override */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
             gap: 20px;
+            justify-content: center;
+        }
+        .products-grid .product-card {
+            max-width: 340px;
         }
 
         .product-card {
@@ -416,7 +420,7 @@
             position: absolute;
             top: 24px;
             right: 24px;
-            background: var(--bg-light);
+            background: white;
             border: none;
             width: 40px;
             height: 40px;
@@ -426,6 +430,10 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: #333;
+            font-weight: bold;
+            z-index: 10;
         }
 
         .modal-close:hover {
@@ -640,7 +648,7 @@
             </a>
             <div class="nav-links">
                 <a href="../index.html">Inicio</a>
-                <a href="marketplace.html" class="active">Marketplace</a>
+                <a href="marketplace.html">Marketplace</a>
                 <a href="donaciones.html">Donaciones</a>
                 <a href="credifast.html">Préstamos</a>
                 <a href="casos.html">Casos Sociales</a>
@@ -726,6 +734,7 @@
 
                     <div class="filter-group">
                         <div class="filter-title">Categorías</div>
+                        <button class="btn btn-sm" onclick="var cks=document.querySelectorAll('.mcat-filter');var all=true;cks.forEach(function(c){if(!c.checked)all=false;});cks.forEach(function(c){c.checked=!all;});applyFilters();" style="margin-bottom:8px;width:100%;background:var(--accent-orange);color:white;border:none;font-weight:600;">Todos</button>
                         <div class="filter-options">
                             <label><input type="checkbox" class="mcat-filter" value="artesan" checked>
                                 Artesanías</label>
@@ -759,6 +768,7 @@
 
                     <button class="btn btn-primary" style="width: 100%;" onclick="applyFilters()">Aplicar
                         Filtros</button>
+                    <button class="btn btn-outline" style="width: 100%; margin-top: 8px;" onclick="resetFilters()">Restablecer</button>
                 </aside>
 
                 <!-- Products Grid -->
@@ -768,7 +778,7 @@
                     <article class="product-card" data-category="asesor" data-type="servicio" data-location="remoto"
                         data-price="150">
                         <div class="featured-badge"><i data-lucide="star" size="14"></i> Destacado</div>
-                        <img src="https://images.unsplash.com/photo-1544681280-d2dc2753ceb1?auto=format&fit=crop&w=500&q=80"
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=500&q=80"
                             alt="Diseño Web" class="product-img">
                         <div class="product-body">
                             <div class="product-seller"><i data-lucide="user" size="14"></i> Agencia Digital Solidaria
@@ -793,7 +803,7 @@
                     <!-- Product 2 -->
                     <article class="product-card" data-category="alimento" data-type="producto"
                         data-location="monte-plata" data-price="18.50">
-                        <img src="https://images.unsplash.com/photo-1610414447385-2eab217eb747?auto=format&fit=crop&w=500&q=80"
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500&q=80"
                             alt="Café" class="product-img">
                         <div class="product-body">
                             <div class="product-seller"><i data-lucide="user" size="14"></i> Cooperativa Tierra Verde
@@ -889,52 +899,7 @@
                     <h2 class="section-title">Planes para Vendedores</h2>
                     <p class="section-subtitle">Aumenta tu impacto y visibilidad en la comunidad.</p>
                 </div>
-
-                <div class="plans-grid">
-                    <div class="plan-card">
-                        <h3 class="plan-name">Básico Solidario</h3>
-                        <div class="plan-price">$0<span>/mes</span></div>
-                        <p class="plan-desc">Empieza a ofrecer tus productos sin costo inicial.</p>
-                        <ul class="plan-features">
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> 5 Publicaciones activas
-                            </li>
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Perfil estándar</li>
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Mensajería básica</li>
-                        </ul>
-                        <button class="btn btn-outline" style="width: 100%;">Plan Actual</button>
-                    </div>
-
-                    <div class="plan-card featured">
-                        <div class="plan-popular-tag">RECOMENDADO</div>
-                        <h3 class="plan-name">Emprendedor Pro</h3>
-                        <div class="plan-price">$9.99<span>/mes</span></div>
-                        <p class="plan-desc">Alcanza a toda la comunidad y destaca tus ofertas.</p>
-                        <ul class="plan-features">
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Publicaciones ilimitadas
-                            </li>
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Insignia de Patrocinador
-                            </li>
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Mayor visibilidad en
-                                búsquedas</li>
-                        </ul>
-                        <button class="btn btn-accent" style="width: 100%;"
-                            onclick="openPaymentModal('Emprendedor Pro', 9.99)">Suscribirse</button>
-                    </div>
-
-                    <div class="plan-card">
-                        <h3 class="plan-name">Comunidad Plus</h3>
-                        <div class="plan-price">$24.99<span>/mes</span></div>
-                        <p class="plan-desc">Para organizaciones que buscan el máximo apoyo social.</p>
-                        <ul class="plan-features">
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Banner en página de
-                                inicio</li>
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Analíticas avanzadas</li>
-                            <li class="plan-feature"><span class="plan-feature-check">✓</span> Soporte prioritario</li>
-                        </ul>
-                        <button class="btn btn-outline" style="width: 100%;"
-                            onclick="openPaymentModal('Comunidad Plus', 24.99)">Suscribirse</button>
-                    </div>
-                </div>
+                <div id="plansContainer" class="plans-grid"></div>
             </section>
         </div>
     </main>
@@ -985,10 +950,21 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Título del Artículo</label>
-                    <input id="mktTituloInput" type="text" class="form-input" placeholder="Ej. Vasija Artesanal"
-                        required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Título del Artículo</label>
+                        <input id="mktTituloInput" type="text" class="form-input" placeholder="Ej. Vasija Artesanal"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado del Producto</label>
+                        <select id="mktEstadoInput" class="form-input">
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado">Usado</option>
+                            <option value="regular">Regular</option>
+                            <option value="reparado">Reparado</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1055,26 +1031,11 @@
 
     <!-- Modal Pago (Simulado) -->
     <div class="modal-overlay" id="paymentModal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content" style="max-width: 440px; padding: 32px;">
             <button class="modal-close" onclick="closePaymentModal()"><i data-lucide="x"></i></button>
-            <h3 style="font-size: 1.5rem; color: var(--primary-blue); margin-bottom: 12px; font-weight: 800;">Pago
-                Seguro</h3>
-            <p style="color: var(--text-muted); margin-bottom: 32px;">Suscripción: <b id="payPlanName">Plan</b> por <b
-                    id="payPlanPrice">$0.00</b></p>
-
-            <form id="formPayment" style="display: flex; flex-direction: column; gap: 20px;">
-                <input type="text" placeholder="Nombre en la tarjeta"
-                    style="width: 100%; padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
-                <input type="text" placeholder="Número de tarjeta"
-                    style="width: 100%; padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <input type="text" placeholder="MM/AA"
-                        style="padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
-                    <input type="text" placeholder="CVC"
-                        style="padding: 14px; border: 1px solid #E5E7EB; border-radius: 12px;" required>
-                </div>
-                <button type="submit" class="btn btn-green btn-lg" style="width: 100%;">Finalizar Pago 🔒</button>
-            </form>
+            <h3 style="font-size: 1.3rem; color: var(--primary-blue); margin-bottom: 8px; font-weight: 800;">Suscripción</h3>
+            <p style="color: var(--text-muted); margin-bottom: 8px;"><b id="payPlanName">Plan</b> &mdash; <b id="payPlanPrice">$0.00</b></p>
+            <div id="payFormArea"></div>
         </div>
     </div>
 
@@ -1402,10 +1363,63 @@
         document.querySelector('.banner-actions .btn-accent').addEventListener('click', initSelectionMap);
 
         // --- PAYMENT SIMULATION ---
+        function renderPlans() {
+            var pc = document.getElementById('plansContainer');
+            if (!pc) return;
+            var section = document.getElementById('suscripciones');
+            var user = DB.getCurrentUser();
+            if (!user) { if (section) section.style.display = 'none'; return; }
+            if (section) section.style.display = '';
+            var currentPlan = localStorage.getItem('user_plan') || 'Básico Solidario';
+            var plans = [
+                { name: 'Básico Solidario', price: 0, features: ['5 Publicaciones activas', 'Perfil estándar', 'Mensajería básica'] },
+                { name: 'Emprendedor Pro', price: 9.99, features: ['Publicaciones ilimitadas', 'Insignia de Patrocinador', 'Mayor visibilidad en búsquedas'], recommended: true },
+                { name: 'Comunidad Plus', price: 24.99, features: ['Banner en página de inicio', 'Analíticas avanzadas', 'Soporte prioritario'] }
+            ];
+            var planIdx = plans.findIndex(function(p) { return p.name === currentPlan; });
+            pc.innerHTML = '';
+            plans.forEach(function(plan, i) {
+                var isCurrent = plan.name === currentPlan;
+                var isMax = currentPlan === 'Comunidad Plus';
+                var canUpgrade = i > planIdx;
+                var btnHtml = '';
+                if (isCurrent) { btnHtml = '<button class="btn btn-outline" style="width:100%;cursor:default;opacity:0.7;" disabled>Plan Actual</button>'; }
+                else if (isMax) { btnHtml = '<button class="btn btn-outline" style="width:100%;cursor:default;opacity:0.5;" disabled>Plan Máximo Activo</button>'; }
+                else if (canUpgrade) { btnHtml = '<button class="btn btn-accent" style="width:100%;" onclick="openPaymentModal(\'' + plan.name + '\',' + plan.price + ')">Actualizar</button>'; }
+                else { btnHtml = '<span style="font-size:0.8rem;color:var(--gray-400);text-align:center;display:block;">Incluido en tu plan</span>'; }
+                var featHtml = plan.features.map(function(f) { return '<li class="plan-feature"><span class="plan-feature-check">✓</span> ' + f + '</li>'; }).join('');
+                pc.innerHTML += '<div class="plan-card' + (plan.recommended && canUpgrade ? ' featured' : '') + '">' + (plan.recommended && canUpgrade ? '<div class="plan-popular-tag">RECOMENDADO</div>' : '') + '<h3 class="plan-name">' + plan.name + '</h3><div class="plan-price">$' + plan.price + '<span>/mes</span></div><ul class="plan-features">' + featHtml + '</ul>' + btnHtml + '</div>';
+            });
+            var expiry = localStorage.getItem('user_plan_expiry');
+            if (expiry && currentPlan !== 'Básico Solidario') {
+                pc.insertAdjacentHTML('afterend', '<p style="text-align:center;color:var(--gray-400);font-size:0.85rem;margin-top:12px;">Tu plan <strong>' + currentPlan + '</strong> vence el ' + new Date(expiry).toLocaleDateString('es-ES') + '</p>');
+            }
+        }
+
         function openPaymentModal(name, price) {
+            var modal = document.getElementById('paymentModal');
+            if (!modal) return;
             document.getElementById('payPlanName').innerText = name;
             document.getElementById('payPlanPrice').innerText = "$" + price + "/mes";
-            document.getElementById('paymentModal').classList.add('active');
+            var formArea = document.getElementById('payFormArea');
+            if (formArea) {
+                formArea.innerHTML = '<div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;"><input type="text" id="payName" placeholder="Nombre completo" style="padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:0.9rem;"><input type="email" id="payEmail" placeholder="Correo electrónico" style="padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:0.9rem;"><input type="tel" id="payPhone" placeholder="Teléfono" style="padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:0.9rem;"><button class="btn btn-accent" style="width:100%;padding:12px;font-size:1rem;margin-top:4px;" onclick="confirmSubscription(\'' + name + '\')">Confirmar Suscripción</button></div>';
+            }
+            modal.classList.add('active');
+        }
+
+        function confirmSubscription(planName) {
+            var n = document.getElementById('payName'); var e = document.getElementById('payEmail'); var ph = document.getElementById('payPhone');
+            if (!n.value.trim() || !e.value.trim() || !ph.value.trim()) { alert('Completa todos los campos'); return; }
+            if (!e.value.includes('@')) { alert('Correo electrónico no válido'); return; }
+            localStorage.setItem('user_plan', planName);
+            var expiry = new Date(); expiry.setMonth(expiry.getMonth() + 1);
+            localStorage.setItem('user_plan_expiry', expiry.toISOString());
+            var user = DB.getCurrentUser();
+            if (user) DB.addNotification(user.id, 'Te has suscrito al plan ' + planName + '. Vence el ' + expiry.toLocaleDateString('es-ES') + '.', 'plan');
+            document.getElementById('paymentModal').classList.remove('active');
+            if (typeof App !== 'undefined') App.showToast('Suscripción a ' + planName + ' activada', 'success');
+            renderPlans();
         }
 
         function closePaymentModal() {
@@ -1445,11 +1459,33 @@
             initCartUI();
             initLeafletMap();
             setupCategories();
+            renderPlans();
             var s = document.getElementById('mktSearch');
             if (s) s.addEventListener('input', function() { renderMarketplaceFromDB(); });
         });
 
         var _currentCategory = 'Todos';
+
+        function getConditionLabel(cond) {
+            var labels = { 'nuevo': 'Nuevo', 'usado': 'Usado', 'regular': 'Regular', 'reparado': 'Reparado' };
+            return labels[cond] || 'Usado';
+        }
+        function sortByPlan(products) {
+            var planOrder = { 'Comunidad Plus': 0, 'Emprendedor Pro': 1, 'Básico': 2 };
+            var grouped = { 0: [], 1: [], 2: [] };
+            products.forEach(function(p) {
+                var order = planOrder[p.plan] !== undefined ? planOrder[p.plan] : 2;
+                grouped[order].push(p);
+            });
+            // Randomize within each tier
+            [0, 1, 2].forEach(function(k) {
+                for (var i = grouped[k].length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var tmp = grouped[k][i]; grouped[k][i] = grouped[k][j]; grouped[k][j] = tmp;
+                }
+            });
+            return grouped[0].concat(grouped[1]).concat(grouped[2]);
+        }
 
         function renderMarketplaceFromDB() {
             var grid = document.querySelector('.products-grid');
@@ -1465,53 +1501,27 @@
             var searchEl = document.getElementById('mktSearch');
             var query = searchEl ? searchEl.value.toLowerCase() : '';
 
-            products.forEach(function(p) {
-                if (query && !(p.name + p.category + p.location + p.description).toLowerCase().includes(query)) return;
-                if (_currentCategory !== 'Todos' && p.category !== _currentCategory) return;
+            // Filter
+            products = products.filter(function(p) {
+                if (query && !(p.name + p.category + p.location + p.description).toLowerCase().includes(query)) return false;
+                if (_currentCategory !== 'Todos' && p.category !== _currentCategory) return false;
+                return true;
+            });
 
-                var sliderId = 'slider-' + p.id;
-                var sliderHTML = '<div class="product-slider" id="' + sliderId + '" style="width:100%;height:220px;position:relative;overflow:hidden;cursor:pointer;">';
-                if (p.images && p.images.length > 0) {
-                    p.images.forEach(function(img, i) {
-                        sliderHTML += '<img src="' + img + '" alt="' + p.name + '" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:' + (i === 0 ? '1' : '0') + ';transition:opacity 0.5s;" class="slide-img" data-index="' + i + '">';
-                    });
-                    sliderHTML += '<div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:4px;">';
-                    p.images.forEach(function(img, i) {
-                        sliderHTML += '<span style="width:8px;height:8px;border-radius:50%;background:' + (i === 0 ? '#fff' : 'rgba(255,255,255,0.5)') + ';cursor:pointer;" class="dot" data-dot="' + i + '"></span>';
-                    });
-                    sliderHTML += '</div>';
-                }
-                sliderHTML += '</div>';
+            // Sort by plan priority
+            products = sortByPlan(products);
+
+            products.forEach(function(p) {
+                var imgSrc = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
+                var imgHTML = '<img src="' + imgSrc + '" alt="' + p.name + '" class="product-img" style="width:100%;height:220px;object-fit:cover;">';
 
                 var escapedName = p.name.replace(/'/g, "\\'");
-                var card = '<article class="product-card new-product-card" data-product-id="' + p.id + '" data-category="' + p.category + '" data-price="' + p.price + '" style="position:relative;border-radius:16px;overflow:hidden;background:white;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow-soft);cursor:pointer;" onclick="openProductPreview(\'' + p.id + '\')">' + sliderHTML + '<div class="product-body" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">' + p.category + '</span><span style="font-size:0.75rem;color:var(--gray-400);">' + (p.condition === 'nuevo' ? 'Nuevo' : 'Usado') + ' &middot; ' + p.location + '</span></div><h3 class="product-title" style="font-size:1rem;margin:8px 0 4px;color:var(--gray-800);">' + p.name + '</h3><p class="product-desc" style="font-size:0.85rem;color:var(--gray-500);margin-bottom:8px;line-height:1.4;">' + p.description.substring(0, 80) + '...</p><div class="product-price" style="font-size:1.2rem;font-weight:800;color:var(--accent-orange);">RD$' + Number(p.price).toLocaleString() + '</div></div><div style="padding:0 16px 16px;display:flex;gap:6px;"><button class="btn btn--primary btn--sm" style="flex:1;background:#25D366;border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();contactProductWhatsapp(\'' + p.id + '\')">Contactar</button><button style="flex:1;background:var(--primary-blue);border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();addToCartUI(\'' + p.id + '\')">&#128722; Agregar</button></div><div style="padding:0 16px 12px;"><button style="background:none;border:1px solid var(--gray-200);padding:8px;border-radius:10px;font-size:0.85rem;color:var(--gray-500);cursor:pointer;font-weight:600;width:100%;" onclick="event.stopPropagation();reportProduct(\'' + p.id + '\',\'' + escapedName + '\')">Reportar</button></div></article>';
+                var planBadge = p.plan === 'Comunidad Plus' ? '<span style="background:var(--accent-orange);color:white;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;margin-left:4px;">Plus</span>' : (p.plan === 'Emprendedor Pro' ? '<span style="background:var(--primary-blue);color:white;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;margin-left:4px;">Pro</span>' : '');
+                var card = '<article class="product-card new-product-card" data-product-id="' + p.id + '" data-category="' + p.category + '" data-price="' + p.price + '" style="position:relative;border-radius:16px;overflow:hidden;background:white;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow-soft);cursor:pointer;" onclick="openProductPreview(\'' + p.id + '\')">' + imgHTML + '<div class="product-body" style="padding:16px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">' + p.category + planBadge + '</span><span style="font-size:0.75rem;color:var(--gray-400);">' + getConditionLabel(p.condition) + ' &middot; ' + p.location + '</span></div><h3 class="product-title" style="font-size:1rem;margin:8px 0 4px;color:var(--gray-800);">' + p.name + '</h3><p class="product-desc" style="font-size:0.85rem;color:var(--gray-500);margin-bottom:8px;line-height:1.4;">' + p.description.substring(0, 80) + '...</p><div class="product-price" style="font-size:1.2rem;font-weight:800;color:var(--accent-orange);">RD$' + Number(p.price).toLocaleString() + '</div></div><div style="padding:0 16px 16px;display:flex;gap:6px;"><button class="btn btn--primary btn--sm" style="flex:1;background:#25D366;border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();contactProductWhatsapp(\'' + p.id + '\')">Contactar</button><button style="flex:1;background:var(--primary-blue);border:none;color:white;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;" onclick="event.stopPropagation();addToCartUI(\'' + p.id + '\')">&#128722; Agregar</button></div><div style="padding:0 16px 12px;"><button style="background:none;border:1px solid var(--gray-200);padding:8px;border-radius:10px;font-size:0.85rem;color:var(--gray-500);cursor:pointer;font-weight:600;width:100%;" onclick="event.stopPropagation();reportProduct(\'' + p.id + '\',\'' + escapedName + '\')">Reportar</button></div></article>';
                 grid.insertAdjacentHTML('beforeend', card);
             });
 
-            initProductSliders();
             lucide.createIcons();
-        }
-
-        var sliderIntervals = {};
-        function initProductSliders() {
-            Object.values(sliderIntervals).forEach(function(i) { clearInterval(i); });
-            sliderIntervals = {};
-            document.querySelectorAll('.product-slider').forEach(function(slider) {
-                var imgs = slider.querySelectorAll('.slide-img');
-                var dots = slider.querySelectorAll('.dot');
-                if (imgs.length <= 1) return;
-                var current = 0; var paused = false;
-                function showSlide(idx) {
-                    imgs.forEach(function(img, i) { img.style.opacity = i === idx ? '1' : '0'; });
-                    dots.forEach(function(dot, i) { dot.style.background = i === idx ? '#fff' : 'rgba(255,255,255,0.5)'; });
-                    current = idx;
-                }
-                var interval = setInterval(function() { if (!paused) showSlide((current + 1) % imgs.length); }, 3000);
-                sliderIntervals[slider.id] = interval;
-                slider.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('dot')) { e.stopPropagation(); paused = true; showSlide(parseInt(e.target.dataset.dot)); }
-                });
-            });
         }
 
         // --- PRODUCT PREVIEW MODAL ---
@@ -1533,40 +1543,17 @@
             var content = document.getElementById('previewContent');
             content.innerHTML = '<button onclick="closeProductPreview()" style="position:absolute;top:16px;right:16px;background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.5rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&times;</button>' +
                 '<div style="position:relative;width:100%;height:400px;overflow:hidden;border-radius:24px 24px 0 0;">' +
-                '<img id="previewMainImg" src="' + (imgs[0] || '') + '" style="width:100%;height:100%;object-fit:cover;">' +
-                '<button onclick="event.stopPropagation();previewNav(-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#8249;</button>' +
-                '<button onclick="event.stopPropagation();previewNav(1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:white;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);">&#8250;</button>' +
-                '<div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;" id="previewDots"></div></div>' +
+                '<img src="' + (imgs[0] || '') + '" style="width:100%;height:100%;object-fit:cover;">' +
+                '</div>' +
                 '<div style="padding:32px;">' +
-                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;"><span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;">' + p.category + '</span><span style="font-size:0.85rem;color:var(--gray-400);">' + (p.condition === 'nuevo' ? 'Nuevo' : 'Usado') + ' &middot; ' + p.location + '</span></div>' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;"><span style="background:var(--primary-blue-light);color:var(--primary-blue);padding:4px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;">' + p.category + '</span><span style="font-size:0.85rem;color:var(--gray-400);">' + getConditionLabel(p.condition) + ' &middot; ' + p.location + '</span></div>' +
                 '<h2 style="color:var(--primary-blue);margin-bottom:8px;">' + p.name + '</h2>' +
                 '<p style="color:var(--gray-500);line-height:1.7;margin-bottom:16px;">' + p.description + '</p>' +
                 '<div style="font-size:2rem;font-weight:800;color:var(--accent-orange);margin-bottom:16px;">RD$' + Number(p.price).toLocaleString() + '</div>' +
                 '<p style="font-size:0.85rem;color:var(--gray-400);margin-bottom:20px;">Vendedor: <strong>' + p.vendorName + '</strong> &middot; ' + (p.views || 0) + ' vistas</p>' +
                 '<div style="display:flex;gap:12px;flex-wrap:wrap;"><button onclick="contactProductWhatsapp(\'' + p.id + '\')" style="flex:1;min-width:140px;background:#25D366;color:white;border:none;padding:14px;border-radius:14px;font-weight:700;cursor:pointer;font-size:1rem;">Contactar</button><button onclick="addToCartUI(\'' + p.id + '\')" style="flex:1;min-width:140px;background:var(--primary-blue);color:white;border:none;padding:14px;border-radius:14px;font-weight:700;cursor:pointer;font-size:1rem;">&#128722; Agregar al Carrito</button></div></div>';
 
-            var dotsEl = document.getElementById('previewDots');
-            dotsEl.innerHTML = '';
-            imgs.forEach(function(img, i) {
-                var dot = document.createElement('span');
-                dot.style.cssText = 'width:10px;height:10px;border-radius:50%;background:' + (i === 0 ? '#fff' : 'rgba(255,255,255,0.5)') + ';cursor:pointer;';
-                dot.onclick = function(e) { e.stopPropagation(); window._previewIdx = i; updatePreviewImg(); };
-                dotsEl.appendChild(dot);
-            });
-            window._previewImgs = imgs;
-            window._previewIdx = 0;
             modal.style.display = 'flex';
-        }
-        function previewNav(dir) {
-            if (!window._previewImgs || !window._previewImgs.length) return;
-            window._previewIdx = (window._previewIdx + dir + window._previewImgs.length) % window._previewImgs.length;
-            updatePreviewImg();
-        }
-        function updatePreviewImg() {
-            var img = document.getElementById('previewMainImg');
-            var dots = document.querySelectorAll('#previewDots span');
-            if (img && window._previewImgs) img.src = window._previewImgs[window._previewIdx];
-            dots.forEach(function(d, i) { d.style.background = i === window._previewIdx ? '#fff' : 'rgba(255,255,255,0.5)'; });
         }
         function closeProductPreview() {
             var modal = document.getElementById('productPreviewModal');
@@ -1644,30 +1631,57 @@
                     container.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('active'); });
                     btn.classList.add('active');
                     renderMarketplaceFromDB();
+                    refreshMapMarkers();
                 };
                 container.appendChild(btn);
             });
         }
 
+        // --- RESET FILTERS ---
+        function resetFilters() {
+            _currentCategory = 'Todos';
+            var container = document.querySelector('.filter-chips');
+            if (container) {
+                container.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('active'); });
+                var first = container.querySelector('.chip');
+                if (first) first.classList.add('active');
+            }
+            document.querySelectorAll('.mcat-filter').forEach(function(cb) { cb.checked = true; });
+            var locNacional = document.querySelector('.loc-filter[value="nacional"]');
+            if (locNacional) locNacional.checked = true;
+            var pMin = document.getElementById('priceMin'); if (pMin) pMin.value = '';
+            var pMax = document.getElementById('priceMax'); if (pMax) pMax.value = '';
+            var kmSlider = document.getElementById('kmSlider');
+            if (kmSlider) { kmSlider.value = 69; document.getElementById('kmVal').innerText = '69 km'; }
+            renderMarketplaceFromDB();
+            refreshMapMarkers();
+        }
+
         // --- LEAFLET MAP ---
+        var mapMarkers = [];
         function initLeafletMap() {
             var mapEl = document.getElementById('leafletMap');
             if (!mapEl || mainMap) return;
-            mainMap = L.map('leafletMap').setView([18.8, -70.0], 8);
+            mainMap = L.map('leafletMap').setView([18.81, -69.78], 9);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(mainMap);
-            addProductMarkers();
+            refreshMapMarkers();
         }
-        function addProductMarkers() {
+        function refreshMapMarkers() {
             if (!mainMap) return;
-            DB.getApprovedProducts().forEach(function(p) {
+            mapMarkers.forEach(function(m) { mainMap.removeLayer(m); });
+            mapMarkers = [];
+            var products = DB.getApprovedProducts();
+            products.forEach(function(p) {
+                if (_currentCategory !== 'Todos' && p.category !== _currentCategory) return;
                 if (p.lat && p.lng) {
-                    L.marker([p.lat, p.lng]).addTo(mainMap).bindPopup('<div style="text-align:center;min-width:150px;"><img src="' + (p.images && p.images[0] ? p.images[0] : '') + '" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;"><b>' + p.name + '</b><br>RD$' + Number(p.price).toLocaleString() + '<br><button onclick="openProductPreview(\'' + p.id + '\')" style="margin-top:6px;padding:4px 12px;background:var(--primary-blue);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;">Ver Detalle</button></div>');
+                    var marker = L.marker([p.lat, p.lng]).addTo(mainMap).bindPopup('<div style="text-align:center;min-width:150px;"><img src="' + (p.images && p.images[0] ? p.images[0] : '') + '" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;"><b>' + p.name + '</b><br>RD$' + Number(p.price).toLocaleString() + '<br><button onclick="openProductPreview(\'' + p.id + '\')" style="margin-top:6px;padding:4px 12px;background:#0A192F;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;">Ver Detalle</button></div>');
+                    mapMarkers.push(marker);
                 }
             });
         }
         function toggleMapView() {
             var mc = document.getElementById('mapaMarketplace');
-            if (mc.style.display === 'block') { mc.style.display = 'none'; } else { mc.style.display = 'block'; setTimeout(function() { if (mainMap) mainMap.invalidateSize(); }, 200); }
+            if (mc.style.display === 'block') { mc.style.display = 'none'; } else { mc.style.display = 'block'; setTimeout(function() { if (mainMap) { mainMap.invalidateSize(); refreshMapMarkers(); } }, 200); }
         }
 
         // --- ESC HANDLER ---

@@ -17,78 +17,112 @@
         }
 
         .legal-container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
             background: white;
-            padding: 48px 60px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-premium);
+            overflow: hidden;
         }
 
-        @media (max-width: 768px) {
-            .legal-container { padding: 24px 20px; }
+        .legal-header {
+            padding: 40px 48px 0;
         }
 
-        .legal-nav {
+        .legal-tabs {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
             border-bottom: 2px solid var(--gray-100);
+            padding: 0 48px;
+            gap: 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .legal-nav a {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+        .legal-tab {
+            padding: 16px 24px;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--gray-600);
-            text-decoration: none;
-            background: var(--bg-light);
-            transition: all 0.2s;
+            color: var(--gray-500);
+            cursor: pointer;
+            border: none;
+            background: none;
+            position: relative;
+            white-space: nowrap;
+            transition: color 0.3s ease;
         }
 
-        .legal-nav a:hover, .legal-nav a.active {
-            background: var(--primary-blue);
-            color: white;
-        }
-
-        .legal-section {
-            margin-bottom: 48px;
-            scroll-margin-top: 100px;
-        }
-
-        .legal-section h2 {
+        .legal-tab:hover {
             color: var(--primary-blue);
-            margin-bottom: 20px;
+        }
+
+        .legal-tab.active {
+            color: var(--primary-blue);
+        }
+
+        .legal-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-orange);
+            border-radius: 3px 3px 0 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .legal-tab.active::after {
+            transform: scaleX(1);
+        }
+
+        .legal-tab-content {
+            padding: 40px 48px 48px;
+            display: none;
+            animation: tabFadeIn 0.4s ease;
+        }
+
+        .legal-tab-content.active {
+            display: block;
+        }
+
+        @keyframes tabFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .legal-tab-content h2 {
+            color: var(--primary-blue);
+            margin-bottom: 24px;
             font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 12px;
-            padding-bottom: 12px;
+            padding-bottom: 16px;
             border-bottom: 2px solid var(--primary-blue-light);
         }
 
-        .legal-section h3 {
+        .legal-tab-content h3 {
             color: var(--gray-800);
-            margin: 20px 0 12px;
+            margin: 28px 0 12px;
             font-size: 1.1rem;
         }
 
-        .legal-section p, .legal-section li {
+        .legal-tab-content p,
+        .legal-tab-content li {
             color: var(--text-dark);
             line-height: 1.8;
             margin-bottom: 12px;
             font-size: 0.95rem;
         }
 
-        .legal-section ul, .legal-section ol {
+        .legal-tab-content ul,
+        .legal-tab-content ol {
             padding-left: 24px;
             margin-bottom: 16px;
         }
 
-        .legal-section li {
+        .legal-tab-content li {
             margin-bottom: 8px;
         }
 
@@ -104,10 +138,11 @@
 
         .back-home:hover { color: var(--accent-orange); }
 
-        .legal-update {
-            font-size: 0.85rem;
-            color: var(--gray-400);
-            margin-bottom: 32px;
+        @media (max-width: 768px) {
+            .legal-header { padding: 24px 20px 0; }
+            .legal-tabs { padding: 0 20px; gap: 0; }
+            .legal-tab { padding: 12px 16px; font-size: 0.82rem; }
+            .legal-tab-content { padding: 24px 20px 32px; }
         }
     </style>
 </head>
@@ -140,20 +175,19 @@
             </a>
 
             <div class="legal-container">
-                <h1 style="color: var(--primary-blue); margin-bottom: 8px; font-size: 2rem;">Información Legal</h1>
-                <p class="legal-update">Última actualización: Abril 2026</p>
+                <div class="legal-header">
+                    <h1 style="color: var(--primary-blue); margin-bottom: 4px; font-size: 2rem;">Información Legal</h1>
+                    <p style="font-size: 0.85rem; color: var(--gray-400); margin-bottom: 0;">Última actualización: Abril 2026</p>
+                </div>
 
-                <nav class="legal-nav">
-                    <a href="#terminos" class="active">Términos y Condiciones</a>
-                    <a href="#privacidad">Política de Privacidad</a>
-                    <a href="#datos">Uso de Datos</a>
-                    <a href="#responsabilidad">Responsabilidad del Usuario</a>
-                    <a href="#marketplace">Normas del Marketplace</a>
-                    <a href="#donaciones">Normas de Donaciones</a>
-                </nav>
+                <div class="legal-tabs">
+                    <button class="legal-tab active" data-tab="terminos">Términos y Condiciones</button>
+                    <button class="legal-tab" data-tab="privacidad">Política de Privacidad</button>
+                    <button class="legal-tab" data-tab="datos">Uso de Datos</button>
+                </div>
 
                 <!-- Términos y Condiciones -->
-                <div id="terminos" class="legal-section">
+                <div id="tab-terminos" class="legal-tab-content active">
                     <h2><i data-lucide="file-text"></i> Términos y Condiciones</h2>
                     <p>Bienvenido a <strong>Ayuda a un Tercero</strong>. Al acceder y utilizar esta plataforma, usted acepta cumplir con los siguientes términos y condiciones. Si no está de acuerdo con alguno de estos términos, le solicitamos no utilizar nuestros servicios.</p>
 
@@ -176,12 +210,35 @@
                         <li><strong>Administrador:</strong> Gestiona la plataforma, aprueba solicitudes y modera el contenido.</li>
                     </ul>
 
-                    <h3>4. Modificaciones</h3>
+                    <h3>4. Productos y Servicios del Marketplace</h3>
+                    <ul>
+                        <li>Solo vendedores aprobados pueden publicar productos o servicios.</li>
+                        <li>Cada publicación debe incluir: nombre, precio, descripción, categoría, ubicación, estado y hasta 4 imágenes.</li>
+                        <li>No se permite la publicación de productos ilegales, peligrosos o prohibidos.</li>
+                        <li>Los precios deben expresarse en pesos dominicanos (RD$).</li>
+                    </ul>
+
+                    <h3>5. Sistema de Donaciones</h3>
+                    <ul>
+                        <li>Cualquier usuario registrado puede solicitar una donación completando el formulario obligatorio.</li>
+                        <li>Todas las solicitudes son revisadas por el administrador antes de ser publicadas.</li>
+                        <li>La plataforma facilita la conexión entre donantes y beneficiarios pero no gestiona fondos directamente.</li>
+                    </ul>
+
+                    <h3>6. Responsabilidad del Usuario</h3>
+                    <ul>
+                        <li>Proporcionar información veraz y actualizada.</li>
+                        <li>No publicar contenido falso, engañoso o fraudulento.</li>
+                        <li>No utilizar la plataforma para fines ilegales.</li>
+                        <li>Respetar a todos los miembros de la comunidad.</li>
+                    </ul>
+
+                    <h3>7. Modificaciones</h3>
                     <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación. El uso continuado de la plataforma constituye la aceptación de los términos modificados.</p>
                 </div>
 
                 <!-- Política de Privacidad -->
-                <div id="privacidad" class="legal-section">
+                <div id="tab-privacidad" class="legal-tab-content">
                     <h2><i data-lucide="shield-check"></i> Política de Privacidad</h2>
                     <p>En Ayuda a un Tercero, valoramos y respetamos la privacidad de nuestros usuarios. Esta política describe cómo recopilamos, usamos, almacenamos y protegemos su información personal.</p>
 
@@ -198,119 +255,52 @@
                         <li>Validar su identidad y gestionar su cuenta.</li>
                         <li>Facilitar las transacciones en el marketplace.</li>
                         <li>Procesar solicitudes de donación.</li>
-                        <li>Mejorar la experiencia del usuario.</li>
+                        <li>Mejorar la experiencia del usuario y personalizar contenido.</li>
                         <li>Enviar notificaciones relevantes sobre el estado de sus solicitudes.</li>
                         <li>Generar estadísticas anónimas sobre el uso de la plataforma.</li>
                     </ul>
 
                     <h3>3. Almacenamiento y Seguridad</h3>
-                    <p>Sus datos se almacenan localmente en su navegador utilizando tecnología localStorage. Implementamos medidas de seguridad para proteger su información contra accesos no autorizados, alteración o divulgación.</p>
+                    <p>Sus datos se almacenan localmente en su navegador utilizando tecnología localStorage. Implementamos medidas de seguridad para proteger su información contra accesos no autorizados, alteración o divulgación. No se transmiten datos a servidores externos.</p>
 
-                    <h3>4. Sus Derechos</h3>
-                    <p>Usted tiene derecho a acceder, rectificar, eliminar y portar sus datos personales. Para ejercer estos derechos, puede contactarnos a través de los canales disponibles en la plataforma.</p>
+                    <h3>4. Compartición de Datos</h3>
+                    <p>No vendemos, alquilamos ni compartimos su información personal con terceros para fines comerciales. La información del vendedor (nombre y WhatsApp) se comparte solo cuando un usuario inicia contacto directo.</p>
+
+                    <h3>5. Sus Derechos</h3>
+                    <p>Usted tiene derecho a:</p>
+                    <ul>
+                        <li>Acceder a sus datos personales almacenados.</li>
+                        <li>Rectificar información incorrecta.</li>
+                        <li>Eliminar sus datos limpiando el almacenamiento del navegador.</li>
+                        <li>Solicitar una copia de sus datos.</li>
+                    </ul>
                 </div>
 
                 <!-- Uso de Datos -->
-                <div id="datos" class="legal-section">
+                <div id="tab-datos" class="legal-tab-content">
                     <h2><i data-lucide="database"></i> Uso de Datos</h2>
-                    <p>Detallamos aquí cómo la plataforma gestiona la información almacenada:</p>
+                    <p>Detallamos aquí cómo la plataforma gestiona la información almacenada en cada módulo del sistema.</p>
 
                     <h3>1. Datos del Marketplace</h3>
-                    <p>Los productos publicados son visibles para todos los usuarios. La información del vendedor (nombre y WhatsApp) se comparte solo cuando un usuario inicia contacto. Cada intento de contacto queda registrado en el sistema.</p>
+                    <p>Los productos publicados son visibles para todos los usuarios. La información del vendedor (nombre y WhatsApp) se comparte solo cuando un usuario inicia contacto. Cada intento de contacto queda registrado en el sistema para auditoría.</p>
 
                     <h3>2. Datos de Donaciones</h3>
-                    <p>Las solicitudes de donación incluyen información personal del solicitante. Esta información es revisada por el administrador antes de hacerse pública. Solo las solicitudes aprobadas son visibles para la comunidad.</p>
+                    <p>Las solicitudes de donación incluyen información personal del solicitante (nombre, apellido, edad, contacto y motivo). Esta información es revisada por el administrador antes de hacerse pública. Solo las solicitudes aprobadas son visibles para la comunidad.</p>
 
                     <h3>3. Datos de Geolocalización</h3>
-                    <p>La plataforma puede solicitar acceso a su ubicación para mostrar productos cercanos en el mapa. Esta información se utiliza exclusivamente para mejorar la relevancia de los resultados y no se comparte con terceros.</p>
+                    <p>La plataforma puede solicitar acceso a su ubicación para mostrar productos y donaciones cercanas en el mapa interactivo. Esta información se utiliza exclusivamente para mejorar la relevancia de los resultados y no se comparte con terceros.</p>
 
-                    <h3>4. Persistencia de Datos</h3>
+                    <h3>4. Datos de Microcréditos</h3>
+                    <p>La información financiera proporcionada al solicitar un préstamo (monto, plazo, tipo) se almacena localmente. Los datos de simulación y amortización se calculan en tiempo real y no se transmiten a servidores externos.</p>
+
+                    <h3>5. Persistencia de Datos</h3>
                     <p>Todos los datos se almacenan en el navegador del usuario mediante localStorage. Los datos persisten entre sesiones pero pueden eliminarse limpiando el almacenamiento del navegador. No se transmiten datos a servidores externos.</p>
+
+                    <h3>6. Transparencia</h3>
+                    <p>Ayuda a un Tercero se compromete a la transparencia total en la gestión de donaciones y datos. El administrador puede visualizar y auditar todas las solicitudes. Las estadísticas de impacto se actualizan automáticamente y son visibles para toda la comunidad.</p>
                 </div>
 
-                <!-- Responsabilidad del Usuario -->
-                <div id="responsabilidad" class="legal-section">
-                    <h2><i data-lucide="user-check"></i> Responsabilidad del Usuario</h2>
-
-                    <h3>1. Conducta General</h3>
-                    <p>Al utilizar la plataforma, el usuario se compromete a:</p>
-                    <ul>
-                        <li>Proporcionar información veraz y actualizada.</li>
-                        <li>No publicar contenido falso, engañoso o fraudulento.</li>
-                        <li>No utilizar la plataforma para fines ilegales o no autorizados.</li>
-                        <li>Respetar a todos los miembros de la comunidad.</li>
-                        <li>No intentar acceder a cuentas o datos de otros usuarios.</li>
-                    </ul>
-
-                    <h3>2. Contenido Publicado</h3>
-                    <p>Los usuarios son responsables del contenido que publican. La plataforma se reserva el derecho de eliminar contenido que viole estos términos sin previo aviso.</p>
-
-                    <h3>3. Reportes</h3>
-                    <p>Los usuarios pueden reportar contenido inapropiado. Los reportes falsos o malintencionados pueden resultar en la suspensión de la cuenta del reportante.</p>
-
-                    <h3>4. Transacciones</h3>
-                    <p>Ayuda a un Tercero actúa como intermediario tecnológico. Las transacciones entre usuarios son responsabilidad exclusiva de las partes involucradas. La plataforma no garantiza la calidad de productos o servicios ofrecidos.</p>
-                </div>
-
-                <!-- Normas del Marketplace -->
-                <div id="marketplace" class="legal-section">
-                    <h2><i data-lucide="shopping-bag"></i> Normas del Marketplace</h2>
-
-                    <h3>1. Publicación de Productos</h3>
-                    <ul>
-                        <li>Solo vendedores aprobados pueden publicar productos o servicios.</li>
-                        <li>Cada publicación debe incluir: nombre, precio, descripción, categoría, ubicación, estado y hasta 4 imágenes.</li>
-                        <li>Todas las publicaciones están sujetas a revisión administrativa.</li>
-                        <li>No se permite la publicación de productos ilegales, peligrosos o prohibidos.</li>
-                    </ul>
-
-                    <h3>2. Precios y Transacciones</h3>
-                    <ul>
-                        <li>Los precios deben expresarse en pesos dominicanos (RD$).</li>
-                        <li>Los vendedores son responsables de la exactitud de los precios publicados.</li>
-                        <li>Las negociaciones se realizan directamente entre comprador y vendedor vía WhatsApp.</li>
-                    </ul>
-
-                    <h3>3. Productos Prohibidos</h3>
-                    <p>Queda estrictamente prohibida la publicación de:</p>
-                    <ul>
-                        <li>Sustancias ilegales o controladas.</li>
-                        <li>Armas de cualquier tipo.</li>
-                        <li>Productos falsificados o robados.</li>
-                        <li>Contenido para adultos.</li>
-                        <li>Cualquier artículo cuya venta esté prohibida por la ley dominicana.</li>
-                    </ul>
-
-                    <h3>4. Sistema de Reportes</h3>
-                    <p>Cualquier usuario puede reportar un producto por: estafa, producto falso, contenido inapropiado, spam u otros motivos. Los reportes son revisados por el equipo administrativo y pueden resultar en la eliminación del producto y/o suspensión del vendedor.</p>
-                </div>
-
-                <!-- Normas de Donaciones -->
-                <div id="donaciones" class="legal-section">
-                    <h2><i data-lucide="heart-handshake"></i> Normas de Donaciones</h2>
-
-                    <h3>1. Solicitudes de Donación</h3>
-                    <ul>
-                        <li>Cualquier usuario registrado puede solicitar una donación completando el formulario obligatorio.</li>
-                        <li>El formulario requiere: nombre, apellido, edad, número de contacto, correo electrónico y motivo detallado.</li>
-                        <li>Todas las solicitudes son revisadas por el administrador antes de ser publicadas.</li>
-                    </ul>
-
-                    <h3>2. Casos Sociales</h3>
-                    <ul>
-                        <li>Los casos sociales destacados son verificados por el equipo administrativo.</li>
-                        <li>Cada caso incluye un objetivo de recaudación y progreso visible.</li>
-                        <li>La plataforma facilita la conexión entre donantes y beneficiarios pero no gestiona fondos directamente.</li>
-                    </ul>
-
-                    <h3>3. Transparencia</h3>
-                    <p>Ayuda a un Tercero se compromete a la transparencia total en la gestión de donaciones. El administrador puede visualizar y auditar todas las solicitudes, aprobaciones y rechazos. Las estadísticas de impacto se actualizan automáticamente y son visibles para toda la comunidad.</p>
-
-                    <h3>4. Donaciones en Compras</h3>
-                    <p>Al realizar contacto para una compra en el marketplace, se ofrece la opción voluntaria de agregar un porcentaje como donación solidaria. Esta donación es completamente opcional y su aceptación no afecta la transacción comercial.</p>
-                </div>
-
-                <div style="text-align:center;padding:32px 0 0;border-top:2px solid var(--gray-100);margin-top:40px;">
+                <div style="text-align:center;padding:24px 48px 32px;border-top:2px solid var(--gray-100);">
                     <p style="color:var(--gray-400);font-size:0.85rem;">Ayuda a un Tercero &copy; 2026. Todos los derechos reservados.</p>
                     <p style="color:var(--gray-400);font-size:0.8rem;margin-top:8px;">Para consultas legales, contacte al equipo administrativo a través de la plataforma.</p>
                 </div>
@@ -318,12 +308,47 @@
         </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <h4>Ayuda a un Tercero</h4>
+                <p style="font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.6;">Plataforma solidaria de comercio, donaciones y apoyo comunitario en República Dominicana.</p>
+            </div>
+            <div>
+                <h4>Navegación</h4>
+                <a href="../index.html">Inicio</a>
+                <a href="marketplace.html">Marketplace</a>
+                <a href="donaciones.html">Donaciones</a>
+                <a href="casos.html">Casos Sociales</a>
+                <a href="impacto.html">Impacto</a>
+            </div>
+            <div>
+                <h4>Servicios</h4>
+                <a href="credifast.html">Préstamos</a>
+                <a href="perfil.html">Mi Perfil</a>
+                <a href="notificaciones.html">Notificaciones</a>
+            </div>
+            <div>
+                <h4>Legal</h4>
+                <a href="legal.html">Términos y Condiciones</a>
+                <a href="legal.html">Política de Privacidad</a>
+                <a href="legal.html">Uso de Datos</a>
+            </div>
+        </div>
+        <div class="container" style="text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);margin-top:20px;">
+            <p style="color:rgba(255,255,255,0.5);font-size:0.8rem;">&copy; 2026 Ayuda a un Tercero. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <script>
         lucide.createIcons();
-        document.querySelectorAll('.legal-nav a').forEach(function(a) {
-            a.addEventListener('click', function() {
-                document.querySelectorAll('.legal-nav a').forEach(function(l) { l.classList.remove('active'); });
+        document.querySelectorAll('.legal-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.legal-tab').forEach(function(t) { t.classList.remove('active'); });
+                document.querySelectorAll('.legal-tab-content').forEach(function(c) { c.classList.remove('active'); });
                 this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
             });
         });
     </script>

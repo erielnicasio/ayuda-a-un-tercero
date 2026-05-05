@@ -424,14 +424,17 @@ button {
 /* ══════════════════════════════════════════════════════════
    HERO SECTION
 ══════════════════════════════════════════════════════════ */
+/* Hero Section */
 .hero {
-  min-height: 100vh;
-  background: linear-gradient(135deg, var(--blue-deep) 0%, #1d4ed8 45%, #1e40af 70%, #0f2d6b 100%);
   position: relative;
-  overflow: hidden;
+  padding-top: var(--nav-height, var(--nav-h));
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: var(--nav-h);
+  background: var(--primary-blue);
+  /* Fondo sólido de respaldo */
+  color: white;
+  overflow: hidden;
 }
 
 .hero-bg-shapes {
@@ -894,8 +897,15 @@ button {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
   gap: 24px;
+  justify-content: center;
+}
+
+.products-grid .product-card,
+.products-grid .new-product-card {
+  max-width: 340px;
+  width: 100%;
 }
 
 /* Product Card */
@@ -1407,15 +1417,18 @@ button {
 .loan-type-card {
   background: var(--white);
   border-radius: var(--radius-lg);
-  padding: 28px;
-  border: 2px solid var(--gray-200);
+  padding: 32px;
+  border: 1px solid var(--gray-200);
   transition: var(--transition);
   cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  text-align: center;
 }
 
 .loan-type-card:hover {
-  border-color: var(--blue-mid);
-  box-shadow: var(--shadow-blue);
+  border-color: var(--accent-orange);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
 }
 
 .loan-type-icon {
