@@ -92,13 +92,14 @@
                     <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue-mid),var(--green));color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;margin:0 auto 8px;">A</div>
                     <div style="font-weight:700;color:var(--blue-deep);">Admin</div>
                 </div>
-                <button class="admin-nav-item active" onclick="switchAdminTab('dashboard')">&#128202; Dashboard</button>
-                <button class="admin-nav-item" onclick="switchAdminTab('vendors')">&#128100; Vendedores</button>
-                <button class="admin-nav-item" onclick="switchAdminTab('products')">&#128722; Productos</button>
-                <button class="admin-nav-item" onclick="switchAdminTab('donations')">&#10084; Donaciones</button>
-                <button class="admin-nav-item" onclick="switchAdminTab('reports')">&#9888; Reportes</button>
-                <button class="admin-nav-item" onclick="switchAdminTab('contacts')">&#128222; Contactos</button>
-                <button class="admin-nav-item" onclick="switchAdminTab('notifications')">&#128276; Notificaciones</button>
+                <button class="admin-nav-item active" onclick="switchAdminTab('dashboard')">📊 Dashboard</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('vendors')">👤 Vendedores</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('products')">🛒 Productos</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('donations')">❤ Donaciones</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('prestamos')">💰 Préstamos</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('reports')">⚠ Reportes</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('contacts')">📞 Contactos</button>
+                <button class="admin-nav-item" onclick="switchAdminTab('notifications')">🔔 Notificaciones</button>
             </aside>
 
             <main class="admin-main">
@@ -136,6 +137,14 @@
                         <div><h1 class="admin-title">Gestión de Donaciones</h1><p class="admin-subtitle">Solicitudes de donación recibidas</p></div>
                     </div>
                     <div id="donations-content"></div>
+                </div>
+
+                <!-- PRESTAMOS -->
+                <div id="view-prestamos" class="admin-view">
+                    <div class="admin-header">
+                        <div><h1 class="admin-title">Gestión de Préstamos</h1><p class="admin-subtitle">Solicitudes y préstamos activos de credifast</p></div>
+                    </div>
+                    <div id="prestamos-content"></div>
                 </div>
 
                 <!-- REPORTS -->
@@ -193,6 +202,7 @@
                 case 'vendors': renderVendors(); break;
                 case 'products': renderProducts(); break;
                 case 'donations': renderDonations(); break;
+                case 'prestamos': renderPrestamos(); break;
                 case 'reports': renderReports(); break;
                 case 'contacts': renderContacts(); break;
                 case 'notifications': renderNotifications(); break;
@@ -202,6 +212,7 @@
         // ── DASHBOARD ──
         function renderDashboard() {
             var stats = DB.getSystemStats();
+            var totalPrestamos = DB.getPrestamos().length;
             var kpiGrid = document.getElementById('kpi-grid');
             kpiGrid.innerHTML = '';
             var kpis = [
@@ -209,6 +220,7 @@
                 { title: 'Vendedores', value: stats.totalVendors, color: 'var(--green)' },
                 { title: 'Productos', value: stats.totalProducts, color: 'var(--amber)' },
                 { title: 'Donaciones', value: stats.totalDonations, color: 'var(--red)' },
+                { title: 'Préstamos', value: totalPrestamos, color: '#F59E0B' },
                 { title: 'Reportes', value: stats.totalReports, color: '#8B5CF6' },
                 { title: 'Contactos', value: stats.totalContacts, color: '#06B6D4' }
             ];
@@ -301,6 +313,31 @@
 
         function approveDonation(id) { DB.updateDonation(id, { status: 'aprobado' }); App.showToast('Donación aprobada', 'success'); renderDonations(); }
         function rejectDonation(id) { DB.updateDonation(id, { status: 'rechazado' }); App.showToast('Donación rechazada', 'info'); renderDonations(); }
+
+        // ── PRESTAMOS ──
+        function renderPrestamos() {
+            var prestamos = DB.getPrestamos();
+            var container = document.getElementById('prestamos-content');
+            if (prestamos.length === 0) { container.innerHTML = '<p style="color:var(--gray-400);padding:40px;text-align:center;">No hay solicitudes de préstamos.</p>'; return; }
+            var html = '<table class="admin-table"><thead><tr><th>Cliente</th><th>Cédula</th><th>Monto</th><th>Plazo</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>';
+            prestamos.forEach(function(p) {
+                var estadoClass = p.status.toLowerCase();
+                if (estadoClass === 'pagado') estadoClass = 'aprobado';
+                if (estadoClass === 'cancelado') estadoClass = 'rechazado';
+                var montoMostrar = p.montoOriginal ? p.montoOriginal : p.monto;
+                html += '<tr><td>' + p.nombre + ' ' + (p.apellido||'') + '</td><td>' + (p.cedula||'-') + '</td><td>RD$' + parseFloat(montoMostrar).toFixed(2) + '</td><td>' + (p.plazo ? p.plazo + ' meses' : '-') + '</td><td><span class="badge-status badge-' + estadoClass + '">' + p.status + '</span></td><td>';
+                if (p.status === 'Pendiente') {
+                    html += '<button class="action-btn btn-approve" onclick="approvePrestamo(\'' + p.id + '\')">Aprobar</button>';
+                    html += '<button class="action-btn btn-reject" onclick="rejectPrestamo(\'' + p.id + '\')">Rechazar</button>';
+                }
+                html += '</td></tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function approvePrestamo(id) { DB.updatePrestamoStatus(id, 'Aprobado'); App.showToast('Préstamo aprobado', 'success'); renderPrestamos(); }
+        function rejectPrestamo(id) { DB.updatePrestamoStatus(id, 'Rechazado'); App.showToast('Préstamo rechazado', 'info'); renderPrestamos(); }
 
         // ── REPORTS ──
         function renderReports() {

@@ -224,10 +224,12 @@ var DB = {
     },
 
     _seedImpacto: function() {
-        if (localStorage.getItem('db_impacto_v2')) return;
+        // Always reseed impact data to ensure latest titles are used
+        // Comment out the guard that prevents re‑seeding when data already exists
+        // if (localStorage.getItem('db_impacto_v2')) return;
         localStorage.removeItem('db_impacto');
         this._set('db_impacto', [
-            { id: 'IMP-001', nombre: 'Pactivia (Maestra)', ubicacion: 'Politécnico Rosario Rojas', historia: 'El centro se siente muy agradecido; me parece un regalo perfecto para nosotros y para el área de redes, que es la que más lo va a aprovechar. Muchísimas gracias por su donación.', videoUrl: 'https://www.youtube.com/embed/DSnf-n_gKWg', thumb: 'https://img.youtube.com/vi/DSnf-n_gKWg/hqdefault.jpg', categoriaIcons: ['heart', 'monitor'], votos: 95, fecha: '2024-05-05' },
+            { id: 'IMP-001', nombre: 'Ayuda a un Tercero', ubicacion: 'Politécnico Rosario Rojas', historia: 'El centro se siente muy agradecido; me parece un regalo perfecto para nosotros y para el área de redes, que es la que más lo va a aprovechar. Muchísimas gracias por su donación.', videoUrl: 'https://www.youtube.com/embed/DSnf-n_gKWg', thumb: 'https://img.youtube.com/vi/DSnf-n_gKWg/hqdefault.jpg', categoriaIcons: ['heart', 'monitor'], votos: 95, fecha: '2024-05-05' },
             { id: 'IMP-002', nombre: 'Ayuda a un Tercero', ubicacion: 'Politécnico Rosario Rojas', historia: 'Entregamos mochilas, ropa, lápices, cuadernos y hasta pelotas para que los estudiantes tengan tanto con qué vestir como con qué escribir y reforzar sus conocimientos.', videoUrl: 'https://www.youtube.com/embed/QSxU_52jrp8', thumb: 'https://img.youtube.com/vi/QSxU_52jrp8/hqdefault.jpg', categoriaIcons: ['gift', 'book'], votos: 112, fecha: '2024-05-05' },
             { id: 'IMP-003', nombre: 'Luz Peña', ubicacion: 'La Vega', historia: 'Recibí medicamentos para mi tratamiento de cáncer gracias a una donación de la comunidad. Ahora puedo continuar con mi vida y cuidar a mis hijos.', videoUrl: 'https://www.youtube.com/embed/DSnf-n_gKWg', thumb: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800', categoriaIcons: ['heart', 'activity'], votos: 156, fecha: '2024-04-10' },
             { id: 'IMP-004', nombre: 'Carlos Medina', ubicacion: 'Puerto Plata', historia: 'Pude iniciar mi negocio de comida gracias al microcrédito. Ahora empleo a 3 personas del barrio y alimentamos a la comunidad.', videoUrl: 'https://www.youtube.com/embed/QSxU_52jrp8', thumb: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800', categoriaIcons: ['briefcase', 'trending-up'], votos: 201, fecha: '2024-05-01' },
@@ -439,8 +441,39 @@ var DB = {
     getReputation: function() { return JSON.parse(localStorage.getItem('db_reputacion')) || { puntos: 0, nivel: 'Silver', insignias: [], metas_proximas: [] }; },
     addPoints: function(amount) { var r = this.getReputation(); r.puntos += amount; if (r.puntos > 500) r.nivel = 'Gold'; localStorage.setItem('db_reputacion', JSON.stringify(r)); },
     getPrestamos: function() { return JSON.parse(localStorage.getItem('db_prestamos')) || []; },
-    savePrestamo: function(p) { var l = this.getPrestamos(); p.id = 'CR-' + Math.floor(Math.random() * 9000 + 1000); p.status = 'Pendiente'; l.push(p); localStorage.setItem('db_prestamos', JSON.stringify(l)); return p; },
-    updatePrestamoStatus: function(id, s) { var l = this.getPrestamos(); var i = l.findIndex(function(x) { return x.id === id; }); if (i !== -1) { l[i].status = s; localStorage.setItem('db_prestamos', JSON.stringify(l)); } },
+    savePrestamo: function(p) { 
+        var l = this.getPrestamos(); 
+        p.id = 'CR-' + Math.floor(Math.random() * 9000 + 1000); 
+        p.status = 'Pendiente'; 
+        p.montoOriginal = p.monto;
+        l.push(p); 
+        localStorage.setItem('db_prestamos', JSON.stringify(l)); 
+        if(this.addNotification) {
+            this.addNotification({
+                userId: 'admin',
+                type: 'prestamo_request',
+                message: 'Nueva solicitud de préstamo de: ' + (p.nombre || 'Usuario')
+            });
+        }
+        return p; 
+    },
+    updatePrestamoStatus: function(id, s) { 
+        var l = this.getPrestamos(); 
+        var i = l.findIndex(function(x) { return x.id === id; }); 
+        if (i !== -1) { 
+            l[i].status = s; 
+            localStorage.setItem('db_prestamos', JSON.stringify(l)); 
+            if(this.addNotification && l[i].userId) {
+                var action = s === 'Aprobado' ? 'aprobada' : (s === 'Rechazado' ? 'rechazada' : 'actualizada');
+                var typeStr = s === 'Aprobado' ? 'prestamo_approved' : (s === 'Rechazado' ? 'prestamo_rejected' : 'prestamo_update');
+                this.addNotification({
+                    userId: l[i].userId,
+                    type: typeStr,
+                    message: 'Tu solicitud de préstamo ha sido ' + action + '.'
+                });
+            }
+        } 
+    },
     getMarketplace: function() { return JSON.parse(localStorage.getItem('db_marketplace')) || []; },
     saveMarketplace: function(item) { var l = this.getMarketplace(); item.id = 'MK-' + Math.floor(Math.random() * 9000 + 1000); item.status = 'En Revisión'; l.push(item); localStorage.setItem('db_marketplace', JSON.stringify(l)); return item; },
     updateMarketplaceStatus: function(id, s) { var l = this.getMarketplace(); var i = l.findIndex(function(x) { return x.id === id; }); if (i !== -1) { l[i].status = s; localStorage.setItem('db_marketplace', JSON.stringify(l)); } },

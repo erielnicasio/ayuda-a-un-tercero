@@ -6,8 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - Ayuda a un Tercero</title>
     <link rel="stylesheet" href="../assets/css/styles-new.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: #333;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: #FEE2E2;
+            color: #EF4444;
+            transform: rotate(90deg);
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         /* Minimalist and Professional Overrides */
         body {
             background-color: #F8FAFC;
@@ -549,9 +608,12 @@
                             <p id="ref-msg" style="font-size: 0.85rem; margin-top: 12px; display: none;"></p>
                         </div>
 
-                        <div style="display: flex; gap: 16px; margin-top: 40px;">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            <button type="button" class="btn btn-ghost" onclick="switchProfileTab('info')">Cancelar</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--gray-200);">
+                            <div style="display: flex; gap: 16px;">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="button" class="btn btn-ghost" onclick="switchProfileTab('info')">Cancelar</button>
+                            </div>
+                            <button type="button" class="btn btn-ghost" style="color: #EF4444;" onclick="eliminarCuenta()">Eliminar Cuenta</button>
                         </div>
                     </form>
                 </div>
@@ -637,6 +699,24 @@
             </div>
         </main>
     </section>
+    <!-- Map Modal -->
+    <div id="mapModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px; width: 90%; padding: 32px;">
+            <button class="modal-close" onclick="closeMapModal()">×</button>
+            <h3 style="margin-bottom: 24px; color: var(--primary-blue);">Seleccionar Ubicación</h3>
+            
+            <button class="btn btn-outline" style="width: 100%; margin-bottom: 16px; border-color: #3B82F6; color: #3B82F6; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="autoSelectLocation(this)">
+                <i data-lucide="crosshair"></i> Detectar automáticamente
+            </button>
+            
+            <div id="leafletMap" style="width: 100%; height: 300px; background: #e2e8f0; border-radius: 12px; z-index: 1;"></div>
+            
+            <div style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+                <input type="text" id="map-selected-text" class="modern-input" placeholder="Provincia, Ciudad..." readonly>
+                <button class="btn btn-primary" onclick="confirmMapLocation()">Confirmar</button>
+            </div>
+        </div>
+    </div>
     
     <!-- Footer -->
     <footer class="footer">
@@ -842,7 +922,7 @@
             if (!container) return;
 
             if (user.role === 'vendedor') {
-                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">✓</div><h3 style="color:#10B981;margin-bottom:8px;">Eres Vendedor Aprobado</h3><p style="color:var(--text-muted);">Ya puedes publicar productos en el marketplace.</p></div>';
+                container.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:3rem;margin-bottom:16px;">✓</div><h3 style="color:#10B981;margin-bottom:8px;">Eres Vendedor Aprobado</h3><p style="color:var(--text-muted);margin-bottom:24px;">Ya puedes publicar productos en el marketplace.</p><button class="btn btn-outline btn-sm" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.2);" onclick="dimitirVendedor()">Dimitir de Vendedor</button></div>';
                 return;
             }
             if (user.vendorStatus === 'pendiente') {
@@ -883,8 +963,8 @@
             html += '<div class="form-row"><div class="form-group"><label class="form-label">Nombre</label><input type="text" id="prod-name" class="modern-input" required></div>';
             html += '<div class="form-group"><label class="form-label">Precio (DOP)</label><input type="number" id="prod-price" class="modern-input" min="0" required></div></div>';
             html += '<div class="form-group"><label class="form-label">Descripción</label><textarea id="prod-desc" class="modern-input" style="min-height:100px" required></textarea></div>';
-            html += '<div class="form-row"><div class="form-group"><label class="form-label">Categoría</label><select id="prod-cat" class="modern-input" required><option value="">Seleccionar</option><option value="Electrónica">Electrónica</option><option value="Hogar">Hogar</option></select></div>';
-            html += '<div class="form-group"><label class="form-label">Ubicación</label><input type="text" id="prod-location" class="modern-input" required></div></div>';
+            html += '<div class="form-row"><div class="form-group"><label class="form-label">Categoría</label><select id="prod-cat" class="modern-input" required><option value="">Seleccionar</option><option value="Electrónica">Electrónica</option><option value="Hogar">Hogar</option><option value="Deportes">Deportes</option><option value="Ropa">Ropa</option><option value="Juguetes">Juguetes</option><option value="Herramientas">Herramientas</option><option value="Otros">Otros</option></select></div>';
+            html += '<div class="form-group"><label class="form-label">Ubicación</label><div style="display: flex; gap: 8px;"><input type="text" id="prod-location" class="modern-input" placeholder="Ej. Monte Plata, R.D." required><button type="button" class="btn btn-outline" style="padding: 0 16px; white-space: nowrap; display: flex; align-items: center; gap: 8px;" onclick="openMapModal()" title="Elegir en el mapa">🗺️ Mapa</button></div></div></div>';
             html += '<div class="form-group"><label class="form-label">Imágenes</label><input type="file" class="modern-input" accept="image/*"></div>';
             html += '<button type="submit" class="btn btn-primary">Publicar</button></form>';
 
@@ -918,7 +998,154 @@
             alert('Producto enviado para revisión');
             renderProductsTab();
         }
+
+        function dimitirVendedor() {
+            if(confirm('¿Estás seguro de que deseas dimitir como vendedor? Tus productos dejarán de ser visibles y perderás tu estatus.')) {
+                var user = DB.getCurrentUser();
+                if(user) {
+                    var users = JSON.parse(localStorage.getItem('db_users')) || [];
+                    var uIndex = users.findIndex(u => u.id === user.id);
+                    if(uIndex !== -1) {
+                        users[uIndex].vendorStatus = 'none';
+                        users[uIndex].role = 'usuario';
+                        localStorage.setItem('db_users', JSON.stringify(users));
+                    }
+                    user.vendorStatus = 'none';
+                    user.role = 'usuario';
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    alert('Has dimitido como vendedor.');
+                    window.location.reload();
+                }
+            }
+        }
+
+        function eliminarCuenta() {
+            if(confirm('⚠️ ADVERTENCIA: ¿Estás seguro de que deseas ELIMINAR tu cuenta? Esta acción es irreversible y perderás tu historial.')) {
+                var user = DB.getCurrentUser();
+                if(user) {
+                    var users = JSON.parse(localStorage.getItem('db_users')) || [];
+                    users = users.filter(u => u.id !== user.id);
+                    localStorage.setItem('db_users', JSON.stringify(users));
+                    App.logout();
+                }
+            }
+        }
+
+        // --- REAL MAP MODAL FUNCTIONS ---
+        var profileMap = null;
+        var profileMarker = null;
+
+        function initProfileMap() {
+            if (!profileMap) {
+                profileMap = L.map('leafletMap').setView([18.7357, -70.1627], 8);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(profileMap);
+
+                profileMap.on('click', function(e) {
+                    if (profileMarker) profileMap.removeLayer(profileMarker);
+                    profileMarker = L.marker(e.latlng).addTo(profileMap);
+                    
+                    document.getElementById('map-selected-text').value = "Cargando...";
+                    fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + e.latlng.lat + '&lon=' + e.latlng.lng)
+                        .then(res => res.json())
+                        .then(data => {
+                            var city = data.address.city || data.address.town || data.address.village || data.address.state || 'República Dominicana';
+                            document.getElementById('map-selected-text').value = city;
+                        }).catch(err => {
+                            document.getElementById('map-selected-text').value = e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4);
+                        });
+                });
+            }
+        }
+
+        function openMapModal() {
+            document.getElementById('mapModal').classList.add('active');
+            lucide.createIcons();
+            document.getElementById('map-selected-text').value = '';
+            setTimeout(() => {
+                initProfileMap();
+                profileMap.invalidateSize();
+            }, 100);
+        }
+
+        function closeMapModal() {
+            document.getElementById('mapModal').classList.remove('active');
+        }
+
+        function autoSelectLocation(btnEl) {
+            var btn = btnEl || (event && event.currentTarget) || document.querySelector('#mapModal .btn-outline');
+            var originalHTML = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '⏳ Obteniendo ubicación...';
+                btn.disabled = true;
+            }
+
+            // Ensure map is ready before we try to pan
+            if (!profileMap) {
+                initProfileMap();
+                setTimeout(function() { profileMap.invalidateSize(); }, 150);
+            }
+
+            if (!('geolocation' in navigator)) {
+                alert('Tu navegador no soporta geolocalización.');
+                if (btn) { btn.innerHTML = originalHTML; btn.disabled = false; }
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+
+                    if (profileMarker) profileMap.removeLayer(profileMarker);
+                    profileMarker = L.marker([lat, lng]).addTo(profileMap);
+                    profileMap.setView([lat, lng], 14);
+
+                    document.getElementById('map-selected-text').value = 'Cargando nombre...';
+
+                    fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng, {
+                        headers: { 'Accept-Language': 'es' }
+                    })
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) {
+                            var addr = data.address || {};
+                            var city = addr.city || addr.town || addr.village || addr.municipality || addr.county || addr.state || 'República Dominicana';
+                            document.getElementById('map-selected-text').value = city + ' (Automático)';
+                        })
+                        .catch(function() {
+                            document.getElementById('map-selected-text').value = lat.toFixed(5) + ', ' + lng.toFixed(5);
+                        })
+                        .finally(function() {
+                            if (btn) { btn.innerHTML = originalHTML; btn.disabled = false; }
+                        });
+                },
+                function(error) {
+                    var msgs = {
+                        1: 'Permiso denegado. Por favor, permite el acceso a tu ubicación en el navegador.',
+                        2: 'Posición no disponible. Verifica tu conexión o GPS.',
+                        3: 'Tiempo de espera agotado. Inténtalo de nuevo.'
+                    };
+                    alert(msgs[error.code] || 'Error al obtener la ubicación. Selecciona en el mapa.');
+                    if (btn) { btn.innerHTML = originalHTML; btn.disabled = false; }
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+
+        function confirmMapLocation() {
+            var val = document.getElementById('map-selected-text').value;
+            if(!val || val === "Cargando...") { alert('Por favor selecciona una ubicación en el mapa o usa detección automática.'); return; }
+            var locInput = document.getElementById('prod-location');
+            if(locInput) {
+                locInput.value = val.replace(' (Automático)', '');
+            }
+            closeMapModal();
+        }
     </script>
+    <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
     <script src="../assets/js/db.js"></script>
     <script src="../assets/js/app.js"></script>
     <script src="../assets/js/accessibility.js"></script>

@@ -277,8 +277,8 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
                     <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--blue-deep);">Historias de la Comunidad</h2>
                     <div style="display: flex; gap: 12px;">
-                        <button class="btn btn-outline btn-sm active">Tendencias</button>
-                        <button class="btn btn-outline btn-sm">Más Recientes</button>
+                        <button id="btnTendencias" class="btn btn-outline btn-sm active">Tendencias</button>
+<button id="btnRecientes" class="btn btn-outline btn-sm">Más Recientes</button>
                     </div>
                 </div>
 
@@ -394,8 +394,12 @@
         function renderImpacto() {
             const grid = document.getElementById('impactoGrid');
             const data = DB.getImpacto();
-            
-            grid.innerHTML = data.map(item => `
+            renderImpactoList(grid, data);
+        }
+
+        // Helper to render a given list of impact items
+        function renderImpactoList(container, items) {
+            container.innerHTML = items.map(item => `
                 <div class="impact-card-v2">
                     <div class="impact-media">
                         <img src="${item.thumb}" alt="${item.nombre}">
@@ -423,6 +427,13 @@
                 </div>
             `).join('');
             lucide.createIcons();
+        }
+
+        // Render only the "Ayuda a un Tercero" videos (Tendencias)
+        function renderTendencias() {
+            const grid = document.getElementById('impactoGrid');
+            const filtered = DB.getImpacto().filter(item => item.nombre === 'Ayuda a un Tercero');
+            renderImpactoList(grid, filtered);
         }
 
         function vote(id, el) {
@@ -464,6 +475,24 @@
             document.getElementById('statVidas').innerText = stats.vidas_impactadas.toLocaleString();
             document.getElementById('statDonaciones').innerText = `$${stats.donaciones_totales.toLocaleString()}`;
             document.getElementById('statCasos').innerText = stats.casos_exitosos.toLocaleString();
+
+            // Button listeners for filtering
+            const btnTend = document.getElementById('btnTendencias');
+            const btnRec = document.getElementById('btnRecientes');
+            if (btnTend) {
+                btnTend.addEventListener('click', () => {
+                    renderTendencias();
+                    btnTend.classList.add('active');
+                    btnRec.classList.remove('active');
+                });
+            }
+            if (btnRec) {
+                btnRec.addEventListener('click', () => {
+                    renderImpacto();
+                    btnRec.classList.add('active');
+                    btnTend.classList.remove('active');
+                });
+            }
 
             document.getElementById('formImpacto').addEventListener('submit', (e) => {
                 e.preventDefault();

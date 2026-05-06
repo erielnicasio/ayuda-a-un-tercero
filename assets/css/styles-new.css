@@ -473,7 +473,7 @@ img {
 .hero {
     position: relative;
     padding-top: var(--nav-height);
-    min-height: 90vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     background: var(--primary-blue);
@@ -503,10 +503,13 @@ img {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg,
-            rgba(10, 25, 47, 0.9) 0%,
-            rgba(10, 25, 47, 0.6) 50%,
-            rgba(10, 25, 47, 0.3) 100%);
+
+    background: linear-gradient(88deg,
+        rgb(32 60 101 / 42%) 0%,
+        rgb(33 57 93 / 54%) 50%,
+        rgba(10, 25, 47, 0.3) 100%
+    );
+
     z-index: 2;
 }
 
