@@ -4,6 +4,9 @@ var DB = {
     _get: function(key) { try { return JSON.parse(localStorage.getItem(key)) || null; } catch(e) { return null; } },
     _set: function(key, val) { localStorage.setItem(key, JSON.stringify(val)); },
     _getArr: function(key) { return this._get(key) || []; },
+    _getSession: function(key) { try { return JSON.parse(sessionStorage.getItem(key)) || null; } catch(e) { return null; } },
+    _setSession: function(key, val) { sessionStorage.setItem(key, JSON.stringify(val)); },
+    _getSessionArr: function(key) { return this._getSession(key) || []; },
 
     init: function() {
         this._ensureAdmin();
@@ -281,7 +284,7 @@ var DB = {
     },
     getCurrentUser: function() { return this._get('db_current_user'); },
     setCurrentUser: function(u) { this._set('db_current_user', u); },
-    logout: function() { localStorage.removeItem('db_current_user'); },
+    logout: function() { localStorage.removeItem('db_current_user'); this.clearCart(); },
     refreshCurrentUser: function() {
         var cu = this.getCurrentUser(); if (!cu) return null;
         var fresh = this.getUsers().find(function(u) { return u.id === cu.id; });
@@ -368,22 +371,22 @@ var DB = {
     },
 
     // ─── Carrito ─────────────────────────────────────────
-    getCart: function() { return this._getArr('db_cart'); },
+    getCart: function() { return this._getSessionArr('db_cart'); },
     addToCart: function(productId) {
         var cart = this.getCart();
         var existing = cart.find(function(c) { return c.productId === productId; });
         if (existing) { existing.qty++; } else { cart.push({ productId: productId, qty: 1 }); }
-        this._set('db_cart', cart); return cart;
+        this._setSession('db_cart', cart); return cart;
     },
     removeFromCart: function(productId) {
-        this._set('db_cart', this.getCart().filter(function(c) { return c.productId !== productId; }));
+        this._setSession('db_cart', this.getCart().filter(function(c) { return c.productId !== productId; }));
     },
     updateCartQty: function(productId, qty) {
         var cart = this.getCart();
         var item = cart.find(function(c) { return c.productId === productId; });
-        if (item) { if (qty <= 0) { this.removeFromCart(productId); return; } item.qty = qty; this._set('db_cart', cart); }
+        if (item) { if (qty <= 0) { this.removeFromCart(productId); return; } item.qty = qty; this._setSession('db_cart', cart); }
     },
-    clearCart: function() { this._set('db_cart', []); },
+    clearCart: function() { this._setSession('db_cart', []); },
     getCartTotal: function() {
         var cart = this.getCart(); var self = this; var total = 0;
         cart.forEach(function(c) { var p = self.findProduct(c.productId); if (p) total += p.price * c.qty; });

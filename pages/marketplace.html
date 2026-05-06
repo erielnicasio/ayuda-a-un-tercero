@@ -1612,9 +1612,40 @@
                     html += '<div style="display:flex;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid #eee;"><img src="' + (p.images && p.images[0] ? p.images[0] : '') + '" style="width:70px;height:70px;border-radius:12px;object-fit:cover;"><div style="flex:1;"><h4 style="margin:0 0 4px;">' + p.name + '</h4><p style="margin:0;color:var(--accent-orange);font-weight:700;">RD$' + Number(p.price).toLocaleString() + '</p></div><div style="display:flex;align-items:center;gap:8px;"><button onclick="changeQty(\'' + item.productId + '\',-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid #ddd;background:white;cursor:pointer;font-size:1.1rem;">&minus;</button><span style="font-weight:700;min-width:24px;text-align:center;">' + item.qty + '</span><button onclick="changeQty(\'' + item.productId + '\',1)" style="width:32px;height:32px;border-radius:8px;border:1px solid #ddd;background:white;cursor:pointer;font-size:1.1rem;">+</button></div><button onclick="removeCartItem(\'' + item.productId + '\')" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:1.2rem;">&times;</button></div>';
                 });
                 html += '<div style="margin-top:20px;padding:20px;background:var(--bg-light);border-radius:16px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:1.1rem;font-weight:700;">Total:</span><span style="font-size:1.5rem;font-weight:800;color:var(--accent-orange);">RD$' + Number(total).toLocaleString() + '</span></div>';
-                html += '<button onclick="DB.clearCart();renderCartContent();updateCartBadge();" style="width:100%;margin-top:12px;padding:14px;background:#EF4444;color:white;border:none;border-radius:14px;font-weight:700;cursor:pointer;">Vaciar Carrito</button>';
+                html += '<div style="display:flex;gap:12px;margin-top:16px;">';
+                html += '<button onclick="checkoutCart()" style="flex:1;padding:14px;background:#25D366;color:white;border:none;border-radius:14px;font-weight:700;cursor:pointer;font-size:1rem;display:flex;justify-content:center;align-items:center;gap:8px;"><i data-lucide="message-circle"></i> Comprar (Contactar WhatsApp)</button>';
+                html += '<button onclick="DB.clearCart();renderCartContent();updateCartBadge();" style="padding:14px;background:#EF4444;color:white;border:none;border-radius:14px;font-weight:700;cursor:pointer;">Vaciar</button>';
+                html += '</div>';
             }
             el.innerHTML = html;
+            lucide.createIcons();
+        }
+        function checkoutCart() {
+            var cart = DB.getCart();
+            if (cart.length === 0) return;
+            var user = DB.getCurrentUser();
+            var msg = 'Hola, me interesan los siguientes artículos de mi carrito en Ayuda a un Tercero:%0A%0A';
+            var total = 0;
+            cart.forEach(function(item) {
+                var p = DB.findProduct(item.productId);
+                if (p) {
+                    msg += '- ' + item.qty + 'x ' + p.name + ' (RD$' + Number(p.price).toLocaleString() + ') - Vendedor: ' + p.vendorName + '%0A';
+                    total += p.price * item.qty;
+                }
+            });
+            msg += '%0ATotal estimado: RD$' + Number(total).toLocaleString() + '%0A%0APor favor confirmarme disponibilidad y siguientes pasos.';
+            
+            DB.addNotification({
+                userId: 'admin',
+                type: 'purchase_cart',
+                message: 'Nueva intención de compra de carrito por RD$' + Number(total).toLocaleString() + ' por ' + (user ? user.name : 'Visitante') + '.'
+            });
+            
+            window.open('https://wa.me/18091234567?text=' + msg, '_blank');
+            DB.clearCart();
+            renderCartContent();
+            updateCartBadge();
+            document.getElementById('cartModal').style.display = 'none';
         }
         function changeQty(pid, d) { var c = DB.getCart(); var it = c.find(function(x) { return x.productId === pid; }); if (it) DB.updateCartQty(pid, it.qty + d); renderCartContent(); updateCartBadge(); }
         function removeCartItem(pid) { DB.removeFromCart(pid); renderCartContent(); updateCartBadge(); }
