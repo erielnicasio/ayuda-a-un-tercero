@@ -1232,7 +1232,7 @@
 
     <!-- Modal Avanzado de Donación -->
     <div class="modal-overlay" id="publishModal">
-        <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-content" style="max-width: 900px; position: relative;">
             <button class="modal-close"
                 style="position: absolute; top: 20px; right: 20px; background:none; border:none; font-size: 1.5rem; cursor:pointer;"
                 onclick="document.getElementById('publishModal').classList.remove('active')">&times;</button>
@@ -1379,7 +1379,7 @@
 
     <!-- Modal QR Code -->
     <div class="modal-overlay" id="qrModal">
-        <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <div class="modal-content" style="max-width: 400px; text-align: center; position: relative;">
             <button class="modal-close"
                 style="position: absolute; top: 15px; right: 20px; background:none; border:none; font-size: 1.5rem; cursor:pointer;"
                 onclick="document.getElementById('qrModal').classList.remove('active')">&times;</button>
@@ -1411,9 +1411,9 @@
 
     <!-- Modal Detalles de Donación -->
     <div class="modal-overlay" id="itemDetailsModal">
-        <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden; border-radius: 20px;">
+        <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden; border-radius: 20px; position: relative;">
             <button class="modal-close" onclick="document.getElementById('itemDetailsModal').classList.remove('active')"
-                style="top: 20px; right: 20px; background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10;">
+                style="position: absolute; top: 20px; right: 20px; background: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10;">
                 &times;
             </button>
 
@@ -2410,35 +2410,48 @@ Una vez un Administrador lo apruebe, recibirás una notificación de WhatsApp y 
             }
         });
     </script>
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div>
-                <h4>Ayuda a un Tercero</h4>
-                <p style="font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.6;">Plataforma solidaria de comercio, donaciones y apoyo comunitario en República Dominicana.</p>
+<footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <a href="#" class="logo" style="margin-bottom: 24px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="heart" aria-hidden="true" style="color: var(--accent-orange);" class="lucide lucide-heart"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg>
+                        Ayuda<span>Tercero</span>
+                    </a>
+                    <p style="color: var(--text-muted);">Liderando la revolución de la ayuda comunitaria a través de un
+                        ecosistema solidaria justo y transparente.</p>
+                </div>
+                <div>
+                    <h4>Recursos</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="#como-funciona">Cómo funciona</a></li>
+                        <li><a href="pages/casos.html">Casos sociales</a></li>
+                        <li><a href="pages/reportes.html">Transparencia</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Compañía</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="pages/sobre-nosotros.html">Sobre nosotros</a></li>
+                        <li><a href="pages/impacto.html">Impacto</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul style="margin-top: 16px;">
+                        <li><a href="pages/privacidad.html">Privacidad</a></li>
+                        <li><a href="pages/terminos.html">Términos</a></li>
+                        <li><a href="pages/cookies.html">Cookies</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <h4>Compañía</h4>
-                <a href="sobre-nosotros.html">Sobre nosotros</a>
-                <a href="impacto.html">Impacto</a>
-                <a href="../index.html#contacto">Contacto</a>
+            <div style="border-top: 1px solid var(--bg-light); margin-top: 60px; padding-top: 40px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+                © 2026 Ayuda a un Tercero. Todos los derechos reservados.
             </div>
-            <div>
-                <h4>Servicios</h4>
-                <a href="marketplace.html">Marketplace</a>
-                <a href="donaciones.html">Donaciones</a>
-                <a href="credifast.html">Préstamos</a>
-            </div>
-            <div>
-                <h4>Legal</h4>
-                <a href="privacidad.html">Privacidad</a>
-                <a href="terminos.html">Términos</a>
-                <a href="cookies.html">Cookies</a>
-            </div>
-        </div>
-        <div class="container" style="text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);margin-top:20px;">
-            <p style="color:rgba(255,255,255,0.5);font-size:0.8rem;">&copy; 2026 Ayuda a un Tercero. Todos los derechos reservados.</p>
         </div>
     </footer>
+    <script src="../assets/js/footer-include.js"></script>
 
     <script src="../assets/js/accessibility.js"></script>
 </body>
